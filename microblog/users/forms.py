@@ -5,6 +5,7 @@ from models import UserAccount
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from microblog.data import db
 
+
 class LoginForm(Form):
     email = fields.StringField(validators=[InputRequired(), Email()])
     password = fields.PasswordField(validators=[InputRequired()])
@@ -31,7 +32,7 @@ class LoginForm(Form):
 
 
 class UpdateProfileForm(Form):
-    name = fields.StringField('User name')
+    name = fields.StringField('User name', validators=[InputRequired()])
     first_name = fields.StringField('First name')
     last_name = fields.StringField('Last name')
 
@@ -42,6 +43,7 @@ class UpdateProfileForm(Form):
         obj.first_name = first_name
         obj.last_name = last_name
         return obj
+
 
 class RegistrationForm(Form):
     name = fields.StringField("User name", validators=[InputRequired()])
