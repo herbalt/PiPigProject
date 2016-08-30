@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="Sqlite (Xerial) - curing-pi.db" uuid="0b4f96a8-1eef-452c-a38b-9becc586b452">
+    <database-info product="SQLite" version="3.8.11" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <schema name="" catalog=""/>
+    <table name="migrate_version" schema="" catalog="" type="TABLE">
+      <column name="repository_id" sqlType="VARCHAR(250)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="repository_path" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="version" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="repository_id"/>
+    </table>
+    <table name="oauth_user" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="social_id" sqlType="VARCHAR(64)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="user_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="id),unique (social_id"/>
+      <foreign-key name="#FAKE_oauth_user_1" columns="user_id" ref-table="user_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+    </table>
+    <table name="user_account" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(64)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR(120)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="admin" sqlType="BOOLEAN" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="_password" sqlType="BLOB" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="_salt" sqlType="VARCHAR(120)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="_password_hash_algorithm" sqlType="VARCHAR(50)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="registration_datetime" sqlType="DATETIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="account_status_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="status_updated_datetime" sqlType="DATETIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="_password_reminder_expire" sqlType="DATETIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="_email_confirmation_token" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="_password_reminder_token" sqlType="VARCHAR(120)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="_accept_terms_of_service" sqlType="BOOLEAN" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id),check (admin in (0,1"/>
+      <foreign-key name="#FAKE_user_account_1" columns="account_status_id" ref-table="user_account_status" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="ix_user_account_email" unique="true" columns="email"/>
+      <index name="ix_user_account_name" unique="true" columns="name"/>
+    </table>
+    <table name="user_account_status" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="code" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="user_profile" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="first_name" sqlType="VARCHAR(120)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="last_name" sqlType="VARCHAR(120)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="account_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="id),foreign key(id"/>
+      <foreign-key name="#FAKE_user_profile_1" columns="id" ref-table="user_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+    </table>
+  </data-source>
+</component>

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{%  block content %}
+    {% import "helpers/forms.html" as forms %}
+    {% import "helpers/flash.html" as forms %}
+
+    <h1>Select the Database action you desire to run</h1>
+
+    <form method="post">
+    {{ form.hidden_tag() }}
+    {{ form.database_actions }}
+    <input type="submit">
+    </form>
+
+{% endblock %}

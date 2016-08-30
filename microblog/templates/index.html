@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{%  block content %}
+    {% include 'helpers/flash.html' %}
+    {% if user == None %}
+        <h1>Hello No User</h1>
+    {% else %}
+        <h1>Logged in as {{user.name}}</h1>
+
+    {% endif %}
+{% endblock %}
