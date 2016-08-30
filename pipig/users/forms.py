@@ -3,7 +3,7 @@ from wtforms import fields
 from wtforms.validators import Email, InputRequired, ValidationError
 from models import UserAccount
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
-from microblog.data import db
+from pipig.data import db
 
 
 class LoginForm(Form):

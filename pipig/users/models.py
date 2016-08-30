@@ -3,9 +3,9 @@ from hmac import compare_digest
 from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from backports.pbkdf2 import pbkdf2_hmac, compare_digest
-from microblog.app_config import config_class as config
+from pipig.app_config import config_class as config
 
-from microblog.data import db, CRUDMixin
+from pipig.data import db, CRUDMixin
 
 
 class UserAccountStatus(db.Model):

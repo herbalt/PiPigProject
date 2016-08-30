@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 from .data import db
 from .auth import login_manager
-import microblog.errors as errors
-import microblog.logs as logs
+import pipig.errors as errors
+import pipig.logs as logs
 from app_config import config_class as config
 from mail import mail
 

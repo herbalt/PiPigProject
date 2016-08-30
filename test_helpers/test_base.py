@@ -1,6 +1,6 @@
 from flask_testing import TestCase
 from config import TestConfiguration
-from microblog import app, db
+from pipig import app, db
 
 
 class BaseTestCase(TestCase):

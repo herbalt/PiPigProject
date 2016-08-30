@@ -1,7 +1,7 @@
 #!flask/bin/python
 from migrate.versioning import api
 
-from microblog.app_config import config_class
+from pipig.app_config import config_class
 SQLALCHEMY_DATABASE_URI = config_class.SQLALCHEMY_DATABASE_URI
 SQLALCHEMY_MIGRATE_REPO = config_class.SQLALCHEMY_MIGRATE_REPO
 

@@ -1,7 +1,7 @@
 import time
 
-from microblog.users.models import UserAccountStatus, UserAccount
-from microblog.data import db
+from pipig.users.models import UserAccountStatus, UserAccount
+from pipig.data import db
 
 
 def data_user_account_status_id():

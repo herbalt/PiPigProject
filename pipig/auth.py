@@ -1,6 +1,6 @@
 from flask_login import AnonymousUserMixin, LoginManager
 
-from microblog.users.models import UserAccount
+from pipig.users.models import UserAccount
 
 login_manager = LoginManager()
 

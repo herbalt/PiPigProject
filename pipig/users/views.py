@@ -1,14 +1,14 @@
 from datetime import datetime
 from flask_login import current_user, login_user, login_required, logout_user
 
-from microblog.mail import send_email
-from microblog.users.OAuth import OAuthSignIn, FacebookSignIn
+from pipig.mail import send_email
+from pipig.users.OAuth import OAuthSignIn, FacebookSignIn
 from flask import Blueprint, redirect, url_for, flash, render_template, request
 
-from microblog.users.forms import LoginForm, RegistrationForm, UpdateProfileForm
-from microblog.users.token import generate_confirmation_token, confirm_token
+from pipig.users.forms import LoginForm, RegistrationForm, UpdateProfileForm
+from pipig.users.token import generate_confirmation_token, confirm_token
 from models import UserAccount, OAuthUser, UserProfile
-from microblog.data import db
+from pipig.data import db
 from models import UserAccountStatus
 
 users = Blueprint('users', __name__)
