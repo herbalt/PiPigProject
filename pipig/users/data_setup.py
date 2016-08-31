@@ -1,7 +1,7 @@
 import time
 
-from pipig.users.models import UserAccountStatus, UserAccount
 from pipig.data import db
+from pipig.users.models import UserAccountStatus, UserAccount
 
 
 def data_user_account_status_id():
@@ -17,3 +17,9 @@ def data_create_admin_user():
     db.session.add(
         UserAccount('', email='ad@min.com', password='admin', admin=True, status=True, status_time=time.time())
         )
+
+    db.session.commit()
+
+if __name__ == '__main__':
+    # data_user_account_status_id()
+    data_create_admin_user()

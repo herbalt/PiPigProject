@@ -1,14 +1,15 @@
 from flask import Flask, render_template
-from .data import db
-from .auth import login_manager
+from pipig.data import db
+from pipig.auth import login_manager
 import pipig.errors as errors
 import pipig.logs as logs
 from app_config import config_class as config
 from mail import mail
 
 # BLUEPRINTS
-from .users.views import users
+from pipig.users.views import users
 from database.views import database
+from pipig.sensors.views import sensors
 
 
 app = Flask(__name__)
@@ -27,6 +28,7 @@ mail.init_app(app)
 
 app.register_blueprint(users)
 app.register_blueprint(database)
+app.register_blueprint(sensors)
 
 if __name__ == '__main__':
     pass

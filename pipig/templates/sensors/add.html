@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% import "helpers/forms.html" as forms %}
+{% block title %}Add Sensors{% endblock %}
+{% block content %}
+{{super()}}
+<form action="{{url_for('sensors.add_sensor')}}" method="POST">
+{{ forms.render(form) }}
+<p><input type="Submit" value="Add Sensor"></p>
+</form>
+{% endblock content %}

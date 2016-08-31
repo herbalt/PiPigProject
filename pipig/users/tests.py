@@ -52,7 +52,7 @@ class UserFormTests(BaseTestCase, FormTestCase):
 
         self.assert_has_validator('password', validator=InputRequired)
 
-        test_form = RegistrationForm.build(name='Test', email='testtest', password='password')
+        test_form = RegistrationForm.populate(name='Test', email='testtest', password='password')
 
         email_validate = test_form.validate_email(None)
         user_name_validate = test_form.validate_user_name(None)

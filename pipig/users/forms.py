@@ -12,7 +12,7 @@ class LoginForm(Form):
     remember_me = fields.BooleanField(label='Remember Me')
 
     @staticmethod
-    def build(email='', password=''):
+    def populate(email='', password=''):
         obj = LoginForm()
         obj.email = email
         obj.password = password
@@ -37,7 +37,7 @@ class UpdateProfileForm(Form):
     last_name = fields.StringField('Last name')
 
     @staticmethod
-    def build(name='', first_name='', last_name=''):
+    def populate(name='', first_name='', last_name=''):
         obj = UpdateProfileForm()
         obj.name = name
         obj.first_name = first_name
@@ -53,7 +53,7 @@ class RegistrationForm(Form):
     password = fields.PasswordField("Password", validators=[InputRequired()])
 
     @staticmethod
-    def build(name='', email='', password=''):
+    def populate(name='', email='', password=''):
         obj = RegistrationForm()
         obj.name = name
         obj.email = email
