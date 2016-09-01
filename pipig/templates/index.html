@@ -2,9 +2,9 @@
 {%  block content %}
     {% include 'helpers/flash.html' %}
     {% if user == None %}
-        <h1>Hello No User</h1>
+        <h1>Welcome to PiPig, Please log in</h1>
     {% else %}
-        <h1>Logged in as {{user.name}}</h1>
+        <h1>Logged into PiPig as {{user.name}}</h1>
 
     {% endif %}
 {% endblock %}

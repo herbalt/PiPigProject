@@ -61,16 +61,17 @@ class RegistrationForm(Form):
         return obj
 
     def validate_email(form, field):
-        # user = db.session.query(UserAccount).filter_by(UserAccount.email == form.email).first()
+        # user = db.session.query(UserAccount).filter_by(UserAccount.email == form.email.data).first()
 
-        # user = UserAccount.query.filter_by(UserAccount.email == form.email).first()
         user_account = UserAccount.query.filter_by(email=form.email).first()
+
+        # user_account = UserAccount.query.filter_by(email=field.data).first()
         if user_account is not None:
             raise ValidationError("A user with that email already exists")
         return True
 
     def validate_user_name(form, field):
-        # user = db.session.query(UserAccount).filter_by(form.name).first()
+        # user = db.session.query(UserAccount).filter_by(form.name.data).first()
         user = UserAccount.query.filter_by(name=form.name).first()
 
         if user is not None:

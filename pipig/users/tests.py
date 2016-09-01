@@ -20,7 +20,7 @@ class UserBlueprintTests(BaseTestCase):
         self.assertTemplateUsed('users/login.html')
 
     def test_index_requires_login(self):
-        self.helper_url_requires_login('/users/index')
+        self.helper_url_requires_login('/index')
 
 
 class UserFormTests(BaseTestCase, FormTestCase):
@@ -77,7 +77,7 @@ class UserViewsTests(BaseTestCase):
         with self.client:
             UserAccount.create(name="Joe", email="joe@gmail.com", password='1')
             response = self.client.post(url_for('users.login'), data={'email': 'joe@gmail.com', 'password': '1'})
-
+            self.assert200(response=response)
             self.assertFalse(current_user.is_anonymous)
             self.assertTrue(current_user.name == 'Joe')
 

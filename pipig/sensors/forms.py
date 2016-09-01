@@ -25,13 +25,13 @@ class SensorsForm(Form):
         return True
 
     def validate_factory_id(form, field):
-        factory_id = sensors.Sensor.query.filter_by(sensor_factory_id=form.sensor_factory_id).first()
+        factory_id = sensors.Sensor.query.filter_by(sensor_factory_id=form.sensor_factory_id.data).first()
         if factory_id < 0:
             return False
         return True
 
     def validate_interval_between_readings(form, field):
-        i_b_r = sensors.Sensor.query.filter_by(interval_between_readings=form.interval_between_readings).first()
+        i_b_r = sensors.Sensor.query.filter_by(interval_between_readings=form.interval_between_readings.data).first()
         if i_b_r < 0:
             return False
         return True

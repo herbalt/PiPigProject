@@ -7,16 +7,27 @@ from flask import Blueprint, redirect, url_for, flash, render_template, request
 
 from pipig.users.forms import LoginForm, RegistrationForm, UpdateProfileForm
 from pipig.users.token import generate_confirmation_token, confirm_token
-from models import UserAccount, OAuthUser, UserProfile
+from models import UserAccount, OAuthUser, UserProfile, UserAccountStatus
 from pipig.data import db
 from models import UserAccountStatus
+
+import data_setup
 
 users = Blueprint('users', __name__)
 
 index_url = 'users.user_index'
 
+@users.route('/users/setup_db_data')
+def setup_database_data():
+    result1 = data_setup.setup_database_admin_user()
+    result2 = data_setup.setup_database_user_account_status_data()
 
-@users.route('/users/index')
+    if result1 and result2:
+        return render_template('users/db_data.html')
+    else:
+        return render_template('users/db_data_fail.html')
+
+@users.route('/index')
 @login_required
 def user_index():
     return render_template('index.html', user=current_user)
@@ -26,7 +37,7 @@ def user_index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user_email = form.data['email']
+        user_email = form.email
         user_account = UserAccount.query.filter_by(email=user_email).first_or_404()
         print str(user_account)
         login_user(user_account)

@@ -1,18 +1,20 @@
-
 OAUTH_CREDENTIALS = {
     'facebook': {
-        'id': 'xxxx',
-        'secret': 'xxxx'
+        'id': '494803964049198',
+        'secret': '8e8a243c9d78696161cb7795075127eb'
     },
     'twitter': {
-        'id': 'xxxx',
-        'secret': 'xxxx'
+        'id': '3RzWQclolxWZIMq5LJqzRZPTl',
+        'secret': 'm9TEd58DSEtRrZHpz2EjrV9AhsBRxKMo8m3kuIZj3zLwzwIimt'
     }
 }
 
-SECRET_KEY = 'xxxx'
-SECURITY_PASSWORD_SALT = 'xxxx'
+SECRET_KEY = 'SECRET_KEY'
+SECURITY_PASSWORD_SALT = 'SECURITY_PASSWORD_SALT'
 
 # APP EMAIL CREDENTIALS
-MAIL_USERNAME = 'xxxx'
-MAIL_PASSWORD = 'xxxx'
+MAIL_USERNAME = 'pipigdeveloper'
+MAIL_PASSWORD = 'notsosecret'
+
+# MAIL_USERNAME = os.environ['APP_MAIL_USERNAME']
+# MAIL_PASSWORD = os.environ['APP_MAIL_PASSWORD']

@@ -6,5 +6,21 @@
 </head>
 <body>
 
+<table>
+{% for item in items %}
+    <tr>
+        <td>
+            ID: {{ item.id }} -
+            NAME: {{item.name}} -
+            SENSOR ID: {{ item.sensor_factory_id }} -
+            INTERVAL: {{ item.interval_between_readings }} -
+            STATE: {{ item.state }}
+        </td>
+
+    </tr>
+{% endfor %}
+</table>
+
+
 </body>
 </html>

@@ -1,25 +1,28 @@
 import time
 
+from datetime import datetime
+from flask import render_template
+
 from pipig.data import db
 from pipig.users.models import UserAccountStatus, UserAccount
 
-
-def data_user_account_status_id():
-    db.session.add(UserAccountStatus('none'))
-    db.session.add(UserAccountStatus('registered'))
-    db.session.add(UserAccountStatus('confirmed'))
-    db.session.add(UserAccountStatus('guest'))
-
+def setup_database_user_account_status_data():
+    UserAccountStatus.query.delete()
+    db.session.add(UserAccountStatus('NotRegistered'))
+    db.session.add(UserAccountStatus('Registered'))
+    db.session.add(UserAccountStatus('Confirmed'))
+    db.session.add(UserAccountStatus('Guest'))
     db.session.commit()
+    return True
 
 
-def data_create_admin_user():
-    db.session.add(
-        UserAccount('', email='ad@min.com', password='admin', admin=True, status=True, status_time=time.time())
+def setup_database_admin_user():
+    user = UserAccount.query.filter_by(email='ad@min.com').first()
+    if user is None:
+        db.session.add(
+            UserAccount(name='admin', email='ad@min.com', password='admin', admin=True, status=True,
+                    status_time=datetime.now())
         )
 
-    db.session.commit()
-
-if __name__ == '__main__':
-    # data_user_account_status_id()
-    data_create_admin_user()
+        db.session.commit()
+    return True

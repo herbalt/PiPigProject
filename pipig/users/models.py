@@ -16,9 +16,10 @@ class UserAccountStatus(db.Model):
     def __init__(self, code):
         self.code = code
 
-    NOT_REGISTERED = 0
-    REGISTERED = 1
-    CONFIRMED = 2
+    NOT_REGISTERED = 1
+    REGISTERED = 2
+    CONFIRMED = 3
+    GUEST = 4
 
 
 class UserProfile(db.Model):
@@ -102,4 +103,5 @@ class OAuthUser(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     social_id = db.Column(db.String(64), nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'))
+
 

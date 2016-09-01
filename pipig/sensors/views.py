@@ -20,19 +20,19 @@ def add_sensor():
         factory_id = form.data['sensor_factory_id']
         interval_between_readings = form.data['interval_between_readings']
 
-        # sensor = Sensor.query.filter_by(name=name, sensor_factory_id=factory_id, interval_between_readings=interval_between_readings).first_or_404()
-        #if sensor is None:
+        sensor = Sensor.query.filter_by(name=name, sensor_factory_id=factory_id, interval_between_readings=interval_between_readings).first()
+        if sensor is not None:
+            return redirect(url_for(sensor_index))
 
-        #TODO Requires validation to check if value already exists in db
         sensor = Sensor(name=name, sensor_factory_id=factory_id, interval_between_readings=interval_between_readings)
+
         db.session.add(sensor)
         db.session.commit()
 
-        print str(sensor)
         return redirect(url_for(sensor_index))
     return render_template('sensors/add.html', form=form)
 
 @sensors.route('/sensors/list/')
 def sensor_list():
-    return render_template('sensors/sensor_list.html')
+    return render_template('sensors/sensor_list.html', items=Sensor.query.all())
 
