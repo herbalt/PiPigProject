@@ -12,22 +12,20 @@ sensors = Blueprint('sensors', __name__)
 sensor_index = 'sensors.sensor_list'
 
 
-@sensors.route('/sensors/add/', methods=('GET', 'POST'))
+@sensors.route('/sensors/add_sensor/', methods=('GET', 'POST'))
 def add_sensor():
     form = SensorsForm()
     if form.validate_on_submit():
-        name = form.data['name']
-        factory_id = form.data['sensor_factory_id']
-        interval_between_readings = form.data['interval_between_readings']
+        name = form.name.data
 
-        sensor = Sensor.query.filter_by(name=name, sensor_factory_id=factory_id, interval_between_readings=interval_between_readings).first()
+        sensor_type_id = form.sensor_type_id.data
+        interval_between_readings = form.interval_between_readings.data
+
+        sensor = Sensor.query.filter_by(name=name).filter_by(sensor_type_id=sensor_type_id).filter_by(interval_between_readings=interval_between_readings).first()
         if sensor is not None:
             return redirect(url_for(sensor_index))
 
-        sensor = Sensor(name=name, sensor_factory_id=factory_id, interval_between_readings=interval_between_readings)
-
-        db.session.add(sensor)
-        db.session.commit()
+        Sensor.create(name=name, sensor_type_id=sensor_type_id, interval_between_readings=interval_between_readings)
 
         return redirect(url_for(sensor_index))
     return render_template('sensors/add.html', form=form)

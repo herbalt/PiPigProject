@@ -8,7 +8,7 @@ from pipig.app_config import config_class as config
 from pipig.data import db, CRUDMixin
 
 
-class UserAccountStatus(db.Model):
+class UserAccountStatus(db.Model, CRUDMixin):
     __tablename__ = 'user_account_status'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     code = db.Column(db.String(20))
@@ -22,7 +22,7 @@ class UserAccountStatus(db.Model):
     GUEST = 4
 
 
-class UserProfile(db.Model):
+class UserProfile(db.Model, CRUDMixin):
     __tablename__ = 'user_profile'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     first_name = db.Column(db.String(120), nullable=True)
@@ -98,7 +98,7 @@ class UserAccount(UserMixin, CRUDMixin, db.Model):
         return bytes(buff)
 
 
-class OAuthUser(db.Model):
+class OAuthUser(db.Model, CRUDMixin):
     __tablename__ = 'oauth_user'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     social_id = db.Column(db.String(64), nullable=False, unique=True)
