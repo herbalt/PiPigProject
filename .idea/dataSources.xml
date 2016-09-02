@@ -7,5 +7,11 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/curing-pi.db</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="pipig_test.db" uuid="53844cf3-d6f2-415b-a9b0-cd8bf15dfafc">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/pipig_test.db</jdbc-url>
+    </data-source>
   </component>
 </project>

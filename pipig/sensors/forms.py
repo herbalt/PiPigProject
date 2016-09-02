@@ -35,7 +35,12 @@ class SensorsForm(Form):
         return True
 
     def validate_interval_between_readings(form, field):
-        # i_b_r = sensors.Sensor.query.filter_by(interval_between_readings=form.interval_between_readings.data).first()
+
+        minimum_search = sensors.SensorType.query.filter_by(id=form.sensor_type_id.data).first()
+        if minimum_search is not None:
+            if minimum_search.minimum_refresh > form.interval_between_readings.data:
+                return False
+
         if form.interval_between_readings.data < 0:
             return False
         return True

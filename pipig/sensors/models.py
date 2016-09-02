@@ -1,12 +1,26 @@
 from pipig.data import db, CRUDMixin
 
+
 class SensorType(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key = True, nullable=False)
     sensor_type = db.Column(db.String(140))
-    minimum_refresh = db.Column(db.Float())
+    sensor_units_id = db.Column(db.Integer)
+    minimum_refresh = db.Column(db.Float(), default=0)
 
-    def __init__(self, sensor_type, minimum_refresh=0.0):
+    def __init__(self, sensor_type, sensor_units_id=0, minimum_refresh=0.0):
         self.sensor_type = sensor_type
+        self.sensor_units_id = sensor_units_id
+        self.minimum_refresh = minimum_refresh
+
+
+class SensorUnits(db.Model, CRUDMixin):
+    id = db.Column(db.Integer, primary_key= True, nullable=False)
+    code_name = db.Column(db.String, nullable=False)
+    display_units = db.Column(db.String(4), nullable=True)
+
+    def __init__(self, code_name, display_units):
+        self.code_name = code_name
+        self.display_units = display_units
 
 
 class Sensor(db.Model, CRUDMixin):

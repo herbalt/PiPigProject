@@ -27,10 +27,11 @@ class SensorFormTests(BaseTestCase, FormTestCase):
         # self.assert_has_validator('name', validator=InputRequired)
         # test= self.get_validator('name', DataRequired())
 
-        SensorType.create(sensor_type='Test Sensor Type')
+        SensorType.create(sensor_type='Test Sensor Type', minimum_refresh=2.0)
 
         valid_form = SensorsForm.populate(name='Valid', sensor_type_id=1, interval_between_readings=2.1)
         invalid_form = SensorsForm.populate(name='', sensor_type_id=2, interval_between_readings=2.1)
+        invalid_form_interval = SensorsForm.populate(name='', sensor_type_id=1, interval_between_readings=1.9)
         placeholder_form = SensorsForm.populate(name='Placeholder', sensor_type_id=-1, interval_between_readings=-1)
 
         name_validate = valid_form.validate_name(None)
@@ -49,9 +50,12 @@ class SensorFormTests(BaseTestCase, FormTestCase):
                          % (placeholder_form.name, placeholder_form.sensor_type_id.data))
 
         interval_valid = valid_form.validate_interval_between_readings(None)
+        interval_invalid = invalid_form_interval.validate_interval_between_readings(None)
         interval_placeholder = placeholder_form.validate_interval_between_readings(None)
         self.assertTrue(interval_valid, '%s Interval: %f does not validate correctly'
                         % (valid_form.name, valid_form.interval_between_readings.data))
+        self.assertFalse(interval_invalid, '%s Interval: %f does not validate correctly'
+                        % (invalid_form_interval.name, invalid_form_interval.interval_between_readings.data))
         self.assertFalse(interval_placeholder, '%s Interval: %f does not validate correctly'
                         % (placeholder_form.name, placeholder_form.interval_between_readings.data))
 
@@ -59,14 +63,10 @@ class SensorFormTests(BaseTestCase, FormTestCase):
 class SensorViewTests(BaseTestCase):
 
     def test_add_sensor(self):
-
-        pass
-
-        # UserAccount.create(name="Joe", email="joe@gmail.com", password='1')
-        response = self.client.post(url_for('users.login'), data={'email': 'joe@gmail.com', 'password': '1'})
-
         SensorType.create(sensor_type='Test Sensor Type')
 
-        # response = self.client.post(url_for('sensors.add_sensor'), data={'name': 'TestForm'})
         response = self.client.post(url_for('sensors.add_sensor'), data={'name': 'TestSensor', 'sensor_type_id': 1, 'interval_between_readings': 2.1})
         self.assertRedirects(response=response, location=url_for('sensors.sensor_list'))
+
+        query = Sensor.query.filter_by(name='TestSensor').first()
+        self.assertIsNotNone(query, "Sensor was not added to db")

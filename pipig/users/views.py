@@ -11,7 +11,7 @@ from models import UserAccount, OAuthUser, UserProfile, UserAccountStatus
 from pipig.data import db
 from models import UserAccountStatus
 
-import data_setup
+from data_setup import run_setup
 
 users = Blueprint('users', __name__)
 
@@ -19,10 +19,7 @@ index_url = 'users.user_index'
 
 @users.route('/users/setup_db_data')
 def setup_database_data():
-    result1 = data_setup.setup_database_admin_user()
-    result2 = data_setup.setup_database_user_account_status_data()
-
-    if result1 and result2:
+    if run_setup():
         return render_template('users/db_data.html')
     else:
         return render_template('users/db_data_fail.html')

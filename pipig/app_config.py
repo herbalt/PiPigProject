@@ -1,4 +1,4 @@
-from config import BaseConfiguration, TestConfiguration, DebugConfiguration
+from config import BaseConfiguration, TestConfiguration, DebugConfiguration, TestDatabaseConfiguration
 
 
 config_class = DebugConfiguration()
