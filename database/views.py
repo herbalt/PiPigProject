@@ -3,7 +3,7 @@ from forms import DatabaseForm
 from db_functions import db_create, db_drop, db_downgrade, db_migrate, db_upgrade
 database = Blueprint('database', __name__)
 
-# TODO Restrict all functions to ADMIN USER only
+# TODO Restrict all functions to ADMIN USER only ..
 
 
 @database.route('/database/index',methods=['POST','GET'])
