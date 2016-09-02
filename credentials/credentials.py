@@ -1,20 +1,18 @@
 OAUTH_CREDENTIALS = {
     'facebook': {
-        'id': '4xxxxxxxxxxxxx',
-        'secret': '8xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        'id': 'facebookid',
+        'secret': 'facebooksecretykey'
     },
     'twitter': {
-        'id': '3xxxxxxxxxxxxxxxxxxxxxxxxx',
-        'secret': 'mxxxxxxxxxxxxxxxxxxxxxxxx'
+        'id': 'twitterid',
+        'secret': 'twittersecretkey'
     }
 }
 
-SECRET_KEY = 'SECRET_KEY'
-SECURITY_PASSWORD_SALT = 'SECURITY_PASSWORD_SALT'
+SECRET_KEY = 'app_secret_key'
+SECURITY_PASSWORD_SALT = 'app_secruitiy_password_salt'
 
 # APP EMAIL CREDENTIAL
-MAIL_USERNAME = 'xxxxxxxxxxxxxx'
-MAIL_PASSWORD = 'xxxxxxxxxxxxxx'
+MAIL_USERNAME = 'mail_username'
+MAIL_PASSWORD = 'mail_password'
 
-# MAIL_USERNAME = os.environ['APP_MAIL_USERNAME']
-# MAIL_PASSWORD = os.environ['APP_MAIL_PASSWORD']
