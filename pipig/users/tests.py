@@ -1,5 +1,5 @@
 from flask import url_for
-from flask.ext.login import current_user
+from flask_login import current_user
 from wtforms import fields
 from wtforms.validators import InputRequired
 

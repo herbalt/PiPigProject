@@ -1,6 +1,5 @@
 from flask_wtf import Form
 from wtforms import fields
-from wtforms.validators import InputRequired, ValidationError, DataRequired
 
 import pipig.sensors.models as sensors
 
@@ -9,6 +8,7 @@ class SensorsForm(Form):
     name = fields.StringField()
     sensor_type_id = fields.IntegerField()
     interval_between_readings = fields.FloatField()
+
 
     @staticmethod
     def populate(name='', sensor_type_id=-1, interval_between_readings=-1):

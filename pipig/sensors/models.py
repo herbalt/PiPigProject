@@ -12,6 +12,17 @@ class SensorType(db.Model, CRUDMixin):
         self.sensor_units_id = sensor_units_id
         self.minimum_refresh = minimum_refresh
 
+    def get_id(self):
+        return self.id
+
+    def get_sensor_type(self):
+        return self.sensor_type
+
+    def get_sensor_units_id(self):
+        return self.sensor_units_id
+
+    def get_minimum_refresh(self):
+        return self.minimum_refresh
 
 class SensorUnits(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key= True, nullable=False)
@@ -21,6 +32,12 @@ class SensorUnits(db.Model, CRUDMixin):
     def __init__(self, code_name, display_units):
         self.code_name = code_name
         self.display_units = display_units
+
+    def get_code_name(self):
+        return self.code_name
+
+    def get_display_units(self):
+        return self.display_units
 
 
 class Sensor(db.Model, CRUDMixin):
@@ -42,6 +59,17 @@ class Sensor(db.Model, CRUDMixin):
                " Interval: " + str(self.interval_between_readings) + \
                " State: " + str(self.state)
 
+    def get_id(self):
+        return self.id
+
+    def get_name(self):
+        return self.name
+
+    def get_sensor_type_id(self):
+        return self.sensor_type_id
+
+    def get_interval_between_readings(self):
+        return self.interval_between_readings
 
 class SensorReading(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -49,4 +77,7 @@ class SensorReading(db.Model, CRUDMixin):
     reading_value = db.Column(db.Float)
     reading_timestamp = db.Column(db.DateTime)
 
-
+    def __init__(self, sensor_id, reading_value, reading_timestamp):
+        self.sensor_id = sensor_id
+        self.reading_value = reading_value
+        self.reading_timestamp = reading_timestamp
