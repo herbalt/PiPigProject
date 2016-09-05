@@ -57,11 +57,11 @@ class BaseSensor(ObserverAsyncTask):
     def on_pre_execute(self):
         self.state = True
 
-    def do_in_background(self, params):
+    def on_operation(self, params):
         while self.state:
             entry = SensorReading.create(self.get_id(), self.take_reading(), datetime())
 
-            self.publish_progress(progress=entry)
+            self.on_progress(progress=entry)
 
             if self.is_cancelled():
                 return (False, entry)

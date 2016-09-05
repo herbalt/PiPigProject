@@ -135,7 +135,7 @@ class BaseSensorTests(BaseTestCase):
 
     def test_on_pre_execute(self):
         test_obj = self.mock_base_sensor()
-        test_obj.on_pre_execute()
+        test_obj.__on_pre_execute()
         self.assertTrue(test_obj.get_state() , "Sensor State should be True after Pre Execute")
 
     def test_do_in_background(self):
