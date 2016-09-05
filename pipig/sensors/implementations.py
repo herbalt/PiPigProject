@@ -1,11 +1,12 @@
 from abc import abstractmethod, ABCMeta
-from time import sleep
+from time import sleep, time
 from models import SensorReading, Sensor, SensorType, SensorUnits
-from general.patterns import ObserverAsyncTask
+from general.patterns import AsyncTask, Observer
 
 from datetime import datetime
 
-class BaseSensor(ObserverAsyncTask):
+
+class BaseSensor(AsyncTask):
     __metaclass__ = ABCMeta
 
     def __init__(self, sensor_id):
@@ -54,18 +55,19 @@ class BaseSensor(ObserverAsyncTask):
     def take_reading(self):
         raise NotImplementedError
 
-    def on_pre_execute(self):
+    def pre_execute(self, payload=None):
         self.state = True
+        return payload
 
-    def on_operation(self, params):
+    def operation(self, params=None):
+        entry = None
         while self.state:
-            entry = SensorReading.create(self.get_id(), self.take_reading(), datetime())
-
+            entry = SensorReading.create(id=self.get_id(), sensor_id=self.get_id(), reading_value=self.take_reading(), reading_timestamp=datetime.now())
             self.on_progress(progress=entry)
-
             if self.is_cancelled():
-                return (False, entry)
-
+                return entry, AsyncTask.STATUS_CODE_CANCEL
             sleep(self.get_interval_between_readings())
+        return entry
 
-        return (True, entry)
+
+

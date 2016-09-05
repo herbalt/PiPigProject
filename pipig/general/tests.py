@@ -32,7 +32,7 @@ class MockAsyncTask(AsyncTask):
     def operation(self, params):
         for i in range(0, 10):
             if self.is_cancelled():
-                return self.on_cancel(None)
+                return self.cancel_operation(None)
             self.counter += 1
             self.on_progress(self.counter)
             sleep(self.interval)
@@ -52,7 +52,7 @@ class AsyncTaskTests(BaseTestCase):
 
     def test_publish_progress(self):
         test = MockAsyncTask()
-        test.execute()
+        test.execute_operation()
 
         self.assertTrue(False, "Not implemented")
 
@@ -74,9 +74,9 @@ class AsyncTaskTests(BaseTestCase):
         test = MockAsyncTask()
         observer = CancelObserver(self)
         test.attach(observer)
-        test.execute()
+        test.execute_operation()
         sleep(0.002)
-        test.on_cancel(True)
+        test.cancel_operation(True)
         sleep(0.008)
 
 

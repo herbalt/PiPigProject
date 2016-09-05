@@ -39,7 +39,7 @@ class Subject(object):
         :return:
         """
         for observer in self._observers:
-            observer.update(result, update_code=status_code)
+            observer.update(result, status_code=status_code)
 
 
 class Observer:
@@ -79,7 +79,13 @@ class AsyncThread(threading.Thread):
         Manage the Threaded components of the AsyncTask methods
         """
         result = self.async_task.on_operation(self.params)
-        self.async_task.on_post_execute(result)
+        try:
+            status_code = result[1]
+            payload = result[0]
+        except TypeError:
+            status_code = AsyncTask.STATUS_CODE_COMPLETE
+            payload = result
+        self.async_task.on_complete(payload, status_code)
 
 
 class AsyncTask(Subject):
@@ -137,10 +143,10 @@ class AsyncTask(Subject):
 
     # ___________________________________________________________________________
     #
-    # TEMPLATE PATTERN MACHINE METHODS
+    # TEMPLATE PATTERN INTERACTION METHODS
     # ___________________________________________________________________________
 
-    def execute(self, params=None):
+    def execute_operation(self, params=None):
         """
 
         Execute must be invoked on the UI thread.
@@ -160,6 +166,23 @@ class AsyncTask(Subject):
 
         self.async_thread.start()
 
+    def cancel_operation(self):
+        """
+        A task can be cancelled at any time by invoking cancel(boolean).
+        Invoking this method will cause subsequent calls to isCancelled() to return true.
+        After invoking this method, onCancelled(Object),
+            instead of onPostExecute(Object) will be invoked after doInBackground(Object[]) returns.
+        To ensure that a task is cancelled as quickly as possible,
+            you should always check the return value of isCancelled() periodically from doInBackground(Object[]),
+            if possible (inside a loop for instance.)
+        """
+        self.cancel_flag = True
+
+    # ___________________________________________________________________________
+    #
+    # TEMPLATE PATTERN MACHINE METHODS
+    # ___________________________________________________________________________
+
     def on_pre_execute(self):
         """
         invoked on the UI thread before the task is executed.
@@ -176,8 +199,7 @@ class AsyncTask(Subject):
         This step can also use publishProgress(Progress...) to publish one or more units of progress.
         These values are published on the UI thread, in the onProgressUpdate(Progress...) step.
         """
-        operation_result = self.operation(params)
-        return operation_result
+        return self.operation(params)
 
     def on_progress(self, progress):
         """
@@ -185,113 +207,52 @@ class AsyncTask(Subject):
         """
         self.notify(self.progress(progress), self.STATUS_CODE_PROGRESS)
 
-    def on_post_execute(self, result):
+    def on_complete(self, payload, status_code=STATUS_CODE_COMPLETE):
         """
         invoked on the UI thread after the background computation finishes.
-        The result of the background computation is passed to this step as a parameter.
+        The payload of the background computation is passed to this step as a parameter.
         """
 
-        self.notify(result, self.STATUS_CODE_COMPLETE)
+        self.notify(self.complete(payload), status_code)
 
-    def is_cancelled(self, payload):
+    def is_cancelled(self):
         """
         Returns the state of the 'Cancel Flag'
 
         Insert into 'Operation' code to check status of flag. Often use after each cycle of a loop
         """
-        if self.cancel_flag:
-            self.notify(result=self.cancel(payload), status_code=self.STATUS_CODE_CANCEL)
+
         return self.cancel_flag
-
-    def on_cancel(self):
-        """
-        A task can be cancelled at any time by invoking cancel(boolean).
-        Invoking this method will cause subsequent calls to isCancelled() to return true.
-        After invoking this method, onCancelled(Object),
-            instead of onPostExecute(Object) will be invoked after doInBackground(Object[]) returns.
-        To ensure that a task is cancelled as quickly as possible,
-            you should always check the return value of isCancelled() periodically from doInBackground(Object[]),
-            if possible (inside a loop for instance.)
-        """
-        self.cancel_flag = True
-
-
-class TestAsy(AsyncTask):
-    def cancel(self, payload=None):
-        pass
-
-    def progress(self, payload=None):
-        pass
-
-    def operation(self, params=None):
-        return "Test"
-
-
-class ObserverAsyncTask(AsyncTask, Subject):
-    def __init__(self):
-        AsyncTask.__init__(self)
-        Subject.__init__(self)
-
-    def progress(self, payload):
-        self.notify(payload)
-
-    def on_post_execute(self, result):
-        self.notify(result)
-
-
-
-
-
-
-
-
-
 
 
 
 class BasicAsyncTask(AsyncTask):
-    """
-    Not used in final code. This is a testing object to experiment with
-    """
-    counter = 0
+    counter = None
 
-    def on_pre_execute(self):
+    def pre_execute(self, payload=None):
         self.counter = 0
+        return self.counter
 
-    def on_operation(self, params):
-        for i in range(0, 10):
+    def operation(self, params=None):
+        for i in range(0, 100):
             if self.is_cancelled():
-                return self.on_cancel(("I cancelled counting ", self.counter, params))
+                return self.counter, AsyncTask.STATUS_CODE_CANCEL
             self.counter += 1
-            self.on_progress(("Counting ", self.counter, params))
-            time.sleep(0.5)
-        return "counted", self.counter, params
+            self.on_progress(self.counter)
+            time.sleep(params)
+        return self.counter
 
-    def on_post_execute(self, result):
-        if result is None:
-            print "BasicAsyncTask is Complete with result: None"
-        message = "BasicAsyncTask is Complete with result: " + str(result[0]) + " " + str(result[1]) + " " + str(result[2])
-        print message
-        return message
 
-    def progress(self, payload):
-        message = "BasicAsyncTask Progress: " + str(payload[0]) + " " + str(payload[1]) + " " + str(payload[2])
-        print message
-        return message
+class ABasicAsyncTaskObserver(Observer):
+    def update(self, payload, status_code=0):
+        print "Status Code: " + str(status_code) + " Payload: " + str(payload)
 
-    def on_cancel(self, payload):
-        message = "BasicAsyncTask cancelled with payload: " + str(payload[0]) + " " + str(payload[1]) + " " + str(payload[2])
-        print message
-        return payload
-        # return message
 
 if __name__ == '__main__':
     task = BasicAsyncTask()
-    task.execute("Chickens")
+    observe = ABasicAsyncTaskObserver()
+    task.attach(observe)
+    task.execute_operation(0.1)
     time.sleep(1)
-    task.cancel(True)
+    task.cancel_operation()
 
-    # BasicAsyncTask Progress: Counting  1 Chickens
-    # BasicAsyncTask Progress: Counting  2 Chickens
-    # BasicAsyncTask cancelled with result: I cancelled counting  2 Chickens
-    # BasicAsyncTask is Complete with result: I cancelled counting  2 Chickens

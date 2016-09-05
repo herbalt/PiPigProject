@@ -2,6 +2,7 @@ from flask import url_for
 from wtforms import fields
 from wtforms.validators import InputRequired
 
+from general.patterns import Observer
 from test_helpers.test_base import BaseTestCase
 from test_helpers.test_forms import FormTestCase
 
@@ -9,6 +10,8 @@ from pipig.sensors.forms import SensorsForm
 from pipig.sensors.models import Sensor, SensorReading, SensorType, SensorUnits
 
 from implementations import BaseSensor
+
+from time import sleep
 
 class SensorFormTests(BaseTestCase, FormTestCase):
 
@@ -91,13 +94,29 @@ class SensorViewTests(BaseTestCase):
 
 class BaseSensorTests(BaseTestCase):
     class TestImplementedBaseSensor(BaseSensor):
+        def __init__(self, sensor_id):
+            BaseSensor.__init__(self, sensor_id=sensor_id)
+            self.counter = 0
+
         def take_reading(self):
-            return None
+            self.counter += 1
+            return self.counter
+
+    class TestObserver(Observer):
+        def __init__(self):
+            Observer.__init__(self)
+            self.results = []
+
+        def update(self, result, status_code=0):
+            self.results.append((result, status_code))
+
+        def get_results(self):
+            return self.results
 
     def mock_base_sensor(self):
         units = SensorUnits.create(code_name="TestUnits", display_units="T")
         type = SensorType.create(sensor_type="TestSensorType", sensor_units_id=1, minimum_refresh=0.0)
-        sensor = Sensor.create(name="TestSensor", sensor_type_id=1, interval_between_readings=0.0)
+        sensor = Sensor.create(name="TestSensor", sensor_type_id=1, interval_between_readings=0.02)
         test_sensor = self.TestImplementedBaseSensor(sensor.get_id())
         return test_sensor
 
@@ -111,7 +130,7 @@ class BaseSensorTests(BaseTestCase):
 
     def test_get_interval_between_readings(self):
         test_obj = self.mock_base_sensor()
-        self.assertTrue(test_obj.get_interval_between_readings() == 0.0, "Interval is %d instead of 0" % test_obj.get_interval_between_readings())
+        self.assertTrue(test_obj.get_interval_between_readings() == 0.02, "Interval is %d instead of 0" % test_obj.get_interval_between_readings())
 
     def test_get_sensor_type_id(self):
         test_obj = self.mock_base_sensor()
@@ -135,8 +154,19 @@ class BaseSensorTests(BaseTestCase):
 
     def test_on_pre_execute(self):
         test_obj = self.mock_base_sensor()
-        test_obj.__on_pre_execute()
+        test_obj.on_pre_execute()
         self.assertTrue(test_obj.get_state() , "Sensor State should be True after Pre Execute")
 
-    def test_do_in_background(self):
-        self.assertTrue(False, "Not implemented")
+    def test_async_sensor(self):
+        test_obj = self.mock_base_sensor()
+        test_observer = self.TestObserver()
+        test_obj.attach(test_observer)
+
+        test_obj.execute_operation()
+        sleep(0.1)
+        test_obj.cancel_operation()
+        sleep(0.1)
+
+        results = test_observer.get_results()
+        expected_results = []
+        self.assertListEqual(results, expected_results, "Async Sensor not working correctly")
