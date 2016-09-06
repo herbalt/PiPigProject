@@ -7,7 +7,7 @@ from flask import Blueprint, redirect, url_for, flash, render_template, request
 
 from pipig.users.forms import LoginForm, RegistrationForm, UpdateProfileForm
 from pipig.users.token import generate_confirmation_token, confirm_token
-from models import UserAccount, OAuthUser, UserProfile, UserAccountStatus
+from models import UserAccount, UserOAuth, UserProfile, UserAccountStatus
 from pipig.data import db
 from models import UserAccountStatus
 
@@ -157,7 +157,7 @@ def oauth_callback(provider):
     if social_id is None:
         flash('Authentication failed.')
         return redirect(url_for(index_url))
-    oauth_user = OAuthUser.query.filter_by(social_id=social_id).first()
+    oauth_user = UserOAuth.query.filter_by(social_id=social_id).first()
 
     user = None
     if oauth_user:
@@ -166,14 +166,14 @@ def oauth_callback(provider):
 
     # Add records to databases
     if not user:
-        user = OAuthUser()
+        user = UserOAuth()
         user.name = username, user.email = email
         db.session.add(user)
         db.session.commit()
         user_record = db.session.query(UserAccount).order_by(UserAccount.id.desc()).first()
 
         if not oauth_user:
-            oauth_user = OAuthUser()
+            oauth_user = UserOAuth()
             oauth_user.social_id = social_id
             oauth_user.user_id = user_record.id
             db.session.add(oauth_user)

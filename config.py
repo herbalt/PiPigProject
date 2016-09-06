@@ -7,7 +7,7 @@ class BaseConfiguration(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = 'flask-session-insecure-secret-key'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'curing-pi.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'production.db')
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
     SQLALCHEMY_ECHO = False
     HASH_ROUNDS = 100000
@@ -48,7 +48,7 @@ class TestDatabaseConfiguration(BaseConfiguration):
     TESTING = True
     WTF_CSRF_ENABLED = False
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'pipig_test.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'test.db')
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository_testing')
     # Since we want our unit tests to run quickly
     # we turn this down - the hashing is still done

@@ -114,6 +114,16 @@ class TestObserver(Observer):
     def get_results(self):
         return self.results
 
+class SensorReadingsTests(BaseTestCase):
+
+    def test_can_build(self):
+        result = SensorReadings(1, 1.0, 1.2)
+        self.assertTrue(type(result) == SensorReadings, "Type %s" % type(result))
+
+    def test_can_commit_to_db(self):
+        result = SensorReadings.create(sensor_id=1, reading_value=1.9, reading_timestamp=1.2)
+        self.assertTrue(type(result) == SensorReadings, "Type %s" % type(result))
+
 class BaseSensorTests(BaseTestCase):
 
     def mock_base_sensor(self):

@@ -45,7 +45,6 @@ class Sensor(db.Model, CRUDMixin):
     name = db.Column(db.String)
     sensor_type_id = db.Column(db.Integer)
     interval_between_readings = db.Column(db.Float)
-    state = db.Column(db.Boolean, default=False)
 
     def __init__(self, name, sensor_type_id, interval_between_readings):
         self.name = name
@@ -56,8 +55,7 @@ class Sensor(db.Model, CRUDMixin):
         return "Id: " + str(self.id) + \
                " Name:" + self.name + \
                " SensorTypeId: " + str(self.sensor_type_id) + \
-               " Interval: " + str(self.interval_between_readings) + \
-               " State: " + str(self.state)
+               " Interval: " + str(self.interval_between_readings)
 
     def get_id(self):
         return self.id
@@ -82,3 +80,5 @@ class SensorReadings(db.Model, CRUDMixin):
         self.sensor_id = sensor_id
         self.reading_value = reading_value
         self.reading_timestamp = reading_timestamp
+        pass
+

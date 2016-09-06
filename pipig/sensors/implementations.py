@@ -2,6 +2,7 @@ from abc import abstractmethod, ABCMeta
 from time import sleep, time
 from pipig.sensors.models import SensorReadings, Sensor, SensorType, SensorUnits
 from general.patterns import AsyncTask, Observer
+from pipig.data import db
 
 from datetime import datetime
 
@@ -59,13 +60,29 @@ class BaseSensor(AsyncTask):
         self.state = True
         return payload
 
+    def create_reading(self, sensor_id, reading_value, reading_timestamp):
+        # entry = SensorReadings.create(sensor_id=id, reading_value=reading, reading_timestamp=timestamp)
+        # entry = SensorReadings.create(sensor_id=1, reading_value=1.9, reading_timestamp=1.2)
+        try:
+            reading = SensorReadings(sensor_id=sensor_id, reading_value=reading_value, reading_timestamp=reading_timestamp)
+
+            db.session.add(reading)
+            db.session.commit()
+
+            return reading
+        except:
+            return None
+
     def operation(self, params=None):
         entry = None
         while self.state:
             timestamp = time()
             reading = self.take_reading()
             id = self.get_id()
-            entry = SensorReadings.create(sensor_id=id, reading_value=reading, reading_timestamp=timestamp)
+
+            self.create_reading(id, reading, timestamp)
+            entry_works = entry is None
+
             self.on_progress(progress=entry)
             if self.is_cancelled():
                 return entry, AsyncTask.STATUS_CODE_CANCEL

@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Sqlite (Xerial) - curing-pi.db" uuid="3c6b63af-3231-4675-84c3-da8bca4bb416">
+    <data-source source="LOCAL" name="Sqlite- test.db" uuid="f8fef9ae-3100-41fe-af95-0c58fcdd1da5">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/curing-pi.db</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="pipig_test.db" uuid="53844cf3-d6f2-415b-a9b0-cd8bf15dfafc">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/pipig_test.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/test.db</jdbc-url>
     </data-source>
   </component>
 </project>
