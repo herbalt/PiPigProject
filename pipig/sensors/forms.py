@@ -1,12 +1,14 @@
 from flask_wtf import Form
 from wtforms import fields
+import wtforms.validators as validators
 
 import pipig.sensors.models as sensors
 
 
 class SensorsForm(Form):
-    name = fields.StringField()
-    sensor_type_id = fields.IntegerField()
+
+    name = fields.StringField(validators=[validators.InputRequired()])
+    sensor_type_id = fields.IntegerField(validators=[validators.InputRequired()])
     interval_between_readings = fields.FloatField()
 
 

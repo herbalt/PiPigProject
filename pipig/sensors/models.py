@@ -71,11 +71,12 @@ class Sensor(db.Model, CRUDMixin):
     def get_interval_between_readings(self):
         return self.interval_between_readings
 
-class SensorReading(db.Model, CRUDMixin):
+
+class SensorReadings(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     sensor_id = db.Column(db.Integer)
     reading_value = db.Column(db.Float)
-    reading_timestamp = db.Column(db.DateTime)
+    reading_timestamp = db.Column(db.Float)
 
     def __init__(self, sensor_id, reading_value, reading_timestamp):
         self.sensor_id = sensor_id

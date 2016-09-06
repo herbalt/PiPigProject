@@ -1,97 +1,85 @@
 from test_helpers.test_base import BaseTestCase
 from pipig.general.patterns import AsyncTask, Observer
-from time import sleep
+from time import sleep, time
 
 
-class SubjectTests(BaseTestCase):
-
-    def test_attach(self):
-        self.assertTrue(False, "Not implemented")
-
-    def test_detach(self):
-        self.assertTrue(False, "Not implemented")
-
-    def test_notify(self):
-        self.assertTrue(False, "Not implemented")
-
-
-class AsyncThreadTests(BaseTestCase):
-
-    def test_run(self):
-        self.assertTrue(False, "Not implemented")
-
-class MockAsyncTask(AsyncTask):
-    def __init__(self):
-        super(MockAsyncTask, self).__init__()
-        self.counter = None
-        self.interval = 0.002
+class TestAsyncTask(AsyncTask):
+    counter = None
 
     def pre_execute(self, payload=None):
         self.counter = 0
-
-    def operation(self, params):
-        for i in range(0, 10):
-            if self.is_cancelled():
-                return self.cancel_operation(None)
-            self.counter += 1
-            self.on_progress(self.counter)
-            sleep(self.interval)
         return self.counter
 
-    def post_execute(self, result):
-        return ("POST EXECUTE", result)
+    def operation(self, params=None):
+        for i in range(0, 5):
+            if self.is_cancelled():
+                return self.counter, AsyncTask.STATUS_CODE_CANCEL
+            self.counter += 1
+            self.on_progress(self.counter)
+            sleep(params)
+        return self.counter
 
-    def progress(self, payload):
-        return (payload)
 
-    def cancel(self, result):
-        return ("CANCELLED", result)
+class ObjectObserver(Observer):
+    results = []
 
+    def update(self, payload, status_code=0):
+        self.results.append((status_code, payload))
+
+    def get_results(self):
+        return self.results
+
+    def clear(self):
+        self.results = []
 
 class AsyncTaskTests(BaseTestCase):
+    def test_operation_complete(self):
+        task = TestAsyncTask()
+        observe = ObjectObserver()
+        observe.clear()
+        task.attach(observe)
+        task.execute_operation(0.01)
+        sleep(0.08)
+        results = observe.get_results()
+        expected_list = [(1, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (3, 5)]
 
-    def test_publish_progress(self):
-        test = MockAsyncTask()
-        test.execute_operation()
+        results_first_status = results[0][0]
+        results_middle_status = results[1][0]
+        results_last_status = results[-1][0]
 
-        self.assertTrue(False, "Not implemented")
+        self.assertIs(results_first_status, 1, "Pre Execute Status Code Incorrect %s" % str(results))
+        self.assertIs(results_middle_status, 2, "Progress Status Code Incorrect %s" % str(results))
+        self.assertIs(results_last_status, 3, "Complete Status Code Incorrect %s" % str(results))
 
-    def test_cancel(self):
+        results_first_payload = results[0][1]
+        results_middle_payload = results[1][1]
+        results_last_payload = results[-1][1]
 
-        class CancelObserver(Observer):
-            def __init__(self, test_case):
-                Observer.__init__(self)
-                self.test_case = test_case
-
-            def update(self, result, update_code=0):
-                if update_code == AsyncTask.STATUS_CODE_CANCEL:
-                    self.test_case.assertTrue(True)
-                elif update_code == AsyncTask.STATUS_CODE_COMPLETE:
-                    self.test_case.assertFalse(True, "Async Task did not Cancel during its running operation")
-                else:
-                    self.test_case.assertTrue(update_code = AsyncTask.STATUS_CODE_PROGRESS)
-
-        test = MockAsyncTask()
-        observer = CancelObserver(self)
-        test.attach(observer)
-        test.execute_operation()
-        sleep(0.002)
-        test.cancel_operation()
-        sleep(0.008)
+        self.assertTrue(type(results_first_payload) == type(1), "Pre Execute Payload Incorrect %s" % str(results))
+        self.assertTrue(type(results_middle_payload) == type(1), "Progress Payload Incorrect %s" % str(results))
+        self.assertTrue(type(results_last_payload) == type(1), "Complete Payload Incorrect %s" % str(results))
 
 
+    def test_operation_cancel(self):
+        task = TestAsyncTask()
+        observe = ObjectObserver()
+        observe.clear()
+        task.attach(observe)
+        task.execute_operation(0.01)
+        sleep(0.03)
+        task.cancel_operation()
+        sleep(0.02)
+        results = observe.get_results()
+        expected_list = [(1, 0), (2, 1), (2, 2), (2, 3), (2, 4), (4, 4)]
 
-    def test_is_cancelled(self):
-        self.assertTrue(False, "Not implemented")
+        results_first_status = results[0][0]
+        results_middle_status = results[1][0]
+        results_last_status = results[-1][0]
 
-    def test_execute(self):
-        self.assertTrue(False, "Not implemented")
+        self.assertIs(results_first_status, 1, "Pre Execute Status Code Incorrect %s" % str(results))
+        self.assertIs(results_middle_status, 2, "Progress Status Code Incorrect %s" % str(results))
+        self.assertIs(results_last_status, 4, "Cancel Status Code Incorrect %s" % str(results))
 
+        results_last_payload = results[-1][1]
 
-class ObserverAsyncTaskTests(BaseTestCase):
-    def test_on_progress_update(self):
-        self.assertTrue(False, "Not implemented")
-
-    def test_on_post_execute(self):
-        self.assertTrue(False, "Not implemented")
-
+        self.assertTrue(type(results_last_payload) == type(1), "Cancel Payload Incorrect")

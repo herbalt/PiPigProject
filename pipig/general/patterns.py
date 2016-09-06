@@ -244,9 +244,14 @@ class BasicAsyncTask(AsyncTask):
 
 
 class BasicAsyncTaskObserver(Observer):
+    results = []
+
     def update(self, payload, status_code=0):
+        self.results.append((status_code, payload))
         print "Status Code: " + str(status_code) + " Payload: " + str(payload)
 
+    def get_results(self):
+        return self.results
 
 if __name__ == '__main__':
     task = BasicAsyncTask()
@@ -255,4 +260,6 @@ if __name__ == '__main__':
     task.execute_operation(0.1)
     time.sleep(1)
     task.cancel_operation()
+    time.sleep(0.5)
+    print str(observe.get_results())
 

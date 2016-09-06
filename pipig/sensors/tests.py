@@ -7,7 +7,7 @@ from test_helpers.test_base import BaseTestCase
 from test_helpers.test_forms import FormTestCase
 
 from pipig.sensors.forms import SensorsForm
-from pipig.sensors.models import Sensor, SensorReading, SensorType, SensorUnits
+from pipig.sensors.models import Sensor, SensorReadings, SensorType, SensorUnits
 
 from implementations import BaseSensor
 
@@ -20,8 +20,8 @@ class SensorFormTests(BaseTestCase, FormTestCase):
 
     def mock_sensor(self):
         units = SensorUnits.create(code_name="TestUnits", display_units="T")
-        type = SensorType.create(sensor_type="TestSensorType", sensor_units_id=1, minimum_refresh=0.0)
-        sensor = Sensor.create(name="TestSensor", sensor_type_id=1, interval_between_readings=0.0)
+        type = SensorType.create(sensor_type="TestSensorType", sensor_units_id=1, minimum_refresh=0.01)
+        sensor = Sensor.create(name="TestSensor", sensor_type_id=1, interval_between_readings=0.02)
         return sensor
 
     def test_add_field_type(self):
@@ -35,8 +35,9 @@ class SensorFormTests(BaseTestCase, FormTestCase):
 
     def test_add_validators(self):
         self.form_class = SensorsForm
+
         self.assert_has_validator('name', validator=InputRequired)
-        self.assert_has_validator('sensor_type_id', validator=InputRequired())
+        self.assert_has_validator('sensor_type_id', validator=InputRequired)
 
     def test_add_form_validate_name(self):
         self.form_class = SensorsForm
@@ -65,11 +66,11 @@ class SensorFormTests(BaseTestCase, FormTestCase):
 
     def test_add_from_validate_interval_between_readings(self):
         self.form_class = SensorsForm
-        SensorType.create(sensor_type='Test Sensor Type', minimum_refresh=2.0)
+        sensor_type = SensorType.create(sensor_type='Test Sensor Type', minimum_refresh=2.0)
 
-        interval_valid = self.mock_form("Valid Interval", None, 2.1)
-        interval_invalid = self.mock_form("Invalid Interval", None, 1.9)
-        interval_placeholder = self.mock_form("Placeholder Interval", None, -1)
+        interval_valid = self.mock_form("Valid Interval", 1, 2.1)
+        interval_invalid = self.mock_form("Invalid Interval", 1, 0.001)
+        interval_placeholder = self.mock_form("Placeholder Interval", 1, -1)
 
 
         self.assertTrue(interval_valid.validate_interval_between_readings(None), '%s Interval: %f does not validate correctly'
@@ -92,32 +93,34 @@ class SensorViewTests(BaseTestCase):
         self.assertIsNotNone(query, "Sensor was not added to db")
 
 
+class TestImplementedBaseSensor(BaseSensor):
+    def __init__(self, sensor_id):
+        BaseSensor.__init__(self, sensor_id=sensor_id)
+        self.counter = 0
+
+    def take_reading(self):
+        self.counter += 1
+        return self.counter
+
+
+class TestObserver(Observer):
+    def __init__(self):
+        Observer.__init__(self)
+        self.results = []
+
+    def update(self, result, status_code=0):
+        self.results.append((result, status_code))
+
+    def get_results(self):
+        return self.results
+
 class BaseSensorTests(BaseTestCase):
-    class TestImplementedBaseSensor(BaseSensor):
-        def __init__(self, sensor_id):
-            BaseSensor.__init__(self, sensor_id=sensor_id)
-            self.counter = 0
-
-        def take_reading(self):
-            self.counter += 1
-            return self.counter
-
-    class TestObserver(Observer):
-        def __init__(self):
-            Observer.__init__(self)
-            self.results = []
-
-        def update(self, result, status_code=0):
-            self.results.append((result, status_code))
-
-        def get_results(self):
-            return self.results
 
     def mock_base_sensor(self):
         units = SensorUnits.create(code_name="TestUnits", display_units="T")
         type = SensorType.create(sensor_type="TestSensorType", sensor_units_id=1, minimum_refresh=0.0)
         sensor = Sensor.create(name="TestSensor", sensor_type_id=1, interval_between_readings=0.02)
-        test_sensor = self.TestImplementedBaseSensor(sensor.get_id())
+        test_sensor = TestImplementedBaseSensor(sensor.get_id())
         return test_sensor
 
     def test_get_id(self):
@@ -159,7 +162,7 @@ class BaseSensorTests(BaseTestCase):
 
     def test_async_sensor(self):
         test_obj = self.mock_base_sensor()
-        test_observer = self.TestObserver()
+        test_observer = TestObserver()
         test_obj.attach(test_observer)
 
         test_obj.execute_operation()
@@ -169,4 +172,4 @@ class BaseSensorTests(BaseTestCase):
 
         results = test_observer.get_results()
         expected_results = []
-        self.assertListEqual(results, expected_results, "Async Sensor not working correctly")
+        self.assertListEqual(results, expected_results, "Async Sensor not working correctly %s" % str(results))

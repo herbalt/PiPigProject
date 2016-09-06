@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABCMeta
 from time import sleep, time
-from models import SensorReading, Sensor, SensorType, SensorUnits
+from pipig.sensors.models import SensorReadings, Sensor, SensorType, SensorUnits
 from general.patterns import AsyncTask, Observer
 
 from datetime import datetime
@@ -62,10 +62,10 @@ class BaseSensor(AsyncTask):
     def operation(self, params=None):
         entry = None
         while self.state:
-            timestamp = datetime.now()
+            timestamp = time()
             reading = self.take_reading()
             id = self.get_id()
-            entry = SensorReading.create(sensor_id=self.get_id(), reading_value=self.take_reading(), reading_timestamp=datetime.now())
+            entry = SensorReadings.create(sensor_id=id, reading_value=reading, reading_timestamp=timestamp)
             self.on_progress(progress=entry)
             if self.is_cancelled():
                 return entry, AsyncTask.STATUS_CODE_CANCEL
