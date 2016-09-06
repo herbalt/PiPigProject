@@ -51,7 +51,7 @@ class Observer:
         pass
 
     @abstractmethod
-    def update(self, result, update_code=0):
+    def update(self, result, status_code=0):
         """
         Abstract Method to implement once it has been notified by its Subject
         :param update_code: Identify the Notifyer code
@@ -183,12 +183,12 @@ class AsyncTask(Subject):
     # TEMPLATE PATTERN MACHINE METHODS
     # ___________________________________________________________________________
 
-    def on_pre_execute(self):
+    def on_pre_execute(self, payload=None):
         """
         invoked on the UI thread before the task is executed.
         This step is normally used to setup the task, for instance by showing a progress bar in the user interface.
         """
-        self.notify(result=self.pre_execute(), status_code=self.STATUS_CODE_PRE_EXECUTE)
+        self.notify(result=self.pre_execute(payload), status_code=self.STATUS_CODE_PRE_EXECUTE)
 
     def on_operation(self, params):
         """
@@ -243,14 +243,14 @@ class BasicAsyncTask(AsyncTask):
         return self.counter
 
 
-class ABasicAsyncTaskObserver(Observer):
+class BasicAsyncTaskObserver(Observer):
     def update(self, payload, status_code=0):
         print "Status Code: " + str(status_code) + " Payload: " + str(payload)
 
 
 if __name__ == '__main__':
     task = BasicAsyncTask()
-    observe = ABasicAsyncTaskObserver()
+    observe = BasicAsyncTaskObserver()
     task.attach(observe)
     task.execute_operation(0.1)
     time.sleep(1)

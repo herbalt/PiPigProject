@@ -76,7 +76,7 @@ class AsyncTaskTests(BaseTestCase):
         test.attach(observer)
         test.execute_operation()
         sleep(0.002)
-        test.cancel_operation(True)
+        test.cancel_operation()
         sleep(0.008)
 
 

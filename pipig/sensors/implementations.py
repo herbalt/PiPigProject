@@ -62,12 +62,23 @@ class BaseSensor(AsyncTask):
     def operation(self, params=None):
         entry = None
         while self.state:
-            entry = SensorReading.create(id=self.get_id(), sensor_id=self.get_id(), reading_value=self.take_reading(), reading_timestamp=datetime.now())
+            timestamp = datetime.now()
+            reading = self.take_reading()
+            id = self.get_id()
+            entry = SensorReading.create(sensor_id=self.get_id(), reading_value=self.take_reading(), reading_timestamp=datetime.now())
             self.on_progress(progress=entry)
             if self.is_cancelled():
                 return entry, AsyncTask.STATUS_CODE_CANCEL
             sleep(self.get_interval_between_readings())
         return entry
+
+    def cancel(self, payload=None):
+        self.state = False
+        return payload
+
+    def complete(self, payload=None):
+        self.state = False
+        return payload
 
 
 
