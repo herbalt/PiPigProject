@@ -10,7 +10,7 @@ from mail import mail
 from pipig.users.views import users
 from database.views import database
 from pipig.sensors.views import sensors
-
+from pipig.appliances.views import appliances
 
 app = Flask(__name__)
 app.config.from_object(config)
