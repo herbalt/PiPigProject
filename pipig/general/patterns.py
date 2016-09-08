@@ -58,7 +58,7 @@ class Observer:
         :param result: The payload of the Notifyer
         :return:
         """
-        raise NotImplementedError
+        pass
 
 
 class AsyncThread(threading.Thread):
@@ -124,7 +124,7 @@ class AsyncTask(Subject):
 
     @abstractmethod
     def operation(self, params=None):
-        raise NotImplementedError
+        pass
 
     def progress(self, payload=None):
         """
