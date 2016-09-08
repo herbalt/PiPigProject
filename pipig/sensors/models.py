@@ -80,5 +80,10 @@ class SensorReadings(db.Model, CRUDMixin):
         self.sensor_id = sensor_id
         self.reading_value = reading_value
         self.reading_timestamp = reading_timestamp
-        pass
+
+    def __str__(self):
+        return "\nSensor ID: %i \nValue: %f \nTimestamp: %f" % (self.sensor_id, self.reading_value, self.reading_timestamp)
+
+    def get_value(self):
+        return self.reading_value
 

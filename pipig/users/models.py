@@ -99,7 +99,7 @@ class UserAccount(UserMixin, CRUDMixin, db.Model):
 
 
 class UserOAuth(db.Model, CRUDMixin):
-    __tablename__ = 'oauth_user'
+    __tablename__ = 'user_oauth'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     social_id = db.Column(db.String(64), nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'))

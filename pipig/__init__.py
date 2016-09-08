@@ -10,7 +10,11 @@ from mail import mail
 from pipig.users.views import users
 from database.views import database
 from pipig.sensors.views import sensors
+from pipig.sessions.views import sessions
 from pipig.appliances.views import appliances
+
+
+
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -29,9 +33,8 @@ mail.init_app(app)
 app.register_blueprint(users)
 app.register_blueprint(database)
 app.register_blueprint(sensors)
-
-if __name__ == '__main__':
-    pass
+app.register_blueprint(sessions)
+app.register_blueprint(appliances)
 
 
 @app.route('/')

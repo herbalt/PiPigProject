@@ -32,14 +32,14 @@ class Subject(object):
         except ValueError:
             pass
 
-    def notify(self, result, status_code=None):
+    def notify(self, payload, status_code=None):
         """
         Notify all observers of the result
-        :param result:
+        :param payload:
         :return:
         """
         for observer in self._observers:
-            observer.update(result, status_code=status_code)
+            observer.receive(payload, status_code=status_code)
 
 
 class Observer:
@@ -51,7 +51,7 @@ class Observer:
         pass
 
     @abstractmethod
-    def update(self, result, status_code=0):
+    def receive(self, result, status_code=0):
         """
         Abstract Method to implement once it has been notified by its Subject
         :param update_code: Identify the Notifyer code
@@ -188,7 +188,7 @@ class AsyncTask(Subject):
         invoked on the UI thread before the task is executed.
         This step is normally used to setup the task, for instance by showing a progress bar in the user interface.
         """
-        self.notify(result=self.pre_execute(payload), status_code=self.STATUS_CODE_PRE_EXECUTE)
+        self.notify(payload=self.pre_execute(payload), status_code=self.STATUS_CODE_PRE_EXECUTE)
 
     def on_operation(self, params):
         """
@@ -246,7 +246,7 @@ class BasicAsyncTask(AsyncTask):
 class BasicAsyncTaskObserver(Observer):
     results = []
 
-    def update(self, payload, status_code=0):
+    def receive(self, payload, status_code=0):
         self.results.append((status_code, payload))
         print "Status Code: " + str(status_code) + " Payload: " + str(payload)
 

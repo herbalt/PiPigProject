@@ -9,7 +9,7 @@ from test_helpers.test_forms import FormTestCase
 from pipig.sensors.forms import SensorsForm
 from pipig.sensors.models import Sensor, SensorReadings, SensorType, SensorUnits
 
-from implementations import BaseSensor
+from sensors import BaseSensor
 
 from time import sleep
 
@@ -108,11 +108,14 @@ class TestObserver(Observer):
         Observer.__init__(self)
         self.results = []
 
-    def update(self, result, status_code=0):
+    def receive(self, result, status_code=0):
+        if result is not None:
+            result = result.get_value()
         self.results.append((result, status_code))
 
     def get_results(self):
         return self.results
+
 
 class SensorReadingsTests(BaseTestCase):
 
@@ -181,5 +184,5 @@ class BaseSensorTests(BaseTestCase):
         sleep(0.1)
 
         results = test_observer.get_results()
-        expected_results = []
+        expected_results = [(None, 1), (1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (None, 4)]
         self.assertListEqual(results, expected_results, "Async Sensor not working correctly %s" % str(results))

@@ -1,10 +1,10 @@
-from sensors.models import SensorType, SensorUnits
+from pipig.sensors.models import SensorType, SensorUnits, Sensor
 
 
-def run_setup():
+def data_setup():
     setup_sensor_type()
     setup_sensor_units()
-
+    setup_testing_sensor()
 
 def setup_sensor_type():
     SensorType.query.delete()
@@ -22,5 +22,12 @@ def setup_sensor_units():
     SensorUnits.create(code_name='CELCIUS', display_units='C')
     SensorUnits.create(code_name='FAHRENHEIT', display_units='F')
     SensorUnits.create(code_name='HUMIDITY', display_units='H')
+    return True
+
+
+def setup_testing_sensor():
+    sensor = Sensor.query.filter_by(name='TEST_SENSOR').first()
+    if sensor is None:
+        Sensor.create(name='TEST_SENSOR', sensor_type_id=1, interval_between_readings=0.0)
     return True
 

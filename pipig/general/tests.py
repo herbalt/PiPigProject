@@ -23,7 +23,7 @@ class TestAsyncTask(AsyncTask):
 class ObjectObserver(Observer):
     results = []
 
-    def update(self, payload, status_code=0):
+    def receive(self, payload, status_code=0):
         self.results.append((status_code, payload))
 
     def get_results(self):

@@ -15,6 +15,7 @@ class Session(db.Model, CRUDMixin):
         return self.name
 
 class CuringSession(db.Model, CRUDMixin):
+    __tablename__ = 'session_curing'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     session_id = db.Column(db.Integer, nullable=False)
     start_time = db.Column(db.Float)

@@ -1,10 +1,9 @@
 from abc import abstractmethod, ABCMeta
 from time import sleep, time
+
+from pipig import app
 from pipig.sensors.models import SensorReadings, Sensor, SensorType, SensorUnits
 from general.patterns import AsyncTask, Observer
-from pipig.data import db
-
-from datetime import datetime
 
 
 class BaseSensor(AsyncTask):
@@ -24,7 +23,9 @@ class BaseSensor(AsyncTask):
         return self.sensor_id
 
     def obj_sensor(self):
-        obj_sensor = Sensor.query.filter_by(id=self.get_id()).first()
+
+        with app.app_context():
+            obj_sensor = Sensor.query.filter_by(id=self.get_id()).first()
         return obj_sensor
 
     def obj_sensor_type(self):
@@ -60,30 +61,16 @@ class BaseSensor(AsyncTask):
         self.state = True
         return payload
 
-    def create_reading(self, sensor_id, reading_value, reading_timestamp):
-        # entry = SensorReadings.create(sensor_id=id, reading_value=reading, reading_timestamp=timestamp)
-        # entry = SensorReadings.create(sensor_id=1, reading_value=1.9, reading_timestamp=1.2)
-        try:
-            reading = SensorReadings(sensor_id=sensor_id, reading_value=reading_value, reading_timestamp=reading_timestamp)
-
-            db.session.add(reading)
-            db.session.commit()
-
-            return reading
-        except:
-            return None
-
     def operation(self, params=None):
         entry = None
         while self.state:
             timestamp = time()
             reading = self.take_reading()
             id = self.get_id()
+            reading = SensorReadings(sensor_id=id, reading_value=reading,
+                                     reading_timestamp=timestamp)
 
-            self.create_reading(id, reading, timestamp)
-            entry_works = entry is None
-
-            self.on_progress(progress=entry)
+            self.on_progress(progress=reading)
             if self.is_cancelled():
                 return entry, AsyncTask.STATUS_CODE_CANCEL
             sleep(self.get_interval_between_readings())
@@ -98,4 +85,11 @@ class BaseSensor(AsyncTask):
         return payload
 
 
+class BasicSensor(BaseSensor):
+    def __init__(self, sensor_id=1):
+        super(BasicSensor, self).__init__(sensor_id)
+        self.counter = 0
 
+    def take_reading(self):
+        self.counter += 1
+        return self.counter
