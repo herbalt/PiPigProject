@@ -13,6 +13,10 @@ from sensors import BaseSensor
 
 from time import sleep
 
+#________________________________________________________________
+#
+# Unit Tests
+#________________________________________________________________
 class SensorFormTests(BaseTestCase, FormTestCase):
 
     def mock_form(self, name, sensor_type_id, interval_between_readings):
@@ -93,30 +97,6 @@ class SensorViewTests(BaseTestCase):
         self.assertIsNotNone(query, "Sensor was not added to db")
 
 
-class TestImplementedBaseSensor(BaseSensor):
-    def __init__(self, sensor_id):
-        BaseSensor.__init__(self, sensor_id=sensor_id)
-        self.counter = 0
-
-    def take_reading(self):
-        self.counter += 1
-        return self.counter
-
-
-class TestObserver(Observer):
-    def __init__(self):
-        Observer.__init__(self)
-        self.results = []
-
-    def receive(self, result, status_code=0):
-        if result is not None:
-            result = result.get_value()
-        self.results.append((result, status_code))
-
-    def get_results(self):
-        return self.results
-
-
 class SensorReadingsTests(BaseTestCase):
 
     def test_can_build(self):
@@ -127,13 +107,14 @@ class SensorReadingsTests(BaseTestCase):
         result = SensorReadings.create(sensor_id=1, reading_value=1.9, reading_timestamp=1.2)
         self.assertTrue(type(result) == SensorReadings, "Type %s" % type(result))
 
+
 class BaseSensorTests(BaseTestCase):
 
     def mock_base_sensor(self):
         units = SensorUnits.create(code_name="TestUnits", display_units="T")
         type = SensorType.create(sensor_type="TestSensorType", sensor_units_id=1, minimum_refresh=0.0)
         sensor = Sensor.create(name="TestSensor", sensor_type_id=1, interval_between_readings=0.02)
-        test_sensor = TestImplementedBaseSensor(sensor.get_id())
+        test_sensor = ObjectBaseSensor(sensor.get_id())
         return test_sensor
 
     def test_get_id(self):
@@ -175,7 +156,7 @@ class BaseSensorTests(BaseTestCase):
 
     def test_async_sensor(self):
         test_obj = self.mock_base_sensor()
-        test_observer = TestObserver()
+        test_observer = ObjectObserver()
         test_obj.attach(test_observer)
 
         test_obj.execute_operation()
@@ -186,3 +167,30 @@ class BaseSensorTests(BaseTestCase):
         results = test_observer.get_results()
         expected_results = [(None, 1), (1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (None, 4)]
         self.assertListEqual(results, expected_results, "Async Sensor not working correctly %s" % str(results))
+
+#________________________________________________________________
+#
+# Objects to use in Tests
+#________________________________________________________________
+class ObjectBaseSensor(BaseSensor):
+    def __init__(self, sensor_id):
+        BaseSensor.__init__(self, sensor_id=sensor_id)
+        self.counter = 0
+
+    def take_reading(self):
+        self.counter += 1
+        return self.counter
+
+
+class ObjectObserver(Observer):
+    def __init__(self):
+        Observer.__init__(self)
+        self.results = []
+
+    def receive(self, result, status_code=0):
+        if result is not None:
+            result = result.get_value()
+        self.results.append((result, status_code))
+
+    def get_results(self):
+        return self.results

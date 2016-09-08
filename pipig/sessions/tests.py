@@ -1,10 +1,18 @@
-from sessions.models import Session
 from test_helpers.test_base import BaseTestCase
 from test_helpers.test_forms import FormTestCase
 
+from sessions.models import Session
+
+
+
+#________________________________________________________________
+#
+# Unit Tests
+#________________________________________________________________
+
 class SessionTests(BaseTestCase):
-    def test_appliance(self):
-        appl = Session("Name")
-        self.assertTrue(appl.get_name() == "Name")
+    def test_session(self):
+        session = Session("Name")
+        self.assertTrue(session.get_name() == "Name")
 
 

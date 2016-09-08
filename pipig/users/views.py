@@ -17,12 +17,6 @@ users = Blueprint('users', __name__)
 
 index_url = 'users.user_index'
 
-@users.route('/users/setup_db_data')
-def setup_database_data():
-    if run_setup():
-        return render_template('users/db_data.html')
-    else:
-        return render_template('users/db_data_fail.html')
 
 @users.route('/index')
 @login_required
