@@ -5,6 +5,7 @@ import inspect
 from general.patterns import Observer, Subject
 from sensors.sensors import SensorReadings, BasicSensor
 from utilities import average_readings, calculate_quantity_of_readings
+from pipig.data import db, CRUDMixin
 
 
 class BaseSensorReadingProcessor(Observer, Subject):
@@ -76,7 +77,7 @@ class ProcessorAverageDelay(BaseSensorReadingProcessor):
             if self.average:
                 value_list = []
                 for reading in self.queue:
-                    value_list.append(reading.get_value())
+                    value_list.append(reading[0].get_value())
                 average_value = average_readings(value_list)
 
                 return_reading = SensorReadings(payload.get_sensor_id(), average_value, payload.get_timestamp())
@@ -85,6 +86,18 @@ class ProcessorAverageDelay(BaseSensorReadingProcessor):
             self.queue = []
             return return_reading
         return None
+
+
+class ProcessorDatabase(BaseSensorReadingProcessor):
+    def __init__(self):
+        super(ProcessorDatabase, self).__init__()
+
+    def process(self, payload, status_code=0):
+        db.session.add(payload)
+        db.session.commit()
+        return payload
+
+
 
 
 if __name__ == '__main__':
