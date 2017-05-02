@@ -2,9 +2,10 @@ from datetime import datetime
 from pipig.users.models import UserAccountStatus, UserAccount
 
 
-def run_setup():
-    return setup_database_admin_user() and setup_database_user_account_status_data()
-
+def data_setup():
+    setup_database_user_account_status_data()
+    setup_database_admin_user()
+    return True
 
 def setup_database_user_account_status_data():
     UserAccountStatus.query.delete()

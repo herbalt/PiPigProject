@@ -29,9 +29,9 @@ class TestConfiguration(BaseConfiguration):
     NAME = 'TestConfiguration'
     TESTING = True
     WTF_CSRF_ENABLED = False
-
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'TEST2.db')
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:' + join(basedir, 'test.db')
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # + join(_cwd, 'testing.db')
-
     # Since we want our unit tests to run quickly
     # we turn this down - the hashing is still done
     # but the time-consuming part is left out.
@@ -42,13 +42,14 @@ class TestConfiguration(BaseConfiguration):
     MAIL_PORT = 25
     MAIL_USE_SSL = False
 
+    # PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 class TestDatabaseConfiguration(BaseConfiguration):
     NAME = 'TestDatabaseConfiguration'
     TESTING = True
     WTF_CSRF_ENABLED = False
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'test.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'testing.db')
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository_testing')
     # Since we want our unit tests to run quickly
     # we turn this down - the hashing is still done

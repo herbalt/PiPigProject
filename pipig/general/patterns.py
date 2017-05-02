@@ -46,6 +46,7 @@ class Observer:
     """
     Attaches to a Subject to be notified by it
     """
+    __metaclass__ = ABCMeta
 
     def __init__(self):
         pass
@@ -58,7 +59,7 @@ class Observer:
         :param result: The payload of the Notifyer
         :return:
         """
-        pass
+        raise NotImplementedError
 
 
 class AsyncThread(threading.Thread):
@@ -124,7 +125,7 @@ class AsyncTask(Subject):
 
     @abstractmethod
     def operation(self, params=None):
-        pass
+        raise NotImplementedError
 
     def progress(self, payload=None):
         """
@@ -196,7 +197,7 @@ class AsyncTask(Subject):
         This step is used to perform background computation that can take a long time.
         The parameters of the asynchronous task are passed to this step.
         The result of the computation must be returned by this step and will be passed back to the last step.
-        This step can also use publishProgress(Progress...) to publish one or more units of progress.
+        This step can also use publishProgress(Progress...) to publish one or more obj_units of progress.
         These values are published on the UI thread, in the onProgressUpdate(Progress...) step.
         """
         return self.operation(params)

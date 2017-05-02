@@ -11,7 +11,7 @@ from models import UserAccount, UserOAuth, UserProfile, UserAccountStatus
 from pipig.data import db
 from models import UserAccountStatus
 
-from data_setup import run_setup
+from data_setup import data_setup
 
 users = Blueprint('users', __name__)
 
@@ -107,7 +107,6 @@ def update_profile(user_id):
     form.last_name.data = user_profile.last_name
 
     if form.validate_on_submit():
-        # TODO THIS IS WHERE YOU STOPPED
         return redirect(url_for(index_url))
     return redirect(url_for('users.update_profile.%s' % user_id))
 

@@ -1,10 +1,5 @@
+from sessions.models import Session, SessionTimeError
 from test_helpers.test_base import BaseTestCase
-from test_helpers.test_forms import FormTestCase
-from test_helpers.test_generics import unwritten_test
-
-from pipig import app
-from sessions.models import Session, CuringSession
-
 
 
 #________________________________________________________________
@@ -12,32 +7,44 @@ from sessions.models import Session, CuringSession
 # Unit Tests
 #________________________________________________________________
 
-class SessionTests(BaseTestCase):
-    def test_session(self):
-        session = Session("Name")
+class SessionsModelTests(BaseTestCase):
+    def test_session_name(self):
+        session = Session.create(name="Name")
         self.assertTrue(session.get_name() == "Name")
 
+    def test_get_start_time(self):
+        session = Session.create(name="Name")
+        self.assertTrue(session.get_start_time() == 0, "Session should init with a session time of 0")
+        session.start_time = 15.0
+        self.assertTrue(session.get_start_time() == 15.0, "Session should get a session time of 15.0 once the parameter is changed")
 
-class CuringSessionTests(BaseTestCase):
-    def compare_curing_session(self, first, second):
-        session_id = first.session_id == second.session_id
-        start_time = first.start_time == second.start_time
-        return session_id and start_time
+    def test_set_start_time(self):
+        session = Session.create(name="Name")
+        session.set_start_time(10.0)
+        self.assertTrue(session.get_start_time() == 10.0, "Session should be able to set a session time")
 
-    def test_curing_session_commits_to_database_when_session_exists(self):
+    def test_get_time_elapsed(self):
+        session = Session.create(name="Name")
+        session.start_time = 15.0
+        reading_time = 20.0
+        result = session.get_time_elapsed(reading_time)
+        self.assertTrue(result == 5.0, "Should be able to get a difference in start time and time elapsed values")
 
-        with app.app_context():
-            Session.create(name="TestSession")
-            CuringSession.create(session_id=1, start_time=50.0)
-            result = CuringSession.get(1)
-        expected = CuringSession(1, 50.0)
-        self.assertTrue(self.compare_curing_session(result, expected), "Curing sessions do not match \nResult: %s\nExpected: %s" % (result, expected))
+        reading_time = 10.0
+        self.assertRaises(SessionTimeError, session.get_time_elapsed, reading_time)
 
+    def test_get_reading_time(self):
+        session = Session.create(name="Name")
+        session.start_time = 15.0
+        time_elapsed = 10.0
+        result = session.get_reading_time(time_elapsed)
+        self.assertTrue(result == 25.0, "Should add together the start time and time elapsed values")
 
-    def test_curing_session_commits_to_database_when_session_doesnt_exist(self):
-        CuringSession.create(session_id=2, start_time=50.0)
-        with app.app_context():
-            result = CuringSession.get(1)
+#________________________________________________________________
+#
+# Builders to use in Unit Tests
+#________________________________________________________________
 
-        self.assertIsNone(result, "The curing session should not exist")
-
+def build_session_model(base_name):
+    session = Session.create(name="%sSessionModel" % base_name)
+    return session

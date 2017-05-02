@@ -3,12 +3,13 @@ from time import sleep
 import inspect
 
 from general.patterns import Observer, Subject
-from sensors.sensors import SensorReadings, BasicSensor
+from sensors.sensor import SensorBasic
+from generics.models import GenericReading
 from utilities import average_readings, calculate_quantity_of_readings
 from pipig.data import db, CRUDMixin
 
 
-class BaseSensorReadingProcessor(Observer, Subject):
+class BaseProcessor(Observer, Subject):
     """
     Template Pattern for processing a Sensor Reading
 
@@ -37,12 +38,12 @@ class BaseSensorReadingProcessor(Observer, Subject):
     @abstractmethod
     def process(self, payload, status_code=0):
         """
-        Method to over-ride with the specific type of processing to apply
+        Method to over-ride with the specific type_name of processing to apply
         :return: Payload after processing
         """
 
 
-class ProcessorPrint(BaseSensorReadingProcessor):
+class ProcessorPrint(BaseProcessor):
     """
     Prints the payload to the Console
     """
@@ -60,7 +61,7 @@ class ProcessorPrint(BaseSensorReadingProcessor):
         return payload
 
 
-class ProcessorAverageDelay(BaseSensorReadingProcessor):
+class ProcessorAverageDelay(BaseProcessor):
     """
     Appends results to a list and returns the reading if list is full
     If average is True: Average the values of the list and use the last timestamp
@@ -71,6 +72,13 @@ class ProcessorAverageDelay(BaseSensorReadingProcessor):
         self.delay_quantity = delay_quantity
         self.average = average
 
+    def update_delay_quantity_by_time(self, delay_in_seconds=1, interval_between_readings=1):
+        self.delay_quantity = calculate_quantity_of_readings(timeframe_in_seconds=delay_in_seconds,
+                                       interval_between_readings=interval_between_readings)
+
+    def update_delay_quantity(self, delay_quantity=1):
+        self.delay_quantity = delay_quantity
+
     def process(self, payload, status_code=0):
         self.queue.append((payload, status_code))
         if len(self.queue) >= self.delay_quantity:
@@ -80,7 +88,7 @@ class ProcessorAverageDelay(BaseSensorReadingProcessor):
                     value_list.append(reading[0].get_value())
                 average_value = average_readings(value_list)
 
-                return_reading = SensorReadings(payload.get_sensor_id(), average_value, payload.get_timestamp())
+                return_reading = GenericReading(payload.get_component_id(), payload.get_component_type_id(), average_value, payload.get_timestamp())
             else:
                 return_reading = payload
             self.queue = []
@@ -88,7 +96,7 @@ class ProcessorAverageDelay(BaseSensorReadingProcessor):
         return None
 
 
-class ProcessorDatabase(BaseSensorReadingProcessor):
+class ProcessorDatabase(BaseProcessor):
     def __init__(self):
         super(ProcessorDatabase, self).__init__()
 
@@ -98,12 +106,20 @@ class ProcessorDatabase(BaseSensorReadingProcessor):
         return payload
 
 
+def build_processor_chain(delay_quantity=1, average=False):
+    processor_print = ProcessorPrint()
+    processor_database = ProcessorDatabase()
+    processor_delay = ProcessorAverageDelay(delay_quantity=delay_quantity, average=average)
 
+    processor_delay.attach(processor_print)
+    processor_delay.attach(processor_database)
+
+    return processor_delay
 
 if __name__ == '__main__':
-    sensor = BasicSensor(1)
+    sensor = SensorBasic(1)
     processor_print = ProcessorPrint()
-    delay_count = calculate_quantity_of_readings(100, sensor.get_interval_between_readings())
+    delay_count = calculate_quantity_of_readings(timeframe_in_seconds=100, interval_between_readings=sensor.get_interval_between_readings())
     processor_delay = ProcessorAverageDelay(delay_count)
 
     processor_delay.attach(processor_print)

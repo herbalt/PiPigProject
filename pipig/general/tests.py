@@ -7,7 +7,7 @@ from time import sleep, time
 # Unit Tests
 #________________________________________________________________
 
-class AsyncTaskTests(BaseTestCase):
+class ObjectTestsAsyncTask(BaseTestCase):
     def test_operation_complete(self):
         task = ObjectAsyncTask()
         observe = ObjectObserver()

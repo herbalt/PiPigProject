@@ -1,2 +1,2 @@
-from sensors.sensors import BasicSensor
+from sensors.sensor import SensorBasic
 

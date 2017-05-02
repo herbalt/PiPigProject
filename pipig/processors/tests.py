@@ -2,8 +2,8 @@ from test_helpers.test_base import BaseTestCase
 from test_helpers.test_forms import FormTestCase
 
 from test_helpers.test_generics import unwritten_test
-from processors import ProcessorAverageDelay, BaseSensorReadingProcessor, ProcessorDatabase
-from sensors.models import SensorReadings
+from processors import ProcessorAverageDelay, BaseProcessor, ProcessorDatabase
+from generics.models import GenericReading
 from general.patterns import Observer, Subject
 from pipig import app
 from pipig.data import db, CRUDMixin
@@ -13,13 +13,13 @@ from pipig.data import db, CRUDMixin
 #________________________________________________________________
 
 
-class ProcessorsTests(BaseTestCase):
+class ProcessorObjectTests(BaseTestCase):
 
     def test_base_sensor_template(self):
-        processor = ObjectBaseSensorReadingProcessor()
-        reading = SensorReadings(1, 2, 3.0)
+        processor = ObjectBaseProcessor()
+        reading = GenericReading(1, 1, 2, 3.0)
         result = processor.receive(reading, 4)
-        self.assertTrue(isinstance(result, SensorReadings), "Return result should be a Sensor Reading Object: " + str(result))
+        self.assertTrue(isinstance(result, GenericReading), "Return result should be a Sensor Reading Object: " + str(result))
 
     def helper_delay_processor(self, expected=None, loop_times=1, average=False):
         average_processor = ProcessorAverageDelay(delay_quantity=3, average=average)
@@ -45,7 +45,7 @@ class ProcessorsTests(BaseTestCase):
         return False
 
     def compare_sensor_readings(self, first, second):
-        id = first.get_sensor_id() == second.get_sensor_id()
+        id = first.get_component_id() == second.get_component_id()
         value = first.get_value() == second.get_value()
         timestamp = first.get_timestamp() == second.get_timestamp()
         return id and value and timestamp
@@ -53,17 +53,17 @@ class ProcessorsTests(BaseTestCase):
 
     def test_average_delay(self):
         expected = []
-        expected.append((SensorReadings(1, 2, 400), 2))
-        expected.append((SensorReadings(1, 5, 700), 2))
-        expected.append((SensorReadings(1, 8, 1000), 2))
+        expected.append((GenericReading(1, 1, 2, 400), 2))
+        expected.append((GenericReading(1, 1, 5, 700), 2))
+        expected.append((GenericReading(1, 1, 8, 1000), 2))
         self.helper_delay_processor(expected, 9, True)
 
 
     def test_average_delay_no_average(self):
         expected = []
-        expected.append((SensorReadings(1, 3, 400), 2))
-        expected.append((SensorReadings(1, 6, 700), 2))
-        expected.append((SensorReadings(1, 9, 1000), 2))
+        expected.append((GenericReading(1, 1, 3, 400), 2))
+        expected.append((GenericReading(1, 1, 6, 700), 2))
+        expected.append((GenericReading(1, 1, 9, 1000), 2))
         self.helper_delay_processor(expected, 9, False)
 
     def test_database_commits_reading(self):
@@ -77,9 +77,9 @@ class ProcessorsTests(BaseTestCase):
         sensor.trigger(loop_times=2)
 
         with app.app_context():
-            reading = SensorReadings.get(1)
+            reading = GenericReading.get(1)
         self.assertIsNotNone(reading)
-        self.assertTrue(self.compare_sensor_readings(SensorReadings(1, 1, 200), reading))
+        self.assertTrue(self.compare_sensor_readings(GenericReading(1, 1, 1, 200), reading))
 
 
 
@@ -88,8 +88,7 @@ class ProcessorsTests(BaseTestCase):
 # Objects for Unit Tests
 #________________________________________________________________
 
-
-class ObjectBaseSensorReadingProcessor(BaseSensorReadingProcessor):
+class ObjectBaseProcessor(BaseProcessor):
     def process(self, payload, status_code=0):
         return payload
 
@@ -110,6 +109,7 @@ class ObjectObserver(Observer):
     def clear_queue(self):
         self.queue = []
 
+
 class ObjectMockSensorSubject(Subject):
     def __init__(self):
         super(ObjectMockSensorSubject, self).__init__()
@@ -120,8 +120,6 @@ class ObjectMockSensorSubject(Subject):
         while loop_times > 0:
             self.counter += number_to_increment
             self.timer += timer_to_increment
-            result = SensorReadings(1, self.counter, self.timer)
+            result = GenericReading(1, 1, self.counter, self.timer)
             self.notify(result, 2)
             loop_times -= 1
-
-

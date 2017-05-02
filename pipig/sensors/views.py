@@ -18,14 +18,14 @@ def add_sensor():
     if form.validate_on_submit():
         name = form.name.data
 
-        sensor_type_id = form.sensor_type_id.data
+        sensor_type_id = form.type_id.data
         interval_between_readings = form.interval_between_readings.data
 
-        sensor = Sensor.query.filter_by(name=name).filter_by(sensor_type_id=sensor_type_id).filter_by(interval_between_readings=interval_between_readings).first()
+        sensor = Sensor.query.filter_by(name=name).filter_by(type_id=sensor_type_id).filter_by(interval_between_readings=interval_between_readings).first()
         if sensor is not None:
             return redirect(url_for(sensor_index))
 
-        Sensor.create(name=name, sensor_type_id=sensor_type_id, interval_between_readings=interval_between_readings)
+        Sensor.create(name=name, type_id=sensor_type_id, interval_between_readings=interval_between_readings)
 
         return redirect(url_for(sensor_index))
     return render_template('sensors/add.html', form=form)

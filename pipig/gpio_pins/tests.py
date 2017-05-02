@@ -8,6 +8,4 @@ from test_helpers.test_generics import unwritten_test
 # Unit Tests
 #________________________________________________________________
 
-class GpioTests(BaseTestCase):
-    def tests_tbc(self):
-        unwritten_test(self)
+

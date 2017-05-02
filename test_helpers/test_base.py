@@ -1,5 +1,5 @@
 from flask_testing import TestCase
-from config import TestConfiguration
+from config import TestConfiguration, TestDatabaseConfiguration
 from pipig import app, db
 
 
@@ -14,6 +14,7 @@ class BaseTestCase(TestCase):
     def setUp(self):
         self.app_context = app.app_context()
         self.app_context.push()
+        # db.create_all(app=app)
         db.create_all()
         app.config['TESTING'] = True
 
@@ -22,3 +23,23 @@ class BaseTestCase(TestCase):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
+
+
+class BaseIntergrationTestCase(TestCase):
+    """A base test case for Intergration Testing"""
+
+
+    def create_app(self):
+        app.config.from_object(TestDatabaseConfiguration)
+        return app
+
+    def setUp(self):
+        self.app_context = app.app_context()
+        self.app_context.push()
+        app.config['TESTING'] = True
+
+
+    def tearDown(self):
+        db.session.remove()
+        self.app_context.pop()
+
