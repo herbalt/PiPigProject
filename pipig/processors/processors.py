@@ -7,7 +7,8 @@ from sensors.sensor import SensorBasic
 from generics.models import GenericReading
 from utilities import average_readings, calculate_quantity_of_readings
 from pipig.data import db, CRUDMixin
-
+from sensors.factory import FactorySensor
+from pipig import app
 
 class BaseProcessor(Observer, Subject):
     """
@@ -118,8 +119,12 @@ def build_processor_chain(delay_quantity=1, average=False):
 
 if __name__ == '__main__':
     sensor = SensorBasic(1)
-    processor_print = ProcessorPrint()
-    delay_count = calculate_quantity_of_readings(timeframe_in_seconds=100, interval_between_readings=sensor.get_interval_between_readings())
+    # sensor_factory = FactorySensor()
+    # sensor = sensor_factory.build_object(1)
+    # processor_print = ProcessorPrint()
+    processor_print = ProcessorDatabase()
+    interval = sensor.get_interval_between_readings()
+    delay_count = calculate_quantity_of_readings(timeframe_in_seconds=100, interval_between_readings=interval)
     processor_delay = ProcessorAverageDelay(delay_count)
 
     processor_delay.attach(processor_print)
