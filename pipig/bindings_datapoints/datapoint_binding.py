@@ -7,17 +7,38 @@ from generics.models import GenericReading
 from pipig import app
 from sensors.models import Sensor
 from sessions.models import Session
+from sensors.factory import FactorySensor
 
 
 class DataPointsSensorBinder(Subject):
     objBindSessionSensors = None
     objBindDataPointsSensors = None
     objSensor = None
+    objDataPoints = None
     objSession = None
 
-    def __init__(self, bind_datapoints_sensors_id):
+    def __init__(self, bind_datapoints_sensors_id, sensor_list = [], datapoints_list = [], session = None):
         super(DataPointsSensorBinder, self).__init__()
         self.bind_datapoints_sensors_id = bind_datapoints_sensors_id
+
+        # Take an input List of sensors and determine if one matches the Binded Object
+        if len(sensor_list) == 0:
+            for sensor in sensor_list:
+                if sensor.get_id() == self.get_sensor_id():
+                    self.objSensor = sensor
+                    break
+
+        # Take an input List of DataPoints and determine if one matches the Binded Object
+        if len(datapoints_list) == 0:
+            for datapoint in datapoints_list:
+                if datapoint.get_id() == self.get_datapoints_id():
+                    self.objDataPoints = datapoint
+                    break
+
+        # Tests to see if Session Object is valid
+        if type(session) == Session:
+            self.objSession = session
+
 
     def obj_datapoints_sensor_binder(self):
         if self.objBindDataPointsSensors is None:
@@ -29,11 +50,17 @@ class DataPointsSensorBinder(Subject):
 
     def obj_sensor(self):
         if self.objSensor is None:
-            with app.app_context():
-                # obj = Sensor.query.filter_by(id=self.get_sensor_id()).first()
-                obj = Sensor.get(self.get_sensor_id())
+            factory = FactorySensor()
+            obj = factory.build_object(self.get_sensor_id())
             return obj
         return self.objSensor
+
+    def obj_data_points(self):
+        if self.objDataPoints is None:
+            with app.app_context():
+                obj = DataPoints.get(self.get_datapoints_id())
+            return obj
+        return self.objDataPoints
 
     def obj_session(self):
         if self.objSession is None:
@@ -80,10 +107,6 @@ class DataPointsSensorBinder(Subject):
         reading = GenericReading(self.get_id(), COMPONENT_TYPE_DATAPOINTS_SENSOR_BINDER, value, time_elapsed)
         self.notify(reading)
         return reading
-
-
-
-
 
 class DataPointsApplianceBinder(Observer, Subject):
     objBindDataPointsAppliances = None

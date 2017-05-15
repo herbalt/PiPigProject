@@ -36,18 +36,6 @@ def build_and_bind_objects_from_session(session_id):
         binder_session_appliance_list.append(SessionApplianceBinder(model.get_id()))
 
 
-    # Build Datapoint Binders
-    datapoints_sensors_models = BindDataPointsSensors.query.filter_by(session_id=session_id).all()
-    datapoints_appliance_models = BindDataPointsAppliances.query.filter_by(session_id=session_id).all()
-
-    for model in datapoints_sensors_models:
-        binder_datapoints_sensor_list.append(DataPointsSensorBinder(model.get_id()))
-
-    for model in datapoints_appliance_models:
-        binder_datapoints_appliance_list.append(DataPointsApplianceBinder(model.get_id()))
-
-    # Build Base Objects
-
     sensor_factory = FactorySensor()
     for sensor_obj in binder_session_sensor_list:
         sensor = sensor_factory.build_object(sensor_obj.get_sensor_id())
@@ -69,6 +57,21 @@ def build_and_bind_objects_from_session(session_id):
         appliance.attach(processor)
 
         appliance_list.append(appliance)
+
+
+    # Build Datapoint Binders
+    datapoints_sensors_models = BindDataPointsSensors.query.filter_by(session_id=session_id).all()
+    datapoints_appliance_models = BindDataPointsAppliances.query.filter_by(session_id=session_id).all()
+
+    for model in datapoints_sensors_models:
+        binder_datapoints_sensor_list.append(DataPointsSensorBinder(model.get_id(), sensor_list=sensor_list, datapoints_list=datapoints_list, session=session))
+
+    for model in datapoints_appliance_models:
+        binder_datapoints_appliance_list.append(DataPointsApplianceBinder(model.get_id()))
+
+    # Build Base Objects
+
+
 
     for bind_db_sensor_obj in binder_datapoints_sensor_list:
         # obj = DataPoints.query.filter_by(datapoints_id=datapoints_obj.get_datapoints_id()).first()
