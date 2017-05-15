@@ -22,26 +22,36 @@ class SessionBinder:
 
 
 class SessionSensorBinder(SessionBinder):
+    objBindSessionsSensors = None
+
     def __init__(self, session_binder_id):
         SessionBinder.__init__(self, session_binder_id)
 
     def get_object(self):
-        with app.app_context():
-            obj = BindSessionsSensors.query.filter_by(id=self.session_binder_id).first()
-        return obj
+        if self.objBindSessionsSensors is None:
+            with app.app_context():
+                # obj = BindSessionsSensors.query.filter_by(id=self.session_binder_id).first()
+                obj = BindSessionsSensors.get(self.session_binder_id)
+            return obj
+        return self.objBindSessionsSensors
 
     def get_sensor_id(self):
         return self.get_object().get_sensor_id()
 
 
 class SessionApplianceBinder(SessionBinder):
+    objBindSessionAppliances = None
+
     def __init__(self, session_binder_id):
         SessionBinder.__init__(self, session_binder_id)
 
     def get_object(self):
-        with app.app_context():
-            obj = BindSessionAppliances.query.filter_by(id=self.session_binder_id).first()
-        return obj
+        if self.objBindSessionAppliances is None:
+            with app.app_context():
+                # obj = BindSessionAppliances.query.filter_by(id=self.session_binder_id).first()
+                obj = BindSessionAppliances.get(self.session_binder_id)
+            return obj
+        return self.objBindSessionAppliances
 
     def get_appliance_id(self):
         return self.get_object().get_appliance_id()

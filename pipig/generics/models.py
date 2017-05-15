@@ -47,6 +47,9 @@ class GenericReading(db.Model, CRUDMixin):
         self.reading_value = reading_value
         self.reading_timestamp = reading_timestamp
 
+    def __str__(self):
+        return "Component ID: " + str(self.component_id) + "\nComponent Type ID: " + str(self.component_type_id) + "\nValue: " + str(self.reading_value) + "\nTimestamp: " + str(self.reading_timestamp)
+
     def get_component_id(self):
         return self.component_id
 

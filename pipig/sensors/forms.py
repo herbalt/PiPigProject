@@ -3,12 +3,14 @@ from wtforms import fields
 import wtforms.validators as validators
 
 import sensors.models as sensors
-
+from pipig import db
 
 class SensorsForm(Form):
 
     name = fields.StringField(validators=[validators.InputRequired()])
     type_id = fields.IntegerField(validators=[validators.InputRequired()])
+
+    # type_description = fields.SelectField(label="Sensor Type", choices=sensor_choices)
     interval_between_readings = fields.FloatField()
 
 

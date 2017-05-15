@@ -13,7 +13,8 @@ class FactorySensor:
 
     def build_object(self, sensor_id):
 
-        db_obj = Sensor.query.filter_by(id=sensor_id).first()
+        # db_obj = Sensor.query.filter_by(id=sensor_id).first()
+        db_obj = Sensor.get(sensor_id)
         sensor_type_id = db_obj.get_type_id()
         sensor_type = SensorType.get(sensor_type_id)
 

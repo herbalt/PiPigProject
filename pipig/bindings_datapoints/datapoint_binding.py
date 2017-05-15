@@ -10,29 +10,46 @@ from sessions.models import Session
 
 
 class DataPointsSensorBinder(Subject):
+    objBindSessionSensors = None
+    objBindDataPointsSensors = None
+    objSensor = None
+    objSession = None
+
     def __init__(self, bind_datapoints_sensors_id):
         super(DataPointsSensorBinder, self).__init__()
         self.bind_datapoints_sensors_id = bind_datapoints_sensors_id
 
     def obj_datapoints_sensor_binder(self):
-        with app.app_context():
-            obj = BindDataPointsSensors.query.filter_by(id=self.bind_datapoints_sensors_id).first()
-        return obj
+        if self.objBindDataPointsSensors is None:
+            with app.app_context():
+                obj = BindDataPointsSensors.get(self.bind_datapoints_sensors_id)
+                # obj = BindDataPointsSensors.query.filter_by(id=self.bind_datapoints_sensors_id).first()
+            return obj
+        return self.objBindDataPointsSensors
 
     def obj_sensor(self):
-        with app.app_context():
-            obj = Sensor.query.filter_by(id=self.get_sensor_id()).first()
-        return obj
+        if self.objSensor is None:
+            with app.app_context():
+                # obj = Sensor.query.filter_by(id=self.get_sensor_id()).first()
+                obj = Sensor.get(self.get_sensor_id())
+            return obj
+        return self.objSensor
 
     def obj_session(self):
-        with app.app_context():
-            obj = Session.query.filter_by(id=self.get_session_id()).first()
-        return obj
+        if self.objSession is None:
+            with app.app_context():
+                # obj = Session.query.filter_by(id=self.get_session_id()).first()
+                obj = Session.get(self.get_session_id())
+            return obj
+        return self.objSession
 
     def obj_session_sensor_binder(self):
-        with app.app_context():
-            obj = BindSessionsSensors.query.filter_by(id=self.obj_datapoints_sensor_binder().get_id()).first()
-        return obj
+        if self.objBindSessionSensors is None:
+            with app.app_context():
+                # obj = BindSessionsSensors.query.filter_by(id=self.obj_datapoints_sensor_binder().get_id()).first()
+                obj = BindSessionsSensors.get(self.obj_datapoints_sensor_binder().get_id())
+            return obj
+        return self.objBindSessionSensors
 
     def get_id(self):
         return self.obj_datapoints_sensor_binder().get_id()
@@ -69,6 +86,9 @@ class DataPointsSensorBinder(Subject):
 
 
 class DataPointsApplianceBinder(Observer, Subject):
+    objBindDataPointsAppliances = None
+    objBindSessionAppliances = None
+
     def __init__(self, bind_datapoints_appliances_id):
         Observer.__init__(self)
         Subject.__init__(self)
@@ -78,14 +98,20 @@ class DataPointsApplianceBinder(Observer, Subject):
         return "DataPointsApplianceBinder: Id %d, SessionId %d, DatapointsId %d, ApplianceId %d, Polarity %d" % (self.get_id(), self.get_session_id(), self.get_datapoints_id(), self.get_appliance_id(), self.get_binder_polarity())
 
     def obj_datapoints_appliance_binder(self):
-        with app.app_context():
-            obj = BindDataPointsAppliances.query.filter_by(id=self.bind_datapoints_appliances_id).first()
-        return obj
+        if self.objBindDataPointsAppliances is None:
+            with app.app_context():
+                # obj = BindDataPointsAppliances.query.filter_by(id=self.bind_datapoints_appliances_id).first()
+                obj = BindDataPointsAppliances.get(self.bind_datapoints_appliances_id)
+            return obj
+        return self.objBindDataPointsAppliances
 
     def obj_session_appliance_binder(self):
-        with app.app_context():
-            obj = BindSessionAppliances.query.filter_by(id=self.obj_datapoints_appliance_binder().get_id()).first()
-        return obj
+        if self.objBindSessionAppliances is None:
+            with app.app_context():
+                # obj = BindSessionAppliances.query.filter_by(id=self.obj_datapoints_appliance_binder().get_id()).first()
+                obj = BindSessionAppliances.get(self.obj_datapoints_appliance_binder().get_id())
+            return obj
+        return self.objBindSessionAppliances
 
     def get_id(self):
         return self.obj_datapoints_appliance_binder().get_id()
