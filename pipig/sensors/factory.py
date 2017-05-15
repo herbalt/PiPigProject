@@ -35,7 +35,7 @@ class FactorySensor:
             return SensorDHT22Humidity(sensor_id)
 
         else:
-            return None
+            return SensorBasic(sensor_id)
 
 
 
