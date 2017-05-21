@@ -8,7 +8,7 @@
 
 # User can request for a password to be reset if forgotten
 
-# User can select 'Remember Me' to retain login between sessions
+# User can select 'Remember Me' to retain login between recipes
 
 # A confirmation email token will only last for 1 hour
 

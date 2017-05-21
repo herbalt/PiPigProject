@@ -13,6 +13,8 @@ from sessions.tests import SessionsModelTests
 # from curing_session.tests import CuringSessionTests
 # from users.tests import UserBlueprintTests, UserFormTests, UserViewsTests
 from utilities.tests import UtilityTests
+from recipes.tests import RecipesModelTests
+
 
 
 class TestSuite():
@@ -77,7 +79,12 @@ class TestSuite():
         return self.suite
 
     def sessions_tests(self):
-        self.suite.addTest(unittest.makeSuite(ApplianceModelTests))
+        self.suite.addTest(unittest.makeSuite(SessionsModelTests))
+        # self.suite.addTest(unittest.makeSuite(CuringSessionTests))
+        return self.suite
+
+    def recipe_tests(self):
+        self.suite.addTest(unittest.makeSuite(RecipesModelTests))
         # self.suite.addTest(unittest.makeSuite(CuringSessionTests))
         return self.suite
 
