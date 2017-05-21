@@ -14,6 +14,12 @@ class Recipe(db.Model, CRUDMixin):
     def get_name(self):
         return self.name
 
+    def get_sensor_datapoints_binding_ids(self):
+        return []
+
+    def get_appliance_datapoints_binding_ids(self):
+        return []
+
 
 
 
