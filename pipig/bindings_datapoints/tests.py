@@ -3,7 +3,7 @@ from binding_session.tests import build_session_sensor_model, build_session_appl
 from bindings_datapoints.datapoint_binding import DataPointsApplianceBinder, DataPointsSensorBinder, \
     IncorrectReadingTypeError
 from bindings_datapoints.models import BindDataPointsAppliances, BindDataPointsSensors
-from data_points.tests import build_datapoints
+from data_points.tests import build_datapoints_model
 from general.patterns import Observer
 from generics.constants import COMPONENT_TYPE_SENSOR, COMPONENT_TYPE_DATAPOINTS_SENSOR_BINDER, \
     COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
@@ -243,7 +243,7 @@ class BindDataPointsApplianceObjectTests(BaseTestCase):
 
 def build_datapoint_sensor_model(base_name, display_units, minimum_refresh, interval_between_readings, gpio_pin_number=None, datapoints_tuple_list = None):
     session_sensor = build_session_sensor_model(base_name, display_units, minimum_refresh, interval_between_readings, gpio_pin_number=None)
-    datapoints = build_datapoints(base_name, datapoints_tuple_list)
+    datapoints = build_datapoints_model(base_name, datapoints_tuple_list)
 
     datapoint_sensor = BindDataPointsSensors.create(session_sensor_id=session_sensor.get_id(), datapoints_id=datapoints.get_id())
     return datapoint_sensor
@@ -251,7 +251,7 @@ def build_datapoint_sensor_model(base_name, display_units, minimum_refresh, inte
 
 def build_datapoint_appliance_model(base_name, display_units, gpio_pin_number=None, datapoints_tuple_list = None, polarity=1):
     session_appliance = build_session_appliance_model(base_name, display_units, gpio_pin_number=None)
-    datapoints = build_datapoints(base_name, datapoints_tuple_list)
+    datapoints = build_datapoints_model(base_name, datapoints_tuple_list)
     datapoint_appliance = BindDataPointsAppliances.create(session_appliance_id=session_appliance.get_id(), datapoints_id=datapoints.get_id(), polarity=polarity)
     return datapoint_appliance
 

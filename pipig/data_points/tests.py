@@ -19,7 +19,7 @@ def compare_data_point(first, second):
 # Unit Tests
 #________________________________________________________________
 
-def build_datapoints(base_name, list_of_points_as_tuples):
+def build_datapoints_model(base_name, list_of_points_as_tuples):
     datapoints = DataPoints.create(name=base_name)
 
     for point in list_of_points_as_tuples:

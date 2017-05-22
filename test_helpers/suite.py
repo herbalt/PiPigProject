@@ -2,8 +2,8 @@ import unittest
 
 
 from appliances.tests import ApplianceModelTests, ApplianceObjectTests
-from bindings_datapoints.tests import BindDataPointsApplianceModelTests, BindDataPointsApplianceObjectTests, BindDataPointsSensorModelTests, BindDataPointsSensorObjectTests
-from binding_session.tests import BindSessionApplianceModelTests, BindSessionApplianceObjectTests, BindSessionSensorModelTests, BindSessionSensorObjectTests
+# from bindings_datapoints.tests import BindDataPointsApplianceModelTests, BindDataPointsApplianceObjectTests, BindDataPointsSensorModelTests, BindDataPointsSensorObjectTests
+# from binding_session.tests import BindSessionApplianceModelTests, BindSessionApplianceObjectTests, BindSessionSensorModelTests, BindSessionSensorObjectTests
 from data_points.tests import DataPointsObjectTests, DataPointsObjectTestsDataPoint
 from general.tests import ObjectTestsAsyncTask
 # from gpio_pins.tests import GpioTests
@@ -14,7 +14,7 @@ from sessions.tests import SessionsModelTests
 # from users.tests import UserBlueprintTests, UserFormTests, UserViewsTests
 from utilities.tests import UtilityTests
 from recipes.tests import RecipesModelTests
-
+from binders.tests import BindDataPointsSensorModelTests, BindDataPointsApplianceModelTests
 
 
 class TestSuite():
@@ -23,14 +23,16 @@ class TestSuite():
 
     def get_suite(self):
         self.appliances_tests()
-        self.bindings_datapoints_tests()
-        self.bindings_session_tests()
+        # self.bindings_datapoints_tests()
+        # self.bindings_session_tests()
         self.data_point_tests()
         self.general_tests()
         self.gpio_tests()
         self.processor_tests()
         self.sensor_tests()
-        self.sessions_tests()
+        # self.sessions_tests()
+        self.binder_tests()
+        self.recipe_tests()
         # self.users_tests()
         self.utilities_tests()
         return self.suite
@@ -41,17 +43,17 @@ class TestSuite():
         return self.suite
 
     def bindings_datapoints_tests(self):
-        self.suite.addTest(unittest.makeSuite(BindDataPointsApplianceModelTests))
-        self.suite.addTest(unittest.makeSuite(BindDataPointsApplianceObjectTests))
-        self.suite.addTest(unittest.makeSuite(BindDataPointsSensorModelTests))
-        self.suite.addTest(unittest.makeSuite(BindDataPointsSensorObjectTests))
+        # self.suite.addTest(unittest.makeSuite(BindDataPointsApplianceModelTests))
+        # self.suite.addTest(unittest.makeSuite(BindDataPointsApplianceObjectTests))
+        # self.suite.addTest(unittest.makeSuite(BindDataPointsSensorModelTests))
+        # self.suite.addTest(unittest.makeSuite(BindDataPointsSensorObjectTests))
         return self.suite
 
     def bindings_session_tests(self):
-        self.suite.addTest(unittest.makeSuite(BindSessionApplianceModelTests))
-        self.suite.addTest(unittest.makeSuite(BindSessionApplianceObjectTests))
-        self.suite.addTest(unittest.makeSuite(BindSessionSensorModelTests))
-        self.suite.addTest(unittest.makeSuite(BindSessionSensorObjectTests))
+        # self.suite.addTest(unittest.makeSuite(BindSessionApplianceModelTests))
+        # self.suite.addTest(unittest.makeSuite(BindSessionApplianceObjectTests))
+        # self.suite.addTest(unittest.makeSuite(BindSessionSensorModelTests))
+        # self.suite.addTest(unittest.makeSuite(BindSessionSensorObjectTests))
         return self.suite
 
     def data_point_tests(self):
@@ -86,6 +88,11 @@ class TestSuite():
     def recipe_tests(self):
         self.suite.addTest(unittest.makeSuite(RecipesModelTests))
         # self.suite.addTest(unittest.makeSuite(CuringSessionTests))
+        return self.suite
+
+    def binder_tests(self):
+        self.suite.addTest(unittest.makeSuite(BindDataPointsSensorModelTests))
+        self.suite.addTest(unittest.makeSuite(BindDataPointsApplianceModelTests))
         return self.suite
 
     def users_tests(self):
