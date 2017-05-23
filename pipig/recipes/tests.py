@@ -39,12 +39,12 @@ class RecipesModelTests(BaseTestCase):
     def test_sensor_datapoints_binding_ids(self):
         recipe = build_recipe_model_simple("SENSOR_BINDERS_IDS")
         result = recipe.get_sensor_datapoints_binding_ids()
-        self.assertListEqual(result, [1, 2], "Sensor Datapoints IDs from recipe are incorrect " + str(result))
+        self.assertListEqual(result, [1, 2, 3], "Sensor Datapoints IDs from recipe are incorrect " + str(result))
 
     def test_appliance_datapoints_binding_ids(self):
         recipe = build_recipe_model_simple("APPLIANCE_BINDERS_IDS")
         result = recipe.get_appliance_datapoints_binding_ids()
-        self.assertListEqual(result, [1, 2], "Appliance Datapoints IDs from recipe are incorrect " + str(result))
+        self.assertListEqual(result, [1, 2, 3, 4], "Appliance Datapoints IDs from recipe are incorrect " + str(result))
 
 
 # ________________________________________________________________
@@ -57,11 +57,10 @@ def build_recipe_model_simple(base_name):
 
     appliance_ids = yeild_object_ids(build_appliances(3))
     sensor_ids = yeild_object_ids(build_sensors(3))
-    dps = build_datapoints(3)
-    datapoints_ids = yeild_object_ids(dps)
+    datapoints_ids = yeild_object_ids(build_datapoints(3))
 
-    binders_sensor_ids = yeild_object_ids(build_sensor_binders(recipe_id, ((1, 1), (2, 2))))
-    binders_appliance_ids = yeild_object_ids(build_appliance_binders(recipe_id, ((1, 1), (2, 2))))
+    binders_sensor_ids = yeild_object_ids(build_sensor_binders(recipe_id, ((1, 1), (2, 2), (1, 2))))
+    binders_appliance_ids = yeild_object_ids(build_appliance_binders(recipe_id, ((1, 1), (2, 2), (1, 2), (2, 1))))
 
     return recipe
 
