@@ -1,4 +1,5 @@
 from test_helpers.test_base import BaseTestCase
+from test_helpers.test_generics import run_equals_test, run_list_equals_test
 from pipig.recipes.models import Recipe
 from binders.models import BindDatapoitnsAppliances, BindDatapoitnsSensors
 from appliances.tests import build_appliance_model
@@ -19,33 +20,33 @@ class RecipesModelTests(BaseTestCase):
     def test_get_id(self):
         recipe = build_recipe_model_simple("ID")
         result = recipe.get_id()
-        self.assertTrue(result == 1, "ID should equal 1 however is " + str(result))
+        run_equals_test(self, result, 1, "Get ID", "Get ID from Recipe Failed")
 
     def test_sensor_ids(self):
         recipe = build_recipe_model_simple("SENSOR_IDS")
         result = recipe.get_sensor_ids()
-        self.assertListEqual(result, [1, 2], "Sensor IDs from recipe are incorrect " + str(result))
+        run_list_equals_test(self, result, [1, 2], "Sensor IDs", "getSensorIds failed")
 
     def test_appliance_ids(self):
         recipe = build_recipe_model_simple("APPLIANCE_IDS")
         result = recipe.get_appliance_ids()
-        self.assertListEqual(result, [1, 2], "Appliance IDs from recipe are incorrect " + str(result))
+        run_list_equals_test(self, result, [1, 2], "Appliance IDs", "getApplianceIds failed")
 
     def test_datapoints_ids(self):
         recipe = build_recipe_model_simple("DATAPOINTS_IDS")
         result = recipe.get_datapoints_ids()
-        self.assertListEqual(result, [1, 2], "Datapoints IDs from recipe are incorrect " + str(result))
+        run_list_equals_test(self, result, [1, 2], "Datapoints IDs", "getDatapointsIds failed")
 
     def test_sensor_datapoints_binding_ids(self):
         recipe = build_recipe_model_simple("SENSOR_BINDERS_IDS")
         result = recipe.get_sensor_datapoints_binding_ids()
-        self.assertListEqual(result, [1, 2, 3], "Sensor Datapoints IDs from recipe are incorrect " + str(result))
+        run_list_equals_test(self, result, [1, 2, 3], "Sensor Datapoints Binder IDs", "get_sensor_datapoints_binding_ids failed")
 
     def test_appliance_datapoints_binding_ids(self):
         recipe = build_recipe_model_simple("APPLIANCE_BINDERS_IDS")
         result = recipe.get_appliance_datapoints_binding_ids()
-        self.assertListEqual(result, [1, 2, 3, 4], "Appliance Datapoints IDs from recipe are incorrect " + str(result))
-
+        run_list_equals_test(self, result, [1, 2, 3, 4], "Appliance Datapoints Binder IDs",
+                             "get_appliance_datapoints_binding_ids failed")
 
 # ________________________________________________________________
 #
