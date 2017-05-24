@@ -15,9 +15,10 @@ from sessions.tests import SessionsModelTests
 from utilities.tests import UtilityTests
 from recipes.tests import RecipesModelTests
 from binders.tests import BindDataPointsSensorModelTests, BindDataPointsApplianceModelTests
+from controller.tests import ControllerBuildTests, ControllerGetTests, ControllerInteractionTests, ControllerQueueTests
 
 
-class TestSuite():
+class TestSuite:
     def __init__(self):
         self.suite = unittest.TestSuite()
 
@@ -33,6 +34,7 @@ class TestSuite():
         # self.sessions_tests()
         self.binder_tests()
         self.recipe_tests()
+        self.controller_tests()
         # self.users_tests()
         self.utilities_tests()
         return self.suite
@@ -93,6 +95,13 @@ class TestSuite():
     def binder_tests(self):
         self.suite.addTest(unittest.makeSuite(BindDataPointsSensorModelTests))
         self.suite.addTest(unittest.makeSuite(BindDataPointsApplianceModelTests))
+        return self.suite
+
+    def controller_tests(self):
+        self.suite.addTest(unittest.makeSuite(ControllerInteractionTests))
+        self.suite.addTest(unittest.makeSuite(ControllerQueueTests))
+        self.suite.addTest(unittest.makeSuite(ControllerGetTests))
+        self.suite.addTest(unittest.makeSuite(ControllerBuildTests))
         return self.suite
 
     def users_tests(self):

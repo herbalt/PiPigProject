@@ -37,6 +37,9 @@ class BaseSensor(AsyncTask):
         result = result + "Type: " + self.obj_type()
         return result
 
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
     def get_id(self):
         return self.sensor_id
 

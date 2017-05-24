@@ -34,6 +34,9 @@ class Appliance(db.Model, CRUDMixin):
         self.type_id = type_id
         self.gpio_pin_id = gpio_pin_id
 
+    def __str__(self):
+        return "Appliance\nName: " + self.name + "\nType ID: " + str(self.type_id) + "\nGPIO Pin: " + str(self.gpio_pin_id)
+
     def get_id(self):
         return self.id
 

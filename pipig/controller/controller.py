@@ -1,4 +1,5 @@
 from pipig.sessions.models import Session
+from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 
 
@@ -28,7 +29,8 @@ class Controller(Observer):
         return self.session_id
 
     def get_recipe_obj(self):
-        pass
+        recipe = Recipe.get(self.get_recipe_id())
+        return recipe
 
     def get_session_obj(self):
         if self.get_session_id() is None:
@@ -100,6 +102,20 @@ class Controller(Observer):
     def start_appliance_queue_processing(self):
         """
         Begins the Thread for processing the outgoing Appliance Readings
+        :return: 
+        """
+        pass
+
+    def stop_sensor_queue_processing(self):
+        """
+        Stops the Sensor Queue from receiving Sensor Readings
+        :return: 
+        """
+        pass
+
+    def stop_appliance_queue_processing(self):
+        """
+        Stops the Appliance Queue from receiving Appliance Readings
         :return: 
         """
         pass

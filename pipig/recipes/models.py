@@ -10,6 +10,26 @@ class Recipe(db.Model, CRUDMixin):
     def __init__(self, name):
         self.name = name
 
+    def __str__(self):
+        return "RECIPE\n" + \
+               "ID: " + str(self.get_id()) + \
+               "\nName: " + self.get_name() + \
+               "\nSensor Bindings: " + str(self.get_sensor_datapoints_binding_ids()) + \
+               "\nAppliance Bindings: " + str(self.get_appliance_datapoints_binding_ids()) + \
+               "\nSensor Ids: " + str(self.get_sensor_ids()) + \
+               "\nAppliance Ids: " + str(self.get_appliance_ids()) + \
+               "\nDatapoints Ids: " + str(self.get_datapoints_ids())
+
+    def __eq__(self, other):
+        equal_id = self.get_id() == other.get_id()
+        equal_name = self.get_name() == other.get_name()
+        equal_sensor_bindings = self.get_sensor_datapoints_binding_ids() == other.get_sensor_datapoints_binding_ids()
+        equal_appliance_bindings = self.get_appliance_datapoints_binding_ids() == other.get_appliance_datapoints_binding_ids()
+        equal_sensor_ids = self.get_sensor_ids() == other.get_sensor_ids()
+        equal_appliance_ids = self.get_appliance_ids() == other.get_appliance_ids()
+        equal_datapoints_ids = self.get_datapoints_ids() == other.get_datapoints_ids()
+        return equal_id and equal_name and equal_sensor_bindings and equal_appliance_bindings and equal_sensor_ids and equal_appliance_ids and equal_datapoints_ids
+
     def get_id(self):
         return self.id
 

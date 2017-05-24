@@ -10,6 +10,15 @@ class Session(db.Model, CRUDMixin):
         self.name = name
         self.start_time = start_time
 
+    def __str__(self):
+        return "Session\nID: " + str(self.get_id()) + "\nName: " + self.get_name() + "\nStart Time: " + str(self.get_start_time())
+
+    def __eq__(self, other):
+        equal_id = self.get_id() == other.get_id()
+        equal_name = self.get_name() == other.get_name()
+        equal_start_time = self.get_start_time() == other.get_start_time()
+        return equal_id and equal_name and equal_start_time
+
     def get_id(self):
         return self.id
 

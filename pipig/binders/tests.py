@@ -1,61 +1,84 @@
 from test_helpers.test_base import BaseTestCase
+from test_helpers.test_generics import run_equals_test
 from binders.models import BindDatapoitnsSensors, BindDatapoitnsAppliances
 
 
+#________________________________________________________________
+#
+# Unit Tests
+#________________________________________________________________
 class BindDataPointsSensorModelTests(BaseTestCase):
-    def build_test_obj(self):
-        return build_sensor_binder()
 
     def test_get_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsSensors)
-        self.assertTrue(obj.get_id() == 1, "%s\n should produce an ID of 1" % str(obj))
+        obj = build_sensor_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsSensors, "BindSensorDataPointsID", "Object type is correct")
+        run_equals_test(self, obj.get_id(), 1, "BindSensorDataPointsID", "Get ID Method")
 
     def test_get_datapoint_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsSensors)
-        self.assertTrue(obj.get_datapoints_id() == 1, "%s\n should produce an DataPoint ID of 1" % str(obj))
+        obj = build_sensor_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsSensors, "BindSensorDataPointsID", "Object type is correct")
+        run_equals_test(self, obj.get_datapoints_id(), 1, "BindSensorDataPointsID", "Get Datapoints ID Method")
 
     def get_recipe_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsSensors)
-        self.assertTrue(obj.get_recipe_id() == 1, "%s\n should produce an Recipe ID of 1" % str(obj))
+        obj = build_sensor_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsSensors, "BindSensorDataPointsID", "Object type is correct")
+        run_equals_test(self, obj.get_recipe_id(), 1, "BindSensorDataPointsID", "Get Recipe ID Method")
 
     def test_get_sensor_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsSensors)
-        self.assertTrue(obj.get_sensor_id() == 1, "%s\n should produce an SessionSensor ID of 1" % str(obj))
+        obj = build_sensor_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsSensors, "BindSensorDataPointsID", "Object type is correct")
+        run_equals_test(self, obj.get_sensor_id(), 1, "BindSensorDataPointsID", "Get Sensor ID Method")
 
 
 class BindDataPointsApplianceModelTests(BaseTestCase):
-    def build_test_obj(self):
-        return build_appliance_binder()
 
     def test_get_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsAppliances)
-        self.assertTrue(obj.get_id() == 1, "%s\n should produce an ID of 1" % str(obj))
+        obj = build_appliance_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsAppliances, "BindApplianceDataPointsID", "Object type is correct")
+        run_equals_test(self, obj.get_id(), 1, "BindApplianceDataPointsID", "Get ID Method")
 
     def test_get_datapoint_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsAppliances)
-        self.assertTrue(obj.get_datapoints_id() == 1, "%s\n should produce an DataPoint ID of 1" % str(obj))
+        obj = build_appliance_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsAppliances, "BindApplianceDataPointsID",
+                        "Object type is correct")
+        run_equals_test(self, obj.get_datapoints_id(), 1, "BindApplianceDataPointsID", "Get DataPoints ID Method")
 
     def get_recipe_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsAppliances)
-        self.assertTrue(obj.get_recipe_id() == 1, "%s\n should produce an Recipe ID of 1" % str(obj))
+        obj = build_appliance_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsAppliances, "BindApplianceDataPointsID",
+                        "Object type is correct")
+        run_equals_test(self, obj.get_recipe_id(), 1, "BindApplianceDataPointsID", "Get Recipe ID Method")
 
     def test_get_appliance_id(self):
-        obj = self.build_test_obj()
-        self.assertTrue(type(obj) == BindDatapoitnsAppliances)
-        self.assertTrue(obj.get_appliance_id() == 1, "%s\n should produce an Appliance ID of 1" % str(obj))
+        obj = build_appliance_binder()
+        run_equals_test(self, type(obj), BindDatapoitnsAppliances, "BindApplianceDataPointsID",
+                        "Object type is correct")
+        run_equals_test(self, obj.get_appliance_id(), 1, "BindApplianceDataPointsID", "Get Appliance ID Method")
 
+    def test_get_polarity(self):
+        obj = build_appliance_binder()
 
+        obj.polarity = 5
+        run_equals_test(self, obj.get_polarity(), 1, "BindApplianceDataPointsID", "Get Appliance ID Method")
+        obj.polarity = 1
+        run_equals_test(self, obj.get_polarity(), 1, "BindApplianceDataPointsID", "Get Appliance ID Method")
+        obj.polarity = 0
+        run_equals_test(self, obj.get_polarity(), 0, "BindApplianceDataPointsID", "Get Appliance ID Method")
+        obj.polarity = -5
+        run_equals_test(self, obj.get_polarity(), -1, "BindApplianceDataPointsID", "Get Appliance ID Method")
+        obj.polarity = -1
+        run_equals_test(self, obj.get_polarity(), -1, "BindApplianceDataPointsID", "Get Appliance ID Method")
+        obj.polarity = None
+        run_equals_test(self, obj.get_polarity(), 1, "BindApplianceDataPointsID", "Get Appliance ID Method")
 
+#________________________________________________________________
+#
+# Builders for Tests
+#________________________________________________________________
 def build_sensor_binder(recipe_id=1, datapoints_id=1, sensor_id=1):
     sensor_binder = BindDatapoitnsSensors.create(recipe_id=recipe_id, datapoints_id=datapoints_id, sensor_id=sensor_id)
     return sensor_binder
+
 
 def build_appliance_binder(recipe_id=1, datapoints_id=1, appliance_id=1):
     appliance_binder = BindDatapoitnsAppliances.create(recipe_id=recipe_id, datapoints_id=datapoints_id, appliance_id=appliance_id)

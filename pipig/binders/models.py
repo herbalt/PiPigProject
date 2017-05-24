@@ -41,6 +41,7 @@ class BindDatapoitnsAppliances(db.Model, CRUDMixin):
     recipe_id = db.Column(db.Integer, nullable=False)
     datapoints_id = db.Column(db.Integer, nullable=False)
     appliance_id = db.Column(db.Integer, nullable=False)
+    polarity = db.Column(db.Integer, nullable=True)
 
     def __init__(self, recipe_id, datapoints_id, appliance_id):
         self.recipe_id = recipe_id
@@ -62,4 +63,14 @@ class BindDatapoitnsAppliances(db.Model, CRUDMixin):
     def get_appliance_id(self):
         return self.appliance_id
 
+    def get_polarity(self):
+        polarity = self.polarity
+        if polarity is None:
+            return 1
+        elif polarity >= 1:
+            return 1
+        elif polarity < 0:
+            return -1
+        else:
+            return 0
 
