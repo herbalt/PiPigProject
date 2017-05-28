@@ -15,8 +15,13 @@ from sessions.tests import SessionsModelTests
 from utilities.tests import UtilityTests
 from recipes.tests import RecipesModelTests
 from binders.tests import BindDataPointsSensorModelTests, BindDataPointsApplianceModelTests
-from controller.tests import ControllerBuildTests, ControllerGetTests, ControllerInteractionTests, ControllerQueueTests
+from factories.tests import FactoryTests, FactorySensorTests, FactoryApplianceTests
 
+from controller.tests import ControllerBuildTests, ControllerGetTests, ControllerInteractionTests, ControllerQueueTests
+# from controller.tests import ControllerBuildTests
+# from controller.tests import ControllerGetTests
+# from controller.tests import ControllerInteractionTests
+# from controller.tests import ControllerQueueTests
 
 class TestSuite:
     def __init__(self):
@@ -35,6 +40,7 @@ class TestSuite:
         self.binder_tests()
         self.recipe_tests()
         self.controller_tests()
+        self.factory_tests()
         # self.users_tests()
         self.utilities_tests()
         return self.suite
@@ -98,10 +104,18 @@ class TestSuite:
         return self.suite
 
     def controller_tests(self):
-        self.suite.addTest(unittest.makeSuite(ControllerInteractionTests))
-        self.suite.addTest(unittest.makeSuite(ControllerQueueTests))
-        self.suite.addTest(unittest.makeSuite(ControllerGetTests))
-        self.suite.addTest(unittest.makeSuite(ControllerBuildTests))
+
+        # self.suite.addTest(unittest.makeSuite(ControllerInteractionTests))
+        # self.suite.addTest(unittest.makeSuite(ControllerQueueTests))
+        # self.suite.addTest(unittest.makeSuite(ControllerGetTests))
+        # self.suite.addTest(unittest.makeSuite(ControllerBuildTests))
+
+        return self.suite
+
+    def factory_tests(self):
+        self.suite.addTest(unittest.makeSuite(FactoryTests))
+        self.suite.addTest(unittest.makeSuite(FactorySensorTests))
+        self.suite.addTest(unittest.makeSuite(FactoryApplianceTests))
         return self.suite
 
     def users_tests(self):

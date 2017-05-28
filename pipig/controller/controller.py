@@ -1,7 +1,8 @@
 from pipig.sessions.models import Session
 from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
-
+from pipig.factories.factory import SensorFactory, ApplianceFactory
+from pipig.factories.abstract_factory import AbstractFactory
 
 class Controller(Observer):
     """
@@ -15,6 +16,7 @@ class Controller(Observer):
         super(Controller, self).__init__()
         self.recipe_id = recipe_id
         self.session_id = session_id
+        self.factory = AbstractFactory()
 
         self.build_controller()
 
@@ -59,7 +61,30 @@ class Controller(Observer):
         Build all Sensors, Datapoints and Appliances
         :return: 
         """
-        pass
+        self.build_sensors()
+        self.build_appliances()
+        self.build_datapoints()
+
+    def build_sensors(self):
+        """
+        Build Sensors in a Dict
+        :return: 
+        """
+        return self.factory.build_objects_dict(self.factory.SENSOR, self.get_recipe_obj().get_sensor_id_list())
+
+    def build_appliances(self):
+        """
+        Build Appliances in a Dict
+        :return: 
+        """
+        return self.factory.build_objects_dict(self.factory.APPLIANCE, self.get_recipe_obj().get_appliance_id_list())
+
+    def build_datapoints(self):
+        """
+        Build Datapoints in a Dict
+        :return: 
+        """
+        return self.factory.build_objects_dict(self.factory.DATAPOINTS, self.get_recipe_obj().get_datapoints_id_list())
 
     def bind_sensor_objects(self):
         """

@@ -54,17 +54,19 @@ def build_session_model(base_name):
 #
 # Mock Object for Unit Tests
 #________________________________________________________________
+"""
 class MockSession(Session):
     def __init__(self, name, self_id, start_time):
         super(MockSession, self).__init__(name)
-        self.self_id = self_id
+        self.id = self_id
         self.start_time = start_time
 
     def get_id(self):
-        return self.self_id
+        return self.id
 
     def get_name(self):
         return self.name
 
     def get_start_time(self):
         return self.start_time
+"""

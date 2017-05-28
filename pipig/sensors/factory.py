@@ -37,5 +37,18 @@ class FactorySensor:
         else:
             return SensorBasic(sensor_id)
 
+    def build_object_dict(self, sensor_id_list):
+        """
+        
+        :param sensor_id_list: 
+        :return: A Dictionary of Sensor objects where the key is the sensor ID
+        """
+        sensor_dict = {}
+        for sensor_id in sensor_id_list:
+            obj = self.build_object(sensor_id)
+            if not sensor_dict.has_key(sensor_id):
+                sensor_dict[sensor_id] = obj
+        return sensor_dict
+
 
 

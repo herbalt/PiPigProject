@@ -2,7 +2,7 @@ from test_helpers.test_base import BaseTestCase
 from test_helpers.test_generics import run_equals_test, unwritten_test, run_object_equals_test
 from pipig.controller.controller import Controller
 from pipig.recipes.tests import MockRecipe
-from pipig.sessions.tests import MockSession
+# from pipig.sessions.tests import MockSession
 
 
 # ________________________________________________________________
@@ -27,7 +27,9 @@ class ControllerGetTests(BaseTestCase):
 
     def test_get_session_obj(self):
         result = build_test_controller().get_session_obj()
-        expected = MockSession("ControllerTest SessionSessionModel", 1, 0)
+        # expected = MockSession("ControllerTest SessionSessionModel", 1, 0)
+        # TODO REQUIRES A SEESSION OBJECT TO RUN TEST CORRECTLY
+        expected = "REQUIRES A SESSION OBJECT"
         run_equals_test(self, result, expected, "Controller Session Object", "Failed to match equaility of attributes")
 
 
@@ -39,13 +41,88 @@ class ControllerBuildTests(BaseTestCase):
     def test_build_controller(self):
         """
         Main method to call from init to construct the environment
+        
+        This should test if every required method is called in the correct order if necessary.
+        Use a Mock Controller Object that returns True for the required methods
+        
         :return: 
         """
-        unwritten_test(self)
+        class MockBuildController(Controller):
+            def __init__(self, recipe_id):
+                super(MockBuildController, self).__init__(recipe_id)
+
+            def build_controller(self):
+                return True
+
+            def build_objects(self):
+                return True
+
+            def bind_sensor_objects(self):
+                return True
+
+            def bind_appliance_objects(self):
+                return True
+
+        mock = MockBuildController(1)
+
+        build = mock.build_objects()
+        bind_sensor = mock.bind_sensor_objects()
+        bind_appliance = mock.bind_appliance_objects()
+
+        run_equals_test(self, [build, bind_sensor, bind_appliance], [True, True, True], "test_build_controller",
+                        "Object Method Calls were trigged incorrectly. Should be BUILD, BIND_SENSOR, BIND_APPLIANCE")
 
     def test_build_objects(self):
         """
         Build all Sensors, Datapoints and Appliances
+        :return: 
+        """
+
+        class MockBuildObjectsController(Controller):
+            def __init__(self, recipe_id):
+                super(MockBuildObjectsController, self).__init__(recipe_id)
+
+            def build_controller(self):
+                return True
+
+            def build_sensors(self):
+                return True
+
+            def build_appliances(self):
+                return True
+
+            def build_datapoints(self):
+                return True
+
+        mock = MockBuildObjectsController(1)
+
+        build_sensors = mock.build_sensors()
+        build_appliances = mock.build_appliances()
+        build_datapoints = mock.build_datapoints()
+
+        run_equals_test(self, [build_sensors, build_appliances, build_datapoints], [True, True, True], "objects",
+                        "Object Method Calls were trigged incorrectly. Should be SENSORS, APPLIANCES, DATAPOINTS")
+
+    def test_build_sensors(self):
+        """
+        Builds all Sensors in a List
+        :return: 
+        """
+        unwritten_test(self)
+
+        # recipe = MockRecipe("ControllerBuildSensors")
+        # sensor_ids = recipe.get_sensor_ids()
+
+    def test_build_appliances(self):
+        """
+        Builds all Appliances in a List
+        :return: 
+        """
+        unwritten_test(self)
+
+    def test_build_datapoints(self):
+        """
+        Builds all Datapoints in a List
         :return: 
         """
         unwritten_test(self)
