@@ -24,6 +24,8 @@ class BaseConfiguration(object):
     # mail accounts
     MAIL_DEFAULT_SENDER = credentials.MAIL_USERNAME
 
+    SENSOR_PROCESSOR_CHAIN = 'database'
+    APPLIANCE_PROCESSOR_CHAIN = 'database'
 
 class TestConfiguration(BaseConfiguration):
     NAME = 'TestConfiguration'

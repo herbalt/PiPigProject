@@ -3,8 +3,9 @@ from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 from pipig.factories.factory import SensorFactory, ApplianceFactory
 from pipig.factories.abstract_factory import AbstractFactory
+from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE
 
-class Controller(Observer):
+class Controller(Observer, Subject):
     """
     Container for creating and binding all the Objects in a Recipe
     Input Queue takes Processed Sensor readings
@@ -14,9 +15,18 @@ class Controller(Observer):
 
     def __init__(self, recipe_id, session_id=None):
         super(Controller, self).__init__()
+
         self.recipe_id = recipe_id
         self.session_id = session_id
         self.factory = AbstractFactory()
+
+        self.sensors_dict = {}
+        self.appliances_dict = {}
+        self.datapoints_dict = {}
+
+        processor_factory = ProcessorChainFactory()
+        self.sensor_processor = processor_factory.build_object(PRINT_DATABASE)
+        self.appliance_processor = processor_factory.build_object(PRINT_DATABASE)
 
         self.build_controller()
 
@@ -61,7 +71,6 @@ class Controller(Observer):
         Build all Sensors, Datapoints and Appliances
         :return: 
         """
-        self.build_sensors()
         self.build_appliances()
         self.build_datapoints()
 
@@ -70,14 +79,20 @@ class Controller(Observer):
         Build Sensors in a Dict
         :return: 
         """
-        return self.factory.build_objects_dict(self.factory.SENSOR, self.get_recipe_obj().get_sensor_id_list())
+        self.sensors_dict = self.factory.build_objects_dict(self.factory.SENSOR, self.get_recipe_obj().get_sensor_id_list())
+        for sensor in self.sensors_dict:
+            self.sensor_processor.attach(sensor)
+        return self.sensors_dict
 
     def build_appliances(self):
         """
         Build Appliances in a Dict
         :return: 
         """
-        return self.factory.build_objects_dict(self.factory.APPLIANCE, self.get_recipe_obj().get_appliance_id_list())
+        self.appliances_dict = self.factory.build_objects_dict(self.factory.APPLIANCE, self.get_recipe_obj().get_appliance_id_list())
+        for appliance in self.appliances_dict:
+            appliance.attach(self.appliance_processor)
+        return self.appliances_dict
 
     def build_datapoints(self):
         """
@@ -91,7 +106,8 @@ class Controller(Observer):
         Bind Sensor Objects to Controller
         :return: 
         """
-        pass
+        self.sensor_processor.attach(self)
+
 
     def bind_appliance_objects(self):
         """
@@ -99,7 +115,7 @@ class Controller(Observer):
         :return: 
         """
         pass
-
+        self.attach(self.appliance_processor)
     """
     Abstract Methods
     """
