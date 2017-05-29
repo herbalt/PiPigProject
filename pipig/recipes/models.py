@@ -1,7 +1,7 @@
 from pipig.data import db, CRUDMixin
 from sensors.models import Sensor
 from binders.models import BindDatapoitnsAppliances, BindDatapoitnsSensors
-
+from binders.models import BindDatapoitnsSensors
 
 class Recipe(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -85,10 +85,50 @@ class Recipe(db.Model, CRUDMixin):
 
         return binder_ids
 
+    def get_datapoints_for_sensor(self, sensor_id):
+        """
+        
+        :param sensor_id: 
+        :return: The corresponding Datapoint IDs for the relevant Sensor
+        """
 
+        output_list = []
+        sensor_binders = self.get_sensor_datapoints_binding_ids()
+        for binder_id in sensor_binders:
+            binder = BindDatapoitnsSensors.get(binder_id)
+            if binder.get_sensor_id() == sensor_id:
+                output_list.append(binder.get_datapoints_id())
+        return output_list
 
+    def get_appliances_for_datapoint(self, datapoints_id):
+        """
+        
+        :param datapoints_id: 
+        :return: The corresponding Appliance IDs for the relevant Datapoint
+        """
 
+        output_list = []
+        appliance_binders = self.get_appliance_datapoints_binding_ids()
+        for binder_id in appliance_binders:
+            binder = BindDatapoitnsAppliances.get(binder_id)
+            if binder_id.get_datapoints_id() == datapoints_id:
+                output_list.append(binder.get_appliance_id())
+        return output_list
 
+    def get_appliance_binders_for_datapoint(self, datapoints_id):
+        """
+
+        :param datapoints_id: 
+        :return: The corresponding Appliance IDs for the relevant Datapoint
+        """
+
+        output_list = []
+        appliance_binders = self.get_appliance_datapoints_binding_ids()
+        for binder_id in appliance_binders:
+            binder = BindDatapoitnsAppliances.get(binder_id)
+            if binder_id.get_datapoints_id() == datapoints_id:
+                output_list.append(binder_id)
+        return output_list
 
 
 

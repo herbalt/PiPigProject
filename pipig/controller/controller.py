@@ -1,9 +1,12 @@
+from generics.constants import COMPONENT_TYPE_SENSOR, COMPONENT_TYPE_DATAPOINT, COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
+from generics.models import GenericReading
 from pipig.sessions.models import Session
 from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
-from pipig.factories.factory import SensorFactory, ApplianceFactory
 from pipig.factories.abstract_factory import AbstractFactory
 from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE
+from Queue import Queue
+from pipig.binders.models import BindDatapoitnsAppliances
 
 class Controller(Observer, Subject):
     """
@@ -27,6 +30,9 @@ class Controller(Observer, Subject):
         processor_factory = ProcessorChainFactory()
         self.sensor_processor = processor_factory.build_object(PRINT_DATABASE)
         self.appliance_processor = processor_factory.build_object(PRINT_DATABASE)
+
+        self.sensor_queue = Queue()
+        self.appliance_queue = Queue()
 
         self.build_controller()
 
@@ -111,15 +117,19 @@ class Controller(Observer, Subject):
 
     def bind_appliance_objects(self):
         """
+        NOT SURE IF I NEED THIS FUNCTION .... HOWEVER I DO MAKE AN EXPLICIT CALL TO THE RELEVANT APPLIANCE
+        Bind Processors to Appliances
+        then
         Bind Controller to Appliances
         :return: 
         """
+
+        # self.attach(self.appliance_processor)
         pass
-        self.attach(self.appliance_processor)
+
     """
     Abstract Methods
     """
-
     def receive(self, result, status_code=0):
         """
         Receive a Sensor Reading to the Controller
@@ -185,14 +195,77 @@ class Controller(Observer, Subject):
         :param reading: A processed Sensor reading that is Recieved
         :return: 
         """
-        pass
+        self.sensor_queue.put_nowait(reading)
 
-    def process_sensor_reading(self):
+    def process_sensor_queue(self):
+        sensor_reading = self.sensor_queue.get()
+        datapoints_result_list = self.process_sensor_reading(sensor_reading)
+        appliance_reading_list = self.process_datapoint_results_to_appliance(datapoints_result_list)
+        for appliance_reading in appliance_reading_list:
+            self.add_appliance_reading_to_queue(appliance_reading)
+
+    def process_sensor_reading(self, sensor_reading):
         """
         Take a Sensor Reading from the Queue and build an output Reading based on the interaction with the Datapoints
         :return: The Output Reading(s) that will be sent to the Appliance Queue
         """
-        pass
+
+        # Check if Reading is of the right component type
+        if not sensor_reading.get_component_id() == COMPONENT_TYPE_SENSOR:
+            raise AttributeError
+
+        # Get the relevant readings to be able to compare against a datapoints object
+        recipe = self.get_recipe_obj()
+        session = self.get_session_obj()
+        sensor_id = sensor_reading.get_component_id()
+        reading_timestamp = sensor_reading.get_reading_timestamp()
+        time_elapsed = session.get_start_time() - reading_timestamp
+        reading_value = sensor_reading.get_reading_value()
+
+        # Get all the corresponding datapoints to compare with
+        datapoint_id_list = recipe.get_datapoints_for_sensor(sensor_id)
+
+        datapoint_result_list = []
+
+        for datapoint_id in datapoint_id_list:
+            datapoints = self.datapoints_dict.get(datapoint_id)
+
+            # Compare Sensor reading versus all the corresponding datapoints
+            datapoint = datapoints.get_point(time_elapsed)
+
+            compare_result = reading_value - datapoint.get_value()
+            datapoint_result_list.append(GenericReading(datapoint_id, COMPONENT_TYPE_DATAPOINT, compare_result, reading_timestamp))
+
+            # Create a Reading for every datapoint comparision that will be added to the Appliance Queue
+
+        # Return the list of Output Readings
+
+        for datapoint_result in datapoint_result_list:
+            recipe.get_appliances_for_datapoint(datapoint_result.get_component_id())
+
+        return datapoint_result_list
+
+    def process_datapoint_results_to_appliance(self, datapoint_readings):
+
+        recipe = self.get_recipe_obj()
+        binder_list = recipe.get_appliance_datapoints_binding_ids()
+
+        for binder in binder_list:
+            if binder.get_datapoint_id() == datapoint_readings.get_component_id():
+                binder_obj = BindDatapoitnsAppliances.get(binder.get_id())
+                polarity = binder_obj.get_polarity()
+                appliance_response = self.response_to_datapoint(datapoint_readings.get_value(), polarity)
+                output_reading = GenericReading(binder_obj.get_appliance_id(), COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER, appliance_response,
+                               datapoint_readings.get_timestamp())
+                self.add_appliance_reading_to_queue(output_reading)
+
+    def response_to_datapoint(self, diff_sensor_datapoint_value, polarity):
+        if diff_sensor_datapoint_value < 0:
+            return polarity
+        elif diff_sensor_datapoint_value > 0:
+            return -1 * polarity
+        else:
+            return 0
 
     def add_appliance_reading_to_queue(self, reading):
         """
@@ -200,11 +273,19 @@ class Controller(Observer, Subject):
         :param reading: A output reading that is to be processed by the Appliances
         :return: 
         """
-        pass
+        if not reading.get_component_id() == COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER:
+            raise AttributeError
+
+        self.appliance_queue.put_nowait(reading)
+
 
     def process_appliance_queue(self):
         """
         Take a Appliance Reading from the Queue and send to the relevant Appliance Objects
         :return: 
         """
-        pass
+        appliance_reading = self.appliance_queue.get()
+        for appliance in self.appliances_dict:
+            if appliance.get_id() == appliance_reading:
+                appliance.recieve(appliance_reading)
+

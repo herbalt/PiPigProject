@@ -1,5 +1,5 @@
 from test_helpers.test_base import BaseTestCase
-from test_helpers.test_generics import run_equals_test, run_list_equals_test
+from test_helpers.test_generics import run_equals_test, run_list_equals_test, unwritten_test
 from pipig.recipes.models import Recipe
 from binders.models import BindDatapoitnsAppliances, BindDatapoitnsSensors
 from appliances.tests import build_appliance_model
@@ -47,6 +47,12 @@ class RecipesModelTests(BaseTestCase):
         result = recipe.get_appliance_datapoints_binding_ids()
         run_list_equals_test(self, result, [1, 2, 3, 4], "Appliance Datapoints Binder IDs",
                              "get_appliance_datapoints_binding_ids failed")
+
+    def test_get_datapoints_for_sensor(self):
+        unwritten_test(self)
+
+    def test_get_appliances_for_datapoint(self):
+        unwritten_test(self)
 
 # ________________________________________________________________
 #

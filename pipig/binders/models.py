@@ -74,3 +74,9 @@ class BindDatapoitnsAppliances(db.Model, CRUDMixin):
         else:
             return 0
 
+
+
+
+
+
+

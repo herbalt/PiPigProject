@@ -1,5 +1,5 @@
 from test_helpers.test_base import BaseTestCase
-from test_helpers.test_generics import run_equals_test
+from test_helpers.test_generics import run_equals_test, unwritten_test
 from binders.models import BindDatapoitnsSensors, BindDatapoitnsAppliances
 
 
@@ -71,6 +71,8 @@ class BindDataPointsApplianceModelTests(BaseTestCase):
         obj.polarity = None
         run_equals_test(self, obj.get_polarity(), 1, "BindApplianceDataPointsID", "Get Appliance ID Method")
 
+    def test_response_to_datapoint(self):
+        unwritten_test(self)
 #________________________________________________________________
 #
 # Builders for Tests
