@@ -4,7 +4,8 @@ from time import sleep, time
 from generics.constants import COMPONENT_TYPE_SENSOR
 from pipig import app
 from pipig.sensors.models import Sensor, SensorType
-from generics.models import GenericUnits, GenericReading
+from generics.models import GenericReading
+from units.models import GenericUnits
 from general.patterns import AsyncTask
 from gpio_pins.models import GpioPin
 

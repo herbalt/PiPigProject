@@ -5,6 +5,7 @@ from sensors.sensor import SensorBasic, SensorADC, SensorDHT22Temperature, Senso
 from appliances.appliance import BasicAppliance
 from appliances.models import Appliance, ApplianceType
 from data_points.models import DataPoints
+from binders.models import BindDatapoitnsAppliances
 
 SENSOR_TYPE_NAME_BASIC = 'Counter'
 SENSOR_TYPE_NAME_ADC = 'ADC Temparture'
@@ -105,3 +106,24 @@ class DatapointFactory(BaseFactory):
 
     def get_database_object(self, object_id):
         return None
+
+
+class ApplianceBinderFactory:
+
+    def __init__(self):
+        pass
+
+    def build_object(self, object_id):
+        db_obj = self.get_database_object(object_id)
+        return db_obj
+
+    def build_object_dict(self, object_id_list):
+        object_dict = {}
+        for object_id in object_id_list:
+            obj = self.build_object(object_id)
+            if not object_dict.has_key(object_id):
+                object_dict[object_id] = obj
+        return object_dict
+
+    def get_database_object(self, object_id):
+        return BindDatapoitnsAppliances.get(object_id)

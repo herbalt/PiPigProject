@@ -9,19 +9,15 @@ class ControllerApi():
         Starts Sensors and Queues of the Controller
         :return: 
         """
-        pass
+        self.controller.start_sensor_queue_processing()
+        self.controller.start_appliance_queue_processing()
+        self.controller.start_sensors()
 
     def stop(self):
         """
         Stops the Sensors and Queues of the Controller
         :return: 
         """
-        pass
-
-    def pause(self):
-        """
-        THIS MAY NOT BE NEEDED
-        Stops the processing of Readings from entering the Queues
-        :return: 
-        """
-        pass
+        self.controller.stop_sensors()
+        self.controller.stop_sensor_queue_processing()
+        self.controller.stop_appliance_queue_processing()

@@ -12,7 +12,6 @@ from database.views import database
 from pipig.sensors.views import sensors
 from pipig.sessions.views import sessions
 from pipig.appliances.views import appliances
-from pipig.binding_session.views import binding_sessions
 from pipig.recipes.views import recipes
 
 
@@ -36,7 +35,7 @@ app.register_blueprint(sensors)
 app.register_blueprint(sessions)
 # app.register_blueprint(recipes)
 app.register_blueprint(appliances)
-app.register_blueprint(binding_sessions)
+# app.register_blueprint(binding_sessions)
 
 
 @app.route('/')

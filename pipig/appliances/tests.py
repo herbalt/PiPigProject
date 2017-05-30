@@ -1,7 +1,8 @@
 from appliances.models import Appliance, ApplianceType
 from bindings_datapoints.datapoint_binding import IncorrectReadingTypeError
 from generics.constants import COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
-from generics.models import GenericUnits,GenericReading
+from generics.models import GenericReading
+from units.models import GenericUnits
 from appliances.appliance import BaseAppliance
 from gpio_pins.models import GpioPin
 

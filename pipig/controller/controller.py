@@ -6,7 +6,8 @@ from pipig.general.patterns import Subject, Observer
 from pipig.factories.abstract_factory import AbstractFactory
 from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE
 from Queue import Queue
-from pipig.binders.models import BindDatapoitnsAppliances
+from threading import Thread
+
 
 class Controller(Observer, Subject):
     """
@@ -26,6 +27,7 @@ class Controller(Observer, Subject):
         self.sensors_dict = {}
         self.appliances_dict = {}
         self.datapoints_dict = {}
+        self.appliance_binders_dict = {}
 
         processor_factory = ProcessorChainFactory()
         self.sensor_processor = processor_factory.build_object(PRINT_DATABASE)
@@ -77,8 +79,10 @@ class Controller(Observer, Subject):
         Build all Sensors, Datapoints and Appliances
         :return: 
         """
+        self.build_sensors()
         self.build_appliances()
         self.build_datapoints()
+        self.build_appliance_binders()
 
     def build_sensors(self):
         """
@@ -107,12 +111,16 @@ class Controller(Observer, Subject):
         """
         return self.factory.build_objects_dict(self.factory.DATAPOINTS, self.get_recipe_obj().get_datapoints_id_list())
 
+    def build_appliance_binders(self):
+        return self.factory.build_objects_dict(self.factory.APPLIANCE_BINDER, self.get_recipe_obj().get_appliance_datapoints_binding_ids())
+
     def bind_sensor_objects(self):
         """
         Bind Sensor Objects to Controller
         :return: 
         """
         self.sensor_processor.attach(self)
+
 
 
     def bind_appliance_objects(self):
@@ -148,28 +156,38 @@ class Controller(Observer, Subject):
         Begins the Thread for processing the incoming Sensor Readings
         :return: 
         """
-        pass
+        num_threads = 3
+
+        for i in range(num_threads):
+            worker = Thread(target=self.process_sensor_queue, args=(self.sensor_queue,))
+            worker.setDaemon(True)
+            worker.start()
 
     def start_appliance_queue_processing(self):
         """
         Begins the Thread for processing the outgoing Appliance Readings
         :return: 
         """
-        pass
+        num_threads = 3
+
+        for i in range(num_threads):
+            worker = Thread(target=self.process_appliance_queue, args=(self.appliance_queue,))
+            worker.setDaemon(True)
+            worker.start()
 
     def stop_sensor_queue_processing(self):
         """
         Stops the Sensor Queue from receiving Sensor Readings
         :return: 
         """
-        pass
+        self.sensor_queue.join()
 
     def stop_appliance_queue_processing(self):
         """
         Stops the Appliance Queue from receiving Appliance Readings
         :return: 
         """
-        pass
+        self.appliance_queue.join()
 
     """
     Interactions
@@ -180,6 +198,8 @@ class Controller(Observer, Subject):
         Start every sensor in the list of Sensors
         :return: 
         """
+        for sensor in self.sensors_dict:
+            sensor.execute_operation()
         pass
 
     def stop_sensors(self):
@@ -187,7 +207,9 @@ class Controller(Observer, Subject):
         Stop every sensor in the list of Sensors
         :return: 
         """
-        pass
+        for sensor in self.sensors_dict:
+            sensor.cancel_operation()
+
 
     def add_sensor_reading_to_queue(self, reading, status_code=0):
         """
@@ -198,9 +220,14 @@ class Controller(Observer, Subject):
         self.sensor_queue.put_nowait(reading)
 
     def process_sensor_queue(self):
+        appliance_reading_list = []
+
         sensor_reading = self.sensor_queue.get()
         datapoints_result_list = self.process_sensor_reading(sensor_reading)
-        appliance_reading_list = self.process_datapoint_results_to_appliance(datapoints_result_list)
+        for datapoint in datapoints_result_list:
+            datapoint_list = self.process_datapoint_results_to_appliance(datapoint)
+            for datapoint in datapoint_list:
+                appliance_reading_list.append(datapoint)
         for appliance_reading in appliance_reading_list:
             self.add_appliance_reading_to_queue(appliance_reading)
 
@@ -219,7 +246,7 @@ class Controller(Observer, Subject):
         session = self.get_session_obj()
         sensor_id = sensor_reading.get_component_id()
         reading_timestamp = sensor_reading.get_reading_timestamp()
-        time_elapsed = session.get_start_time() - reading_timestamp
+        time_elapsed = reading_timestamp - session.get_start_time()
         reading_value = sensor_reading.get_reading_value()
 
         # Get all the corresponding datapoints to compare with
@@ -247,12 +274,15 @@ class Controller(Observer, Subject):
 
     def process_datapoint_results_to_appliance(self, datapoint_readings):
 
+        if not datapoint_readings.get_component_id() == COMPONENT_TYPE_DATAPOINT:
+            raise AttributeError
+
         recipe = self.get_recipe_obj()
         binder_list = recipe.get_appliance_datapoints_binding_ids()
 
         for binder in binder_list:
             if binder.get_datapoint_id() == datapoint_readings.get_component_id():
-                binder_obj = BindDatapoitnsAppliances.get(binder.get_id())
+                binder_obj = self.appliance_binders_dict.get(binder.get_id())
                 polarity = binder_obj.get_polarity()
                 appliance_response = self.response_to_datapoint(datapoint_readings.get_value(), polarity)
                 output_reading = GenericReading(binder_obj.get_appliance_id(), COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER, appliance_response,
@@ -288,4 +318,6 @@ class Controller(Observer, Subject):
         for appliance in self.appliances_dict:
             if appliance.get_id() == appliance_reading:
                 appliance.recieve(appliance_reading)
+
+
 

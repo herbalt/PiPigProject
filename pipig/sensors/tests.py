@@ -9,7 +9,8 @@ from test_helpers.test_forms import FormTestCase
 
 from pipig.sensors.forms import SensorsForm
 from pipig.sensors.models import Sensor, SensorType
-from generics.models import GenericUnits, GenericReading
+from generics.models import GenericReading
+from units.models import GenericUnits
 
 from sensor import BaseSensor
 from gpio_pins.models import GpioPin

@@ -8,7 +8,7 @@ class SensorType(db.Model, CRUDMixin):
     Example, DHT22, TMP32, TestCounter
     """
     __tablename__ = "sensor_type"
-    id = db.Column(db.Integer, primary_key = True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     type_name = db.Column(db.String(140), nullable=False)
     units_id = db.Column(db.Integer, nullable=False)
     minimum_refresh = db.Column(db.Float(), default=0)
@@ -29,9 +29,6 @@ class SensorType(db.Model, CRUDMixin):
 
     def get_units_id(self):
         return self.units_id
-
-
-
 
 
 class Sensor(db.Model, CRUDMixin):
@@ -76,6 +73,7 @@ class Sensor(db.Model, CRUDMixin):
 
     def get_readings(self):
         return GenericReading.query.filter_by(component_id=self.get_id()).all()
+
 
     def process_sensor_reading_list_to_single_point(self, list_of_sensor_reading_objects=None):
         """
