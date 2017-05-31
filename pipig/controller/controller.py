@@ -1,12 +1,12 @@
 from generics.constants import COMPONENT_TYPE_SENSOR, COMPONENT_TYPE_DATAPOINT, COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
-from generics.models import GenericReading
+from pipig.generics.models import GenericReading
 from pipig.sessions.models import Session
 from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 from pipig.factories.abstract_factory import AbstractFactory
 from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE
 from Queue import Queue
-from threading import Thread
+from threading import Thread, Event
 
 
 class Controller(Observer, Subject):
@@ -34,7 +34,10 @@ class Controller(Observer, Subject):
         self.appliance_processor = processor_factory.build_object(PRINT_DATABASE)
 
         self.sensor_queue = Queue()
+        self.sensor_queue.empty()
         self.appliance_queue = Queue()
+        self.sensor_queue.empty()
+
 
         self.build_controller()
 
@@ -180,6 +183,7 @@ class Controller(Observer, Subject):
         Stops the Sensor Queue from receiving Sensor Readings
         :return: 
         """
+        # self.add_sensor_reading_to_queue(Event())
         self.sensor_queue.join()
 
     def stop_appliance_queue_processing(self):
@@ -223,6 +227,7 @@ class Controller(Observer, Subject):
         appliance_reading_list = []
 
         sensor_reading = self.sensor_queue.get()
+
         datapoints_result_list = self.process_sensor_reading(sensor_reading)
         for datapoint in datapoints_result_list:
             datapoint_list = self.process_datapoint_results_to_appliance(datapoint)
@@ -230,6 +235,7 @@ class Controller(Observer, Subject):
                 appliance_reading_list.append(datapoint)
         for appliance_reading in appliance_reading_list:
             self.add_appliance_reading_to_queue(appliance_reading)
+
 
     def process_sensor_reading(self, sensor_reading):
         """
@@ -318,6 +324,7 @@ class Controller(Observer, Subject):
         for appliance in self.appliances_dict:
             if appliance.get_id() == appliance_reading:
                 appliance.recieve(appliance_reading)
+
 
 
 

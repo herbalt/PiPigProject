@@ -1,7 +1,7 @@
 from Queue import Queue, Empty
 from threading import Thread, Event
 
-num_fetch_threads = 2
+num_fetch_threads = 10
 queue = Queue()
 quit_event = Event()
 
@@ -18,7 +18,7 @@ def worker(queue):
         do_work(item)
         queue.task_done()
 
-for i in range(num_worker_threads):
+for i in range(num_fetch_threads):
      t = Thread(target=worker)
      t.daemon = True
      t.start()

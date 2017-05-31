@@ -1,11 +1,12 @@
 from controller_api import ControllerApi
 from time import sleep
 from app import data_setup as generics
+from pipig import db
 
-from sensors.models import Sensor
-from data_points.models import DataPoints, DataPoint
-from appliances.models import Appliance
-from binders.models import BindDatapoitnsAppliances, BindDatapoitnsSensors
+from pipig.sensors.models import Sensor
+from pipig.data_points.models import DataPoints, DataPoint
+from pipig.appliances.models import Appliance
+from pipig.binders.models import BindDatapoitnsAppliances, BindDatapoitnsSensors
 
 
 recipe_id = 1
@@ -37,9 +38,9 @@ appliance_3 = Appliance.create(name="appliance3", type_id=1, gpio_pin_id=None)
 appliance_4 = Appliance.create(name="appliance4", type_id=1, gpio_pin_id=None)
 appliance_5 = Appliance.create(name="appliance5", type_id=1, gpio_pin_id=None)
 
-sensor_binder_1 = BindDatapoitnsSensors(recipe_id=1, datapoints_id=1, sensor_id=1)
-sensor_binder_2 = BindDatapoitnsSensors(recipe_id=1, datapoints_id=1, sensor_id=2)
-sensor_binder_3 = BindDatapoitnsSensors(recipe_id=1, datapoints_id=2, sensor_id=2)
+sensor_binder_1 = BindDatapoitnsSensors.create(recipe_id=1, datapoints_id=1, sensor_id=1)
+sensor_binder_2 = BindDatapoitnsSensors.create(recipe_id=1, datapoints_id=1, sensor_id=2)
+sensor_binder_3 = BindDatapoitnsSensors.create(recipe_id=1, datapoints_id=2, sensor_id=2)
 
 appliance_binder_1 = BindDatapoitnsAppliances.create(recipe_id=1, datapoints_id=1, appliance_id=1, polarity=1)
 appliance_binder_2 = BindDatapoitnsAppliances.create(recipe_id=1, datapoints_id=1, appliance_id=2, polarity=-1)

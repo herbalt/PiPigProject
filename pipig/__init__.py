@@ -7,12 +7,12 @@ from app_config import config_class as config
 from mail import mail
 
 # BLUEPRINTS
-from pipig.users.views import users
-from database.views import database
-from pipig.sensors.views import sensors
-from pipig.sessions.views import sessions
-from pipig.appliances.views import appliances
-from pipig.recipes.views import recipes
+#from pipig.users.views import users
+# from database.views import database
+# from pipig.sensors.views import sensors
+# from pipig.sessions.views import sessions
+# from pipig.appliances.views import appliances
+# from pipig.recipes.views import recipes
 
 
 app = Flask(__name__)
@@ -28,7 +28,7 @@ mail.init_app(app)
 
 # logs.init_app(app, remove_existing_handlers=True)
 # errors.init_app(app)
-
+"""
 app.register_blueprint(users)
 app.register_blueprint(database)
 app.register_blueprint(sensors)
@@ -36,7 +36,7 @@ app.register_blueprint(sessions)
 # app.register_blueprint(recipes)
 app.register_blueprint(appliances)
 # app.register_blueprint(binding_sessions)
-
+"""
 
 @app.route('/')
 def index():

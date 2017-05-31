@@ -1,5 +1,5 @@
 from pipig import app
-from units.models import GenericUnits
+from pipig.units.models import GenericUnits
 
 
 def data_setup():

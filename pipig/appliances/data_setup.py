@@ -1,7 +1,7 @@
 from appliances.factory import APPLIANCE_TYPE_NAME_BASIC
 from appliances.models import ApplianceType, Appliance
 from units.models import GenericUnits
-from pipig import app
+from pipig import app, db
 
 
 def data_setup():
@@ -11,6 +11,7 @@ def data_setup():
 
 
 def setup_appliance_type():
+
     ApplianceType.query.delete()
     ApplianceType.create(type_name=APPLIANCE_TYPE_NAME_BASIC, units_id=5)
     return True

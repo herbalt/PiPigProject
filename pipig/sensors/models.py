@@ -2,6 +2,7 @@ from generics.constants import COMPONENT_TYPE_SENSOR
 from generics.models import GenericReading
 from pipig.data import db, CRUDMixin
 
+
 class SensorType(db.Model, CRUDMixin):
     """
     Determines the SensorType
@@ -70,10 +71,8 @@ class Sensor(db.Model, CRUDMixin):
     def get_gpio_pin_id(self):
         return self.gpio_pin_id
 
-
     def get_readings(self):
         return GenericReading.query.filter_by(component_id=self.get_id()).all()
-
 
     def process_sensor_reading_list_to_single_point(self, list_of_sensor_reading_objects=None):
         """
