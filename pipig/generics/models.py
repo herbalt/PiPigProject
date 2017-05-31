@@ -5,7 +5,7 @@ class GenericReading(db.Model, CRUDMixin):
     """
     Determines the output of a Sensor measurement
     """
-    __tablename__ = "sensor_reading"
+    __tablename__ = "readings"
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     component_id = db.Column(db.Integer)
     component_type_id = db.Column(db.Integer)

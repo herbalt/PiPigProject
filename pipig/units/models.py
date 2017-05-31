@@ -7,11 +7,13 @@ class GenericUnits(db.Model, CRUDMixin):
     Determines the Units of measures
     Example Celcius, Humidty, TestInteger
     """
-    __tablename__ = "generic_units"
+    __tablename__ = "units"
     id = db.Column(db.Integer, primary_key= True, nullable=False)
     code_name = db.Column(db.String, nullable=False)
     display_units = db.Column(db.String(4), nullable=True)
-    type = db.Column(db.String(140))
+
+    # TODO WHY IS TYPE HERE ?
+    # type = db.Column(db.String(140))
 
     def __init__(self, code_name, display_units):
         self.code_name = code_name

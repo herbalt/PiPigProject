@@ -7,7 +7,7 @@ from pipig.factories.abstract_factory import AbstractFactory
 from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE
 from Queue import Queue
 from threading import Thread, Event
-
+from pipig import app
 
 class Controller(Observer, Subject):
     """
@@ -52,14 +52,16 @@ class Controller(Observer, Subject):
         return self.session_id
 
     def get_recipe_obj(self):
-        recipe = Recipe.get(self.get_recipe_id())
+        with app.app_context():
+            recipe = Recipe.get(self.get_recipe_id())
         return recipe
 
     def get_session_obj(self):
         if self.get_session_id() is None:
             return Session("GenericSession")
         else:
-            session = Session.get(self.get_session_id())
+            with app.app_context():
+                session = Session.get(self.get_session_id())
             if session is None:
                 return Session("GenericSession")
             return Session.get(self.get_session_id())

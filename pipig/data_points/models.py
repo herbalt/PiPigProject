@@ -1,5 +1,5 @@
 from pipig.data import db, CRUDMixin
-
+from pipig import app
 
 class DataPoint(db.Model, CRUDMixin):
     """
@@ -72,7 +72,8 @@ class DataPoints(db.Model, CRUDMixin):
         This should be an ordered list based on time elapsed values
         :return: List of DataPoints
         """
-        data_point_id_list = DataPoint.query.filter_by(data_points_id=self.id).order_by(DataPoint.time_elapsed).all()
+        with app.app_context():
+            data_point_id_list = DataPoint.query.filter_by(data_points_id=self.id).order_by(DataPoint.time_elapsed).all()
         return data_point_id_list
 
     def process_data_point_list_to_single_point(self, list_of_data_point_objects=None):
@@ -108,7 +109,8 @@ class DataPoints(db.Model, CRUDMixin):
         """
 
         # Processes DataPoints if multiple readings at time_elapsed
-        initial_query = DataPoint.query.filter_by(time_elapsed=time_elapsed).all()
+        with app.app_context():
+            initial_query = DataPoint.query.filter_by(time_elapsed=time_elapsed).all()
         if initial_query is not None:
             initial_result = self.process_data_point_list_to_single_point(initial_query)
             if initial_result is not None:
@@ -187,12 +189,12 @@ class DataPoints(db.Model, CRUDMixin):
             if value is None or time_elapsed is None:
                 return None
 
-
-            data_point = DataPoint.create(data_points_id=self.id, value=value, time_elapsed=time_elapsed)
+            with app.app_context():
+                data_point = DataPoint.create(data_points_id=self.id, value=value, time_elapsed=time_elapsed)
 
         else:
-
-            data_point = DataPoint.query.filter_by(id=datapoint_id).first()
+            with app.app_context():
+                data_point = DataPoint.query.filter_by(id=datapoint_id).first()
             if value is not None:
                 data_point.value = value
 
@@ -211,7 +213,8 @@ class DataPoints(db.Model, CRUDMixin):
         :return: Boolean based on the success of the Delete action
         """
         if data_point_id is not None:
-            data_point = DataPoint.query.filter_by(id=data_point_id).first()
+            with app.app_context():
+                data_point = DataPoint.query.filter_by(id=data_point_id).first()
             db.session.delete(data_point)
             db.session.commit()
             return True

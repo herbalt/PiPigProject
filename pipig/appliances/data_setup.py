@@ -11,16 +11,17 @@ def data_setup():
 
 
 def setup_appliance_type():
-
-    ApplianceType.query.delete()
-    ApplianceType.create(type_name=APPLIANCE_TYPE_NAME_BASIC, units_id=5)
+    with app.app_context():
+        ApplianceType.query.delete()
+        ApplianceType.create(type_name=APPLIANCE_TYPE_NAME_BASIC, units_id=5)
     return True
 
 
 def setup_testing_appliance():
-    appliance = Appliance.query.filter_by(name='TEST_APPLIANCE').first()
-    if appliance is None:
-        Appliance.create(name='TEST_APPLIANCE', type_id=1)
+    with app.app_context():
+        appliance = Appliance.query.filter_by(name='TEST_APPLIANCE').first()
+        if appliance is None:
+            Appliance.create(name='TEST_APPLIANCE', type_id=1)
     return True
 
 

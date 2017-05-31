@@ -3,7 +3,7 @@ from wtforms import fields
 import wtforms.validators as validators
 
 import sensors.models as sensors
-from pipig import db
+
 
 class SensorsForm(Form):
 

@@ -3,10 +3,13 @@ from pipig.data import db, CRUDMixin
 
 
 
-class BindDatapoitnsSensors(db.Model, CRUDMixin):
+class BindDatapointsSensors(db.Model, CRUDMixin):
+    __tablename__ = 'bind_datapoints_sensors'
+
     """
-    Binds a Sensor to a Session
+        Binds a Sensor to a Session
     """
+
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     recipe_id = db.Column(db.Integer, nullable=False)
     datapoints_id = db.Column(db.Integer, nullable=False)
@@ -33,10 +36,11 @@ class BindDatapoitnsSensors(db.Model, CRUDMixin):
         return self.sensor_id
 
 
-class BindDatapoitnsAppliances(db.Model, CRUDMixin):
+class BindDatapointsAppliances(db.Model, CRUDMixin):
     """
     Binds a Sensor to a Session
     """
+    __tablename__ = 'bind_datapoints_appliances'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     recipe_id = db.Column(db.Integer, nullable=False)
     datapoints_id = db.Column(db.Integer, nullable=False)

@@ -5,7 +5,8 @@ from sensors.sensor import SensorBasic, SensorADC, SensorDHT22Temperature, Senso
 from appliances.appliance import BasicAppliance
 from appliances.models import Appliance, ApplianceType
 from data_points.models import DataPoints
-from binders.models import BindDatapoitnsAppliances
+from binders.models import BindDatapointsAppliances
+from pipig import app
 
 SENSOR_TYPE_NAME_BASIC = 'Counter'
 SENSOR_TYPE_NAME_ADC = 'ADC Temparture'
@@ -60,10 +61,14 @@ class BaseFactory:
 
 class ApplianceFactory(BaseFactory):
     def get_database_object(self, object_id):
-        return Appliance.get(id=object_id)
+        with app.app_context():
+            appliance = Appliance.get(id=object_id)
+        return appliance
 
     def get_type_object(self, type_id):
-        return ApplianceType.get(type_id)
+        with app.app_context():
+            appliance_type = ApplianceType.get(type_id)
+        return appliance_type
 
     def get_object(self, lookup_value, object_id):
         if lookup_value == APPLIANCE_TYPE_NAME_BASIC:
@@ -91,15 +96,21 @@ class SensorFactory(BaseFactory):
             return SensorBasic(object_id)
 
     def get_database_object(self, object_id):
-        return Sensor.get(id=object_id)
+        with app.app_context():
+            sensor = Sensor.get(id=object_id)
+        return sensor
 
     def get_type_object(self, type_id):
-        return SensorType.get(id=type_id)
+        with app.app_context():
+            sensor_type = SensorType.get(id=type_id)
+        return sensor_type
 
 
 class DatapointFactory(BaseFactory):
     def get_object(self, lookup_value, object_id):
-        return DataPoints.get(object_id)
+        with app.app_context():
+            datapoints = DataPoints.get(object_id)
+        return datapoints
 
     def get_type_object(self, type_id):
         return None
@@ -126,4 +137,6 @@ class ApplianceBinderFactory:
         return object_dict
 
     def get_database_object(self, object_id):
-        return BindDatapoitnsAppliances.get(object_id)
+        with app.app_context():
+            binder = BindDatapointsAppliances.get(object_id)
+        return binder

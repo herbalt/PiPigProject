@@ -51,8 +51,8 @@ class TestDatabaseConfiguration(BaseConfiguration):
     TESTING = True
     WTF_CSRF_ENABLED = False
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'testing.db')
-    SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository_testing')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'development5.db')
+    SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository_development5')
     # Since we want our unit tests to run quickly
     # we turn this down - the hashing is still done
     # but the time-consuming part is left out.

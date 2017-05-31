@@ -1,9 +1,10 @@
 from pipig.data import db, CRUDMixin
 from sensors.models import Sensor
-from binders.models import BindDatapoitnsAppliances, BindDatapoitnsSensors
-from binders.models import BindDatapoitnsSensors
+from binders.models import BindDatapointsAppliances, BindDatapointsSensors
+from binders.models import BindDatapointsSensors
 
 class Recipe(db.Model, CRUDMixin):
+    __tablename__ = 'recipe'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String, nullable=False)
 
@@ -37,21 +38,21 @@ class Recipe(db.Model, CRUDMixin):
         return self.name
 
     def get_sensor_datapoints_binding_ids(self):
-        binder_list = BindDatapoitnsSensors.query.filter_by(recipe_id=self.get_id()).all()
+        binder_list = BindDatapointsSensors.query.filter_by(recipe_id=self.get_id()).all()
         binder_ids = []
         for binder in binder_list:
             binder_ids.append(binder.get_id())
         return binder_ids
 
     def get_appliance_datapoints_binding_ids(self):
-        binder_list = BindDatapoitnsAppliances.query.filter_by(recipe_id=self.get_id()).all()
+        binder_list = BindDatapointsAppliances.query.filter_by(recipe_id=self.get_id()).all()
         binder_ids = []
         for binder in binder_list:
             binder_ids.append(binder.get_id())
         return binder_ids
 
     def get_sensor_ids(self):
-        binder_list = BindDatapoitnsSensors.query.filter_by(recipe_id=self.get_id()).all()
+        binder_list = BindDatapointsSensors.query.filter_by(recipe_id=self.get_id()).all()
         binder_ids = []
         for binder in binder_list:
             result = binder.get_sensor_id()
@@ -60,7 +61,7 @@ class Recipe(db.Model, CRUDMixin):
         return binder_ids
 
     def get_appliance_ids(self):
-        binder_list = BindDatapoitnsAppliances.query.filter_by(recipe_id=self.get_id()).all()
+        binder_list = BindDatapointsAppliances.query.filter_by(recipe_id=self.get_id()).all()
         binder_ids = []
         for binder in binder_list:
             result = binder.get_appliance_id()
@@ -69,14 +70,14 @@ class Recipe(db.Model, CRUDMixin):
         return binder_ids
 
     def get_datapoints_ids(self):
-        binder_list = BindDatapoitnsSensors.query.filter_by(recipe_id=self.get_id()).all()
+        binder_list = BindDatapointsSensors.query.filter_by(recipe_id=self.get_id()).all()
         binder_ids = []
         for binder in binder_list:
             result = binder.get_sensor_id()
             if result not in binder_ids:
                 binder_ids.append(result)
 
-        binder_list = BindDatapoitnsAppliances.query.filter_by(recipe_id=self.get_id()).all()
+        binder_list = BindDatapointsAppliances.query.filter_by(recipe_id=self.get_id()).all()
 
         for binder in binder_list:
             result = binder.get_appliance_id()
@@ -95,7 +96,7 @@ class Recipe(db.Model, CRUDMixin):
         output_list = []
         sensor_binders = self.get_sensor_datapoints_binding_ids()
         for binder_id in sensor_binders:
-            binder = BindDatapoitnsSensors.get(binder_id)
+            binder = BindDatapointsSensors.get(binder_id)
             if binder.get_sensor_id() == sensor_id:
                 output_list.append(binder.get_datapoints_id())
         return output_list
@@ -110,7 +111,7 @@ class Recipe(db.Model, CRUDMixin):
         output_list = []
         appliance_binders = self.get_appliance_datapoints_binding_ids()
         for binder_id in appliance_binders:
-            binder = BindDatapoitnsAppliances.get(binder_id)
+            binder = BindDatapointsAppliances.get(binder_id)
             if binder_id.get_datapoints_id() == datapoints_id:
                 output_list.append(binder.get_appliance_id())
         return output_list
@@ -125,7 +126,7 @@ class Recipe(db.Model, CRUDMixin):
         output_list = []
         appliance_binders = self.get_appliance_datapoints_binding_ids()
         for binder_id in appliance_binders:
-            binder = BindDatapoitnsAppliances.get(binder_id)
+            binder = BindDatapointsAppliances.get(binder_id)
             if binder_id.get_datapoints_id() == datapoints_id:
                 output_list.append(binder_id)
         return output_list

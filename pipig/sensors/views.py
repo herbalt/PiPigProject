@@ -5,7 +5,6 @@ from flask import url_for
 
 from pipig.sensors.forms import SensorsForm
 from pipig.sensors.models import Sensor
-from pipig.data import db
 
 sensors = Blueprint('sensors', __name__)
 

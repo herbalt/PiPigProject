@@ -1,7 +1,7 @@
 from test_helpers.test_base import BaseTestCase
 from test_helpers.test_generics import run_equals_test, run_list_equals_test, unwritten_test
 from pipig.recipes.models import Recipe
-from binders.models import BindDatapoitnsAppliances, BindDatapoitnsSensors
+from binders.models import BindDatapointsAppliances, BindDatapointsSensors
 from appliances.tests import build_appliance_model
 from sensors.tests import build_sensor_model
 from data_points.tests import build_datapoints_model
@@ -107,7 +107,7 @@ def build_sensor_binders(recipe_id, tuple_list_of_sensor_datapoints):
     binders = []
     for tuple_binder in tuple_list_of_sensor_datapoints:
         binders.append(
-            BindDatapoitnsSensors.create(recipe_id=recipe_id, datapoints_id=tuple_binder[1], sensor_id=tuple_binder[0]))
+            BindDatapointsSensors.create(recipe_id=recipe_id, datapoints_id=tuple_binder[1], sensor_id=tuple_binder[0]))
     return binders
 
 
@@ -115,7 +115,7 @@ def build_appliance_binders(recipe_id, tuple_list_of_appliance_datapoints):
     binders = []
     for tuple_binder in tuple_list_of_appliance_datapoints:
         binders.append(
-            BindDatapoitnsAppliances.create(recipe_id=recipe_id, datapoints_id=tuple_binder[1], appliance_id=tuple_binder[0]))
+            BindDatapointsAppliances.create(recipe_id=recipe_id, datapoints_id=tuple_binder[1], appliance_id=tuple_binder[0]))
     return binders
 
 # ________________________________________________________________

@@ -1,6 +1,7 @@
 import os.path
 import imp
 from migrate.versioning import api
+from pipig import app
 from pipig.data import db
 
 from pipig.app_config import config_class
@@ -10,7 +11,8 @@ SQLALCHEMY_MIGRATE_REPO = config_class.SQLALCHEMY_MIGRATE_REPO
 
 def db_create():
     try:
-        db.create_all()
+        with app.app_context():
+            db.create_all()
         if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
             api.create(SQLALCHEMY_MIGRATE_REPO, 'database repository')
             api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
@@ -23,9 +25,10 @@ def db_create():
 
 def db_drop():
     try:
-        db.drop_all()
+        with app.app_context():
+            db.drop_all()
         return True
-    except:
+    except RuntimeError:
         return False
 
 
@@ -58,3 +61,6 @@ def db_migrate():
     print ("New migration saved as " + migration)
     print ("Current database version " + str(ver))
     return ver
+
+if __name__ == "__main__":
+    print db_create()

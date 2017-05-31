@@ -1,3 +1,3 @@
 from flask import Blueprint
 
-sessions = Blueprint('recipes', __name__)
+sessions = Blueprint('sessions', __name__)
