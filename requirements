@@ -2,9 +2,9 @@ migrate
 flask-login==0.3.2
 flask-wtf==0.12
 wtforms=2.1
-sqlalchemy==1.0.14
+sqlalchemy==1.1.9
 backports.pbkdf2==0.1
-flask==0.11.1
+flask==0.12.1
 rauth==0.7.2
 itsdangerous==0.24
 flask_sqlalchemy==2.1

@@ -1,5 +1,6 @@
 from os.path import abspath, dirname, join, os
 from credentials import credentials
+from processors.factory import PRINT_DATABASE
 basedir = dirname(abspath(__file__))
 
 class BaseConfiguration(object):
@@ -24,8 +25,11 @@ class BaseConfiguration(object):
     # mail accounts
     MAIL_DEFAULT_SENDER = credentials.MAIL_USERNAME
 
+    # SENSOR_PROCESSOR_CHAIN = PRINT_DATABASE
+    # APPLIANCE_PROCESSOR_CHAIN = PRINT_DATABASE
     SENSOR_PROCESSOR_CHAIN = 'database'
     APPLIANCE_PROCESSOR_CHAIN = 'database'
+
 
 class TestConfiguration(BaseConfiguration):
     NAME = 'TestConfiguration'
@@ -51,8 +55,8 @@ class TestDatabaseConfiguration(BaseConfiguration):
     TESTING = True
     WTF_CSRF_ENABLED = False
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'development5.db')
-    SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository_development5')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(basedir, 'development.db')
+    SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository_development')
     # Since we want our unit tests to run quickly
     # we turn this down - the hashing is still done
     # but the time-consuming part is left out.
