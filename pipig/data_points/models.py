@@ -1,3 +1,4 @@
+
 from pipig.data import db, CRUDMixin
 from pipig import app
 

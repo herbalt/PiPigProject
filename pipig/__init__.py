@@ -11,15 +11,7 @@ from mail import mail
 # BLUEPRINTS
 #from pipig.users.views import users
 from database.views import database
-from pipig.sensors.views import sensors
-from pipig.sessions.views import sessions
-from pipig.appliances.views import appliances
-from pipig.recipes.views import recipes
 
-from pipig.binders.views import binders
-from pipig.data_points.views import data_points
-from pipig.generics.views import generics
-from pipig.gpio_pins.views import gpio_pins
 
 from pipig.data import db
 
@@ -39,6 +31,21 @@ mail.init_app(app)
 
 # app.register_blueprint(users)
 # app.register_blueprint(database)
+
+
+
+
+from pipig.sensors.views import sensors
+from pipig.sessions.views import sessions
+from pipig.appliances.views import appliances
+from pipig.recipes.views import recipes
+
+from pipig.binders.views import binders
+from pipig.data_points.views import data_points
+from pipig.generics.views import generics
+from pipig.gpio_pins.views import gpio_pins
+
+
 app.register_blueprint(sensors)
 app.register_blueprint(sessions)
 app.register_blueprint(recipes)

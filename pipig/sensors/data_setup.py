@@ -1,6 +1,6 @@
 from pipig import app
 from sensors.models import SensorType, Sensor
-from units.models import GenericUnits
+from generics.models import GenericUnits
 from sensors.factory import SENSOR_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_ADC, SENSOR_TYPE_NAME_DHT22_CELSIUS, SENSOR_TYPE_NAME_DHT22_FAHRENHEIT, SENSOR_TYPE_NAME_HUMIDITY
 
 

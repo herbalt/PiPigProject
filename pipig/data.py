@@ -1,14 +1,13 @@
 from sqlite3 import IntegrityError
 
 from flask_sqlalchemy import SQLAlchemy
-
 db = SQLAlchemy()
 
 
 class CRUDMixin(object):
     __table_args__ = {'extend_existing': True}
 
-    id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.Integer, primary_key=True)
 
     @classmethod
     def create(cls, commit=True, **kwargs):

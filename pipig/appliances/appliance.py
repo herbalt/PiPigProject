@@ -4,7 +4,7 @@ from appliances.models import Appliance, ApplianceType
 # from pipig.bindings_datapoints.datapoint_binding import IncorrectReadingTypeError
 from general.patterns import Observer, Subject
 from generics.constants import COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
-from units.models import GenericUnits
+from generics.models import GenericUnits
 from pipig import app
 
 

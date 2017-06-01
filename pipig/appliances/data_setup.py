@@ -1,6 +1,6 @@
 from appliances.factory import APPLIANCE_TYPE_NAME_BASIC
 from appliances.models import ApplianceType, Appliance
-from units.models import GenericUnits
+from generics.models import GenericUnits
 from pipig import app, db
 
 
