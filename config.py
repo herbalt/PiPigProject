@@ -1,7 +1,8 @@
 from os.path import abspath, dirname, join, os
 from credentials import credentials
-from processors.factory import PRINT_DATABASE
+# from processors.factory import PRINT_DATABASE
 basedir = dirname(abspath(__file__))
+
 
 class BaseConfiguration(object):
     NAME = 'BaseConfiguration'
@@ -50,6 +51,7 @@ class TestConfiguration(BaseConfiguration):
 
     # PRESERVE_CONTEXT_ON_EXCEPTION = False
 
+
 class TestDatabaseConfiguration(BaseConfiguration):
     NAME = 'TestDatabaseConfiguration'
     TESTING = True
@@ -66,6 +68,7 @@ class TestDatabaseConfiguration(BaseConfiguration):
     MAIL_SERVER = 'localhost'
     MAIL_PORT = 25
     MAIL_USE_SSL = False
+
 
 class DebugConfiguration(BaseConfiguration):
     NAME = 'DebugConfiguration'

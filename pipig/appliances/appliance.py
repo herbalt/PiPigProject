@@ -2,6 +2,7 @@ from abc import abstractmethod, ABCMeta
 
 from appliances.models import Appliance, ApplianceType
 # from pipig.bindings_datapoints.datapoint_binding import IncorrectReadingTypeError
+from pipig.binders.models import IncorrectReadingTypeError
 from general.patterns import Observer, Subject
 from generics.constants import COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
 from generics.models import GenericUnits
@@ -51,9 +52,12 @@ class BaseAppliance(Observer, Subject):
 
     def receive(self, result, status_code=0):
 
+
         if result.get_component_type_id() == COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER:
             result = self.process_result(result)
             self.state = result.get_value()
+        else:
+            raise IncorrectReadingTypeError()
 
     @abstractmethod
     def process_result(self, result):

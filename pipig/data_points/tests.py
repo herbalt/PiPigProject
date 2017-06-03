@@ -78,9 +78,8 @@ class DataPointsObjectTests(BaseTestCase):
         data_points = DataPoints.create(name="test_update_point_new")
 
         data_point = data_points.update_point(datapoint_id=None, value=1, time_elapsed=100)
-        # with app.app_context():
-        expected_data_point = DataPoint.create(data_points_id=1, value=1, time_elapsed=100)
-        pass
+
+        expected_data_point = DataPoint(data_points_id=1, value=1, time_elapsed=100)
 
         self.assertTrue(compare_data_point(data_point, expected_data_point),
                         "Failed adding a new Data Point to %s" % data_points.name)

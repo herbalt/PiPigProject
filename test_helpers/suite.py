@@ -105,10 +105,10 @@ class TestSuite:
 
     def controller_tests(self):
 
-        # self.suite.addTest(unittest.makeSuite(ControllerInteractionTests))
-        # self.suite.addTest(unittest.makeSuite(ControllerQueueTests))
-        # self.suite.addTest(unittest.makeSuite(ControllerGetTests))
-        # self.suite.addTest(unittest.makeSuite(ControllerBuildTests))
+        self.suite.addTest(unittest.makeSuite(ControllerInteractionTests))
+        self.suite.addTest(unittest.makeSuite(ControllerQueueTests))
+        self.suite.addTest(unittest.makeSuite(ControllerGetTests))
+        self.suite.addTest(unittest.makeSuite(ControllerBuildTests))
 
         return self.suite
 
