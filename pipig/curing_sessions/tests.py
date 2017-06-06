@@ -46,7 +46,7 @@ class CuringSessionsModelTests(BaseTestCase):
 #________________________________________________________________
 
 def build_curing_session_model(base_name):
-    curing_session = CuringSession.create(name="%sSessionModel" % base_name)
+    curing_session = CuringSession.create(name=base_name)
     return curing_session
 
 

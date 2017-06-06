@@ -105,8 +105,9 @@ class Controller(Observer, Subject):
         :return: 
         """
         self.appliances_dict = self.factory.build_objects_dict(self.factory.APPLIANCE, self.get_recipe_obj().get_appliance_ids())
-        for appliance in self.appliances_dict:
-            appliance.attach(self.appliance_processor)
+        for appliance_id in self.appliances_dict:
+            appliance_object = self.appliances_dict.get(appliance_id)
+            appliance_object.attach(self.appliance_processor)
         return self.appliances_dict
 
     def build_datapoints(self):
@@ -114,7 +115,7 @@ class Controller(Observer, Subject):
         Build Datapoints in a Dict
         :return: 
         """
-        return self.factory.build_objects_dict(self.factory.DATAPOINTS, self.get_recipe_obj().get_datapoints_id_list())
+        return self.factory.build_objects_dict(self.factory.DATAPOINTS, self.get_recipe_obj().get_datapoints_ids())
 
     def build_appliance_binders(self):
         return self.factory.build_objects_dict(self.factory.APPLIANCE_BINDER, self.get_recipe_obj().get_appliance_datapoints_binding_ids())

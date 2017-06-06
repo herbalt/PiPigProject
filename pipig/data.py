@@ -1,6 +1,7 @@
 from sqlite3 import IntegrityError
-
+from pipig import app
 from flask_sqlalchemy import SQLAlchemy
+
 db = SQLAlchemy()
 
 

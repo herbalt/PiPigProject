@@ -29,8 +29,12 @@ class ControllerGetTests(BaseTestCase):
         result = build_test_controller().get_session_obj()
         # expected = MockSession("ControllerTest SessionSessionModel", 1, 0)
         # TODO REQUIRES A SEESSION OBJECT TO RUN TEST CORRECTLY
-        expected = "REQUIRES A SESSION OBJECT"
-        run_equals_test(self, result, expected, "Controller Session Object", "Failed to match equaility of attributes")
+        from pipig.curing_sessions.models import CuringSession
+        expected = CuringSession(name="ControllerTest Session", start_time=0)
+        expected.id = 1
+        # expected = build_curing_session_model("ControllerTest Session")
+        run_object_equals_test(self, result, expected, "Controller Session Object", "Failed to match equaility of attributes")
+        # run_equals_test(self, result, expected, "Controller Session Object", "Failed to match equaility of attributes")
 
 
 class ControllerBuildTests(BaseTestCase):
@@ -224,6 +228,15 @@ class ControllerInteractionTests(BaseTestCase):
         :return: 
         """
         unwritten_test(self)
+
+    def test_response_to_datapoint(self):
+        obj = build_test_controller()
+        self.helper_response_to_datapoint(obj, -1, 1, 1)
+
+    def helper_response_to_datapoint(self, controller, diff_value, polarity, expected):
+        result = controller.response_to_datapoint(diff_sensor_datapoint_value=diff_value, polarity=polarity)
+        expected_result = expected
+        run_equals_test(result=result, expected=expected_result, test_title="Response to Datapoint Reading", test_message="Incorrectly generated the wrong output value to send to an appliance", test_case=self)
 
 
 # ________________________________________________________________

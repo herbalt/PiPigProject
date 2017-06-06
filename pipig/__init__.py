@@ -13,10 +13,12 @@ from mail import mail
 # from database.views import database
 
 
-from pipig.data import db
+
 
 app = Flask(__name__)
 app.config.from_object(config)
+
+from pipig.data import db
 
 # Setup extensions
 db.init_app(app)

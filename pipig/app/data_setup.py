@@ -7,7 +7,7 @@ from units import data_setup as generics_data
 def data_setup():
     appliance_data.data_setup()
     generics_data.data_setup()
-    gpio_data.data_setup()
+    # gpio_data.data_setup()
     sensor_data.data_setup()
 
 if __name__ == "__main__":

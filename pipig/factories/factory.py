@@ -22,8 +22,12 @@ class BaseFactory:
     def build_object(self, object_id):
         db_obj = self.get_database_object(object_id)
         type_id = db_obj.get_type_id()
-        type_obj = self.get_type_object(type_id)
-        type_name = type_obj.get_type()
+        try:
+            type_obj = self.get_type_object(type_id)
+            type_name = type_obj.get_type()
+        except:
+            type_name = "NoType"
+
         return self.get_object(type_name, object_id)
 
     def build_object_dict(self, object_id_list):
@@ -98,27 +102,27 @@ class SensorFactory(BaseFactory):
             return SensorBasic(object_id)
 
     def get_database_object(self, object_id):
-        with app.app_context():
-            sensor = Sensor.get(id=object_id)
+        # with app.app_context():
+        sensor = Sensor.get(id=object_id)
         return sensor
 
     def get_type_object(self, type_id):
-        with app.app_context():
-            sensor_type = SensorType.get(id=type_id)
+        # with app.app_context():
+        sensor_type = SensorType.get(id=type_id)
         return sensor_type
 
 
 class DatapointFactory(BaseFactory):
     def get_object(self, lookup_value, object_id):
-        with app.app_context():
-            datapoints = DataPoints.get(object_id)
+        # with app.app_context():
+        datapoints = DataPoints.get(object_id)
         return datapoints
 
     def get_type_object(self, type_id):
-        return None
+        return "DATAPOINTS"
 
     def get_database_object(self, object_id):
-        return None
+        return DataPoints.get(object_id)
 
 
 class ApplianceBinderFactory:

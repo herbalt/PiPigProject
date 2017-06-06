@@ -1,12 +1,13 @@
 #!flask/bin/python
 import imp
 from migrate.versioning import api
-from pipig.data import db
 from pipig import app
 
 from pipig.app_config import config_class
 SQLALCHEMY_DATABASE_URI = config_class.SQLALCHEMY_DATABASE_URI
 SQLALCHEMY_MIGRATE_REPO = config_class.SQLALCHEMY_MIGRATE_REPO
+
+from pipig.data import db
 
 v = api.db_version(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
 migration = SQLALCHEMY_MIGRATE_REPO + ('/versions/%03d_migration.py' % (v+1))

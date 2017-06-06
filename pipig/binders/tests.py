@@ -71,8 +71,7 @@ class BindDataPointsApplianceModelTests(BaseTestCase):
         obj.polarity = None
         run_equals_test(self, obj.get_polarity(), 1, "BindApplianceDataPointsID", "Get Appliance ID Method")
 
-    def test_response_to_datapoint(self):
-        unwritten_test(self)
+
 #________________________________________________________________
 #
 # Builders for Tests

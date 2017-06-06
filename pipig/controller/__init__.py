@@ -21,14 +21,14 @@ if __name__ == "__main__":
         sensor_2 = Sensor.create(name="Sensor2", type_id=1, interval_between_readings=0.25, gpio_pin_id=None)
         sensor_3 = Sensor.create(name="Sensor3", type_id=1, interval_between_readings=0.5, gpio_pin_id=None)
 
-        datapoints_1 = DataPoints.create("datapoints1")
+        datapoints_1 = DataPoints.create(name="datapoints1")
         datapoint_id = datapoints_1.get_id()
         DataPoint.create(data_points_id=datapoint_id, value=10, time_elapsed=0)
         DataPoint.create(data_points_id=datapoint_id, value=5, time_elapsed=1)
         DataPoint.create(data_points_id=datapoint_id, value=15, time_elapsed=2)
         DataPoint.create(data_points_id=datapoint_id, value=5, time_elapsed=3)
 
-        datapoints_2 = DataPoints.create("datapoints2")
+        datapoints_2 = DataPoints.create(name="datapoints2")
         datapoint_id = datapoints_2.get_id()
         DataPoint.create(data_points_id=datapoint_id, value=1, time_elapsed=0)
         DataPoint.create(data_points_id=datapoint_id, value=2, time_elapsed=0.5)

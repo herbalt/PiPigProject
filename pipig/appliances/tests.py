@@ -76,8 +76,6 @@ class ApplianceObjectTests(BaseTestCase):
 
     def test_receive(self):
         obj = self.mock_base_appliance()
-        incorrect_reading_type = GenericReading(0, 0, 0, 0)
-        self.assertRaises(IncorrectReadingTypeError, obj.receive, incorrect_reading_type)
 
         try:
             GenericReading(0, COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER, 0, 0)
@@ -87,6 +85,11 @@ class ApplianceObjectTests(BaseTestCase):
 
         self.helper_test_receive(1)
         self.helper_test_receive(0)
+
+    def test_receive_throws_error(self):
+        obj = self.mock_base_appliance()
+        incorrect_reading_type = GenericReading(0, 0, 0, 0)
+        self.assertRaises(AttributeError, obj.receive, incorrect_reading_type)
 
 #________________________________________________________________
 #

@@ -51,6 +51,16 @@ class DataPoint(db.Model, CRUDMixin):
         """
         return self.get_data_points_id(), self.get_value(), self.get_time_elapsed()
 
+    def set_value(self, value=None):
+        if value is not None:
+            self.update(value=value)
+        return self.get_value()
+
+    def set_time_elapsed(self, time_elapsed=None):
+        if time_elapsed is not None:
+            self.update(time_elapsed=time_elapsed)
+        return self.get_time_elapsed()
+
 
 class DataPoints(db.Model, CRUDMixin):
     """
@@ -66,6 +76,9 @@ class DataPoints(db.Model, CRUDMixin):
     def get_id(self):
         return self.id
 
+    def get_type_id(self):
+        return 0
+
     def get_points(self):
         """
         Query the Data Point Binding to get all the related Data Point IDs
@@ -73,8 +86,7 @@ class DataPoints(db.Model, CRUDMixin):
         This should be an ordered list based on time elapsed values
         :return: List of DataPoints
         """
-        with app.app_context():
-            data_point_id_list = DataPoint.query.filter_by(data_points_id=self.id).order_by(DataPoint.time_elapsed).all()
+        data_point_id_list = DataPoint.query.filter_by(data_points_id=self.id).order_by(DataPoint.time_elapsed).all()
         return data_point_id_list
 
     def process_data_point_list_to_single_point(self, list_of_data_point_objects=None):
@@ -110,8 +122,8 @@ class DataPoints(db.Model, CRUDMixin):
         """
 
         # Processes DataPoints if multiple readings at time_elapsed
-        with app.app_context():
-            initial_query = DataPoint.query.filter_by(time_elapsed=time_elapsed).all()
+        # with app.app_context():
+        initial_query = DataPoint.query.filter_by(time_elapsed=time_elapsed).all()
         if initial_query is not None:
             initial_result = self.process_data_point_list_to_single_point(initial_query)
             if initial_result is not None:
@@ -191,17 +203,20 @@ class DataPoints(db.Model, CRUDMixin):
                 return None
 
             data_point = DataPoint.create(data_points_id=self.id, value=value, time_elapsed=time_elapsed)
-            db.session.commit()
+            # db.session.commit()
         else:
-            with app.app_context():
-                data_point = DataPoint.query.filter_by(id=datapoint_id).first()
-            if value is not None:
-                data_point.value = value
+            # with app.app_context():
+            # data_point = DataPoint.query.filter_by(id=datapoint_id).first()
+            data_point = DataPoint.get(id=datapoint_id)
+            data_point.set_value(value)
+            data_point.set_time_elapsed(time_elapsed)
+            # if value is not None:
+            #     data_point.value = value
 
-            if time_elapsed is not None:
-                data_point.time_elapsed = time_elapsed
+            # if time_elapsed is not None:
+            #    data_point.time_elapsed = time_elapsed
 
-            db.session.commit()
+            # db.session.commit()
 
         return data_point
 
@@ -213,8 +228,8 @@ class DataPoints(db.Model, CRUDMixin):
         :return: Boolean based on the success of the Delete action
         """
         if data_point_id is not None:
-            with app.app_context():
-                data_point = DataPoint.query.filter_by(id=data_point_id).first()
+            # with app.app_context():
+            data_point = DataPoint.query.filter_by(id=data_point_id).first()
             db.session.delete(data_point)
             db.session.commit()
             return True

@@ -5,8 +5,9 @@ from sensors.factory import SENSOR_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_ADC, SENSOR
 
 
 def data_setup():
-    setup_sensor_type()
-    setup_testing_sensor()
+    with app.app_context():
+        setup_sensor_type()
+        setup_testing_sensor()
 
 
 
@@ -28,5 +29,4 @@ def setup_testing_sensor():
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        data_setup()
+    data_setup()

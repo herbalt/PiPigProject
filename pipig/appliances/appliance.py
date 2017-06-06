@@ -57,7 +57,7 @@ class BaseAppliance(Observer, Subject):
             result = self.process_result(result)
             self.state = result.get_value()
         else:
-            raise IncorrectReadingTypeError()
+            raise AttributeError
 
     @abstractmethod
     def process_result(self, result):
