@@ -73,6 +73,8 @@ class ApplianceFactory(BaseFactory):
     def get_object(self, lookup_value, object_id):
         if lookup_value == APPLIANCE_TYPE_NAME_BASIC:
             return BasicAppliance(object_id)
+        else:
+            return BasicAppliance(object_id)
 
 
 class SensorFactory(BaseFactory):

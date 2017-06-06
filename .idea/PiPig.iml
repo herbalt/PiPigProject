@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/pipig" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/credentials" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 2.7.7 (C:\Python27\python.exe)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7.12 (C:\Python27\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">

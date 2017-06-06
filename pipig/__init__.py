@@ -10,7 +10,7 @@ from mail import mail
 
 # BLUEPRINTS
 #from pipig.users.views import users
-from database.views import database
+# from database.views import database
 
 
 from pipig.data import db
@@ -36,7 +36,7 @@ mail.init_app(app)
 
 
 from pipig.sensors.views import sensors
-from pipig.sessions.views import sessions
+from pipig.curing_sessions.views import sessions
 from pipig.appliances.views import appliances
 from pipig.recipes.views import recipes
 

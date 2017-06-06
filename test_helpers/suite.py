@@ -9,7 +9,7 @@ from general.tests import ObjectTestsAsyncTask
 # from gpio_pins.tests import GpioTests
 from processors.tests import ProcessorObjectTests
 from sensors.tests import SensorViewTests, SensorObjectTests, SensorReadingModelTests, SensorFormTests
-from sessions.tests import SessionsModelTests
+from curing_sessions.tests import CuringSessionsModelTests
 # from curing_session.tests import CuringSessionTests
 # from users.tests import UserBlueprintTests, UserFormTests, UserViewsTests
 from utilities.tests import UtilityTests
@@ -89,7 +89,7 @@ class TestSuite:
         return self.suite
 
     def sessions_tests(self):
-        self.suite.addTest(unittest.makeSuite(SessionsModelTests))
+        self.suite.addTest(unittest.makeSuite(CuringSessionsModelTests))
         # self.suite.addTest(unittest.makeSuite(CuringSessionTests))
         return self.suite
 

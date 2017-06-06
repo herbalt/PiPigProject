@@ -2,7 +2,7 @@ from test_helpers.test_base import BaseTestCase
 from test_helpers.test_generics import run_equals_test, unwritten_test, run_object_equals_test
 from pipig.controller.controller import Controller
 from pipig.recipes.tests import MockRecipe
-# from pipig.sessions.tests import MockSession
+# from pipig.curing_sessions.tests import MockSession
 
 
 # ________________________________________________________________
@@ -16,7 +16,7 @@ class ControllerGetTests(BaseTestCase):
         run_equals_test(self, result, expected, "Controller Recipe", "Failed to match IDs")
 
     def test_get_session_id(self):
-        result = build_test_controller().get_session_id()
+        result = build_test_controller().get_curing_session_id()
         expected = 1
         run_equals_test(self, result, expected, "Controller Session", "Failed to match IDs")
 
@@ -195,7 +195,7 @@ class ControllerInteractionTests(BaseTestCase):
         """
         unwritten_test(self)
 
-    def test_add_sensor_reading_to_queue(self, reading, status_code=0):
+    def test_add_sensor_reading_to_queue(self):
         """
         Takes the reading and add it to the Sensor Reading Queue
         :param reading: A processed Sensor reading that is Recieved
@@ -210,7 +210,7 @@ class ControllerInteractionTests(BaseTestCase):
         """
         unwritten_test(self)
 
-    def test_add_appliance_reading_to_queue(self, reading):
+    def test_add_appliance_reading_to_queue(self):
         """
         Add the Appliance Reading to the Appliance Queue
         :param reading: A output reading that is to be processed by the Appliances
@@ -231,17 +231,17 @@ class ControllerInteractionTests(BaseTestCase):
 # Builders to use in Unit Tests
 # ________________________________________________________________
 from pipig.recipes.tests import build_recipe_model
-from pipig.sessions.tests import build_session_model
+from pipig.curing_sessions.tests import build_curing_session_model
 
 
 def build_test_controller():
     recipe = build_recipe_model("ControllerTest")
-    session = build_session_model("ControllerTest Session")
+    session = build_curing_session_model("ControllerTest Session")
     return TestController(recipe.get_id(), session.get_id())
 
 
 class TestController(Controller):
-    def __init__(self, recipe_id, session_id=None):
-        super(TestController, self).__init__(recipe_id, session_id)
+    def __init__(self, recipe_id, curing_session_id=None):
+        super(TestController, self).__init__(recipe_id, curing_session_id)
 
 

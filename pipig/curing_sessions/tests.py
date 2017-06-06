@@ -1,4 +1,4 @@
-from sessions.models import Session, SessionTimeError
+from curing_sessions.models import CuringSession, SessionTimeError
 from test_helpers.test_base import BaseTestCase
 
 
@@ -7,24 +7,24 @@ from test_helpers.test_base import BaseTestCase
 # Unit Tests
 #________________________________________________________________
 
-class SessionsModelTests(BaseTestCase):
+class CuringSessionsModelTests(BaseTestCase):
     def test_session_name(self):
-        session = Session.create(name="Name")
-        self.assertTrue(session.get_name() == "Name")
+        curing_session = CuringSession.create(name="Name")
+        self.assertTrue(curing_session.get_name() == "Name")
 
     def test_get_start_time(self):
-        session = Session.create(name="Name")
-        self.assertTrue(session.get_start_time() == 0, "Session should init with a session time of 0")
-        session.start_time = 15.0
-        self.assertTrue(session.get_start_time() == 15.0, "Session should get a session time of 15.0 once the parameter is changed")
+        curing_session = CuringSession.create(name="Name")
+        self.assertTrue(curing_session.get_start_time() == 0, "Session should init with a session time of 0")
+        curing_session.start_time = 15.0
+        self.assertTrue(curing_session.get_start_time() == 15.0, "Session should get a session time of 15.0 once the parameter is changed")
 
     def test_set_start_time(self):
-        session = Session.create(name="Name")
+        session = CuringSession.create(name="Name")
         session.set_start_time(10.0)
         self.assertTrue(session.get_start_time() == 10.0, "Session should be able to set a session time")
 
     def test_get_time_elapsed(self):
-        session = Session.create(name="Name")
+        session = CuringSession.create(name="Name")
         session.start_time = 15.0
         reading_time = 20.0
         result = session.get_time_elapsed(reading_time)
@@ -34,7 +34,7 @@ class SessionsModelTests(BaseTestCase):
         self.assertRaises(SessionTimeError, session.get_time_elapsed, reading_time)
 
     def test_get_reading_time(self):
-        session = Session.create(name="Name")
+        session = CuringSession.create(name="Name")
         session.start_time = 15.0
         time_elapsed = 10.0
         result = session.get_reading_time(time_elapsed)
@@ -45,9 +45,9 @@ class SessionsModelTests(BaseTestCase):
 # Builders to use in Unit Tests
 #________________________________________________________________
 
-def build_session_model(base_name):
-    session = Session.create(name="%sSessionModel" % base_name)
-    return session
+def build_curing_session_model(base_name):
+    curing_session = CuringSession.create(name="%sSessionModel" % base_name)
+    return curing_session
 
 
 #________________________________________________________________

@@ -1,6 +1,6 @@
 from generics.constants import COMPONENT_TYPE_SENSOR, COMPONENT_TYPE_DATAPOINT, COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
 from pipig.generics.models import GenericReading
-from pipig.sessions.models import Session
+from pipig.curing_sessions.models import CuringSession
 from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 from pipig.factories.abstract_factory import AbstractFactory
@@ -17,11 +17,11 @@ class Controller(Observer, Subject):
     Pass the Appliance Reading to another Queue that is pushes results to the relevant appliances
     """
 
-    def __init__(self, recipe_id, session_id=None):
+    def __init__(self, recipe_id, curing_session_id=None):
         super(Controller, self).__init__()
 
         self.recipe_id = recipe_id
-        self.session_id = session_id
+        self.curing_session_id = curing_session_id
         self.factory = AbstractFactory()
 
         self.sensors_dict = {}
@@ -48,23 +48,23 @@ class Controller(Observer, Subject):
     def get_recipe_id(self):
         return self.recipe_id
 
-    def get_session_id(self):
-        return self.session_id
+    def get_curing_session_id(self):
+        return self.curing_session_id
 
     def get_recipe_obj(self):
-        with app.app_context():
-            recipe = Recipe.get(self.get_recipe_id())
+        # with app.app_context():
+        recipe = Recipe.get(self.get_recipe_id())
         return recipe
 
     def get_session_obj(self):
-        if self.get_session_id() is None:
-            return Session("GenericSession")
+        if self.get_curing_session_id() is None:
+            return CuringSession("GenericSession")
         else:
             with app.app_context():
-                session = Session.get(self.get_session_id())
+                session = CuringSession.get(self.get_curing_session_id())
             if session is None:
-                return Session("GenericSession")
-            return Session.get(self.get_session_id())
+                return CuringSession("GenericSession")
+            return CuringSession.get(self.get_curing_session_id())
 
     """
     Build Methods
@@ -94,7 +94,7 @@ class Controller(Observer, Subject):
         Build Sensors in a Dict
         :return: 
         """
-        self.sensors_dict = self.factory.build_objects_dict(self.factory.SENSOR, self.get_recipe_obj().get_sensor_id_list())
+        self.sensors_dict = self.factory.build_objects_dict(self.factory.SENSOR, self.get_recipe_obj().get_sensor_ids())
         for sensor in self.sensors_dict:
             self.sensor_processor.attach(sensor)
         return self.sensors_dict
@@ -104,7 +104,7 @@ class Controller(Observer, Subject):
         Build Appliances in a Dict
         :return: 
         """
-        self.appliances_dict = self.factory.build_objects_dict(self.factory.APPLIANCE, self.get_recipe_obj().get_appliance_id_list())
+        self.appliances_dict = self.factory.build_objects_dict(self.factory.APPLIANCE, self.get_recipe_obj().get_appliance_ids())
         for appliance in self.appliances_dict:
             appliance.attach(self.appliance_processor)
         return self.appliances_dict

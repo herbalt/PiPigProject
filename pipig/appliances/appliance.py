@@ -27,12 +27,12 @@ class BaseAppliance(Observer, Subject):
             obj = Appliance.query.filter_by(id=self.get_id()).first()
         return obj
 
-    def obj_type(self):
+    def get_type(self):
         obj = ApplianceType.get(self.obj_appliance().get_type_id())
         return obj
 
     def obj_units(self):
-        return GenericUnits.get(self.obj_type().get_id())
+        return GenericUnits.get(self.get_type().get_id())
 
     def get_name(self):
         return self.obj_appliance().get_name()

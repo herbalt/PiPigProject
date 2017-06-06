@@ -3,7 +3,7 @@ import unittest
 from appliances.tests import ApplianceModelTests, ApplianceObjectTests
 from sensors.tests import SensorObjectTests, SensorFormTests, SensorModelTests, SensorReadingModelTests, SensorViewTests
 from data_points.tests import DataPointsObjectTests, DataPointsObjectTestsDataPoint
-from sessions.tests import SessionsModelTests
+from curing_sessions.tests import CuringSessionsModelTests
 from processors.tests import ProcessorObjectTests
 from general.tests import ObjectTestsAsyncTask
 from binding_session.tests import BindSessionSensorModelTests, BindSessionSensorObjectTests, BindSessionApplianceModelTests, BindSessionApplianceObjectTests
@@ -78,7 +78,7 @@ class ActiveTestSuite():
         return self.suite
 
     def sessions_tests(self):
-        self.suite.addTest(unittest.makeSuite(SessionsModelTests))
+        self.suite.addTest(unittest.makeSuite(CuringSessionsModelTests))
         return self.suite
 
     def curing_session_tests(self):

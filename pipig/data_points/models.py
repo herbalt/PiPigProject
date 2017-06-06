@@ -190,9 +190,8 @@ class DataPoints(db.Model, CRUDMixin):
             if value is None or time_elapsed is None:
                 return None
 
-            with app.app_context():
-                data_point = DataPoint.create(data_points_id=self.id, value=value, time_elapsed=time_elapsed)
-
+            data_point = DataPoint.create(data_points_id=self.id, value=value, time_elapsed=time_elapsed)
+            db.session.commit()
         else:
             with app.app_context():
                 data_point = DataPoint.query.filter_by(id=datapoint_id).first()

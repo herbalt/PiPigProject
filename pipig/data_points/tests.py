@@ -1,6 +1,6 @@
 from test_helpers.test_base import BaseTestCase
 
-from .models import DataPoint, DataPoints
+from pipig.data_points.models import DataPoint, DataPoints
 
 #________________________________________________________________
 #
@@ -75,8 +75,8 @@ class DataPointsObjectTests(BaseTestCase):
         self.helper_test_get_data_point_list(data_points, expected)
 
     def test_update_point_new(self):
-        data_points = DataPoints.create(name="test_update_point_new")
-
+        data_points = DataPoints(name="test_update_point_new")
+        data_points.id = 1
         data_point = data_points.update_point(datapoint_id=None, value=1, time_elapsed=100)
 
         expected_data_point = DataPoint(data_points_id=1, value=1, time_elapsed=100)
@@ -85,11 +85,12 @@ class DataPointsObjectTests(BaseTestCase):
                         "Failed adding a new Data Point to %s" % data_points.name)
 
     def test_update_point_existing(self):
-        data_points = DataPoints.create(name="TestDataPoints")
+        data_points = DataPoints(name="TestDataPoints")
+        data_points.id = 1
         existing_data_point = data_points.update_point(datapoint_id=None, value=1, time_elapsed=100)
-        expected_data_point = DataPoint.create(data_points_id=1, value=1, time_elapsed=100)
+        expected_data_point = DataPoint(data_points_id=1, value=2, time_elapsed=50)
 
-        data_point = data_points.update_point(datapoint_id=1)
+        data_point = data_points.update_point(datapoint_id=1, value=2, time_elapsed=50)
 
         self.assertTrue(compare_data_point(data_point, expected_data_point),
                         "Failed adding a new Data Point to %s" % data_points.name)
@@ -128,12 +129,14 @@ class DataPointsObjectTests(BaseTestCase):
         self.helper_test_get_data_point_by_id(5, DataPoint(1, 150, 30), data_points)
 
     def test_get_data_point_time_does_not_exist(self):
-        data_points = DataPoints.create(name="test_get_data_point_time_does_not_exist")
+        data_points = DataPoints(name="test_get_data_point_time_does_not_exist")
+        data_points.id = 1
         self.populate_with_mock_data_points()
         self.helper_test_get_data_point(5, DataPoint(1, 25, 5), data_points)
 
     def test_get_data_point_time_after_last_point(self):
-        data_points = DataPoints.create(name="test_get_data_point_time_after_last_point")
+        data_points = DataPoints(name="test_get_data_point_time_after_last_point")
+        data_points.id = 1
         self.populate_with_mock_data_points()
         self.helper_test_get_data_point(50, DataPoint(1, 200, 50), data_points)
 

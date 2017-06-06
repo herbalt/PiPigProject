@@ -14,7 +14,7 @@ class ApplianceType(db.Model, CRUDMixin):
     def get_id(self):
         return self.id
 
-    def get_type_name(self):
+    def get_type(self):
         return self.type_name
 
     def get_units_id(self):
