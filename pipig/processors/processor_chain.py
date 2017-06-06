@@ -24,7 +24,8 @@ class ProcessorChain(Observer, Subject):
         :param status_code:
         :return:
         """
-        self.delay_processor.receive(payload, status_code)
+        result = self.delay_processor.receive(payload, status_code)
+        # self.notify(result, status_code)
 
     def create_chain(self, delay_quantity=1, average=False):
         self.create_delay_processor(delay_quantity, average)

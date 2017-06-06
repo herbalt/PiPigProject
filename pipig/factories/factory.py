@@ -21,8 +21,9 @@ class BaseFactory:
 
     def build_object(self, object_id):
         db_obj = self.get_database_object(object_id)
-        type_id = db_obj.get_type_id()
+
         try:
+            type_id = db_obj.get_type_id()
             type_obj = self.get_type_object(type_id)
             type_name = type_obj.get_type()
         except:

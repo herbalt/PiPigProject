@@ -212,6 +212,7 @@ class Controller(Observer, Subject):
         for sensor_id in self.sensors_dict:
             sensor_obj = self.sensors_dict.get(sensor_id)
             sensor_obj.execute_operation()
+
         pass
 
     def stop_sensors(self):
@@ -230,13 +231,13 @@ class Controller(Observer, Subject):
         :param reading: A processed Sensor reading that is Recieved
         :return: 
         """
+
         self.sensor_queue.put_nowait(reading)
 
     def process_sensor_queue(self):
         appliance_reading_list = []
 
         sensor_reading = self.sensor_queue.get()
-
         datapoints_result_list = self.process_sensor_reading(sensor_reading)
         for datapoint in datapoints_result_list:
             datapoint_list = self.process_datapoint_results_to_appliance(datapoint)

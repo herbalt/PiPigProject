@@ -34,7 +34,7 @@ class BaseSensor(AsyncTask):
     # ---------------------------------------------------------------------
     def __str__(self):
         result = "Sensor: " + self.get_name() + "\n"
-        result = result + "Type: " + self.obj_type()
+        result = result + "Type: " + str(self.obj_type())
         return result
 
     def __eq__(self, other):
@@ -130,6 +130,7 @@ class SensorBasic(BaseSensor):
 
     def take_reading(self):
         self.counter += 1
+        # print self.get_name() + "\ntake_reading: " + str(self.counter) + "\n"
         return self.counter
 
 
