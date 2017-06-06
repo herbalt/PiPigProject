@@ -3,19 +3,25 @@ from time import sleep
 from app import data_setup as generics
 from pipig import app
 
+from pipig.recipes.models import Recipe
+from pipig.curing_sessions.models import CuringSession
 from pipig.sensors.models import Sensor
 from pipig.data_points.models import DataPoints, DataPoint
 from pipig.appliances.models import Appliance
 from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
-
+from datetime import datetime
 if __name__ == "__main__":
 
-    recipe_id = 1
-    session_id = 1
+
 
     # generics.data_setup()
 
     with app.app_context():
+        recipe = Recipe.create(name="InitRecipe")
+        session = CuringSession.create(name="InitCuringSession", start_time=datetime.now())
+
+        recipe_id = recipe.get_id()
+        session_id = session.get_id()
 
         sensor_1 = Sensor.create(name="Sensor1", type_id=1, interval_between_readings=0.5, gpio_pin_id=None)
         sensor_2 = Sensor.create(name="Sensor2", type_id=1, interval_between_readings=0.25, gpio_pin_id=None)
@@ -51,11 +57,11 @@ if __name__ == "__main__":
         appliance_binder_4 = BindDatapointsAppliances.create(recipe_id=recipe_id, datapoints_id=2, appliance_id=4, polarity=-1)
         appliance_binder_5 = BindDatapointsAppliances.create(recipe_id=recipe_id, datapoints_id=2, appliance_id=5, polarity=0)
 
-    controller = ControllerApi(recipe_id, session_id)
+        controller = ControllerApi(recipe_id, session_id)
 
-    controller.start()
+        controller.start()
 
-    sleep(10)
+        sleep(10)
 
-    controller.stop()
+        controller.stop()
 

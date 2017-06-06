@@ -94,7 +94,9 @@ class Controller(Observer, Subject):
         Build Sensors in a Dict
         :return: 
         """
-        self.sensors_dict = self.factory.build_objects_dict(self.factory.SENSOR, self.get_recipe_obj().get_sensor_ids())
+        recipe_obj = self.get_recipe_obj()
+        sensor_list = recipe_obj.get_sensor_ids()
+        self.sensors_dict = self.factory.build_objects_dict(self.factory.SENSOR, sensor_list)
         for sensor in self.sensors_dict:
             self.sensor_processor.attach(sensor)
         return self.sensors_dict
@@ -165,7 +167,8 @@ class Controller(Observer, Subject):
         num_threads = 3
 
         for i in range(num_threads):
-            worker = Thread(target=self.process_sensor_queue, args=(self.sensor_queue,))
+            # worker = Thread(target=self.process_sensor_queue, args=(self.sensor_queue,))
+            worker = Thread(target=self.process_sensor_queue)
             worker.setDaemon(True)
             worker.start()
 
@@ -177,7 +180,8 @@ class Controller(Observer, Subject):
         num_threads = 3
 
         for i in range(num_threads):
-            worker = Thread(target=self.process_appliance_queue, args=(self.appliance_queue,))
+            # worker = Thread(target=self.process_appliance_queue, args=(self.appliance_queue,))
+            worker = Thread(target=self.process_appliance_queue)
             worker.setDaemon(True)
             worker.start()
 
@@ -205,8 +209,9 @@ class Controller(Observer, Subject):
         Start every sensor in the list of Sensors
         :return: 
         """
-        for sensor in self.sensors_dict:
-            sensor.execute_operation()
+        for sensor_id in self.sensors_dict:
+            sensor_obj = self.sensors_dict.get(sensor_id)
+            sensor_obj.execute_operation()
         pass
 
     def stop_sensors(self):
@@ -214,8 +219,9 @@ class Controller(Observer, Subject):
         Stop every sensor in the list of Sensors
         :return: 
         """
-        for sensor in self.sensors_dict:
-            sensor.cancel_operation()
+        for sensor_id in self.sensors_dict:
+            sensor_obj = self.sensors_dict.get(sensor_id)
+            sensor_obj.cancel_operation()
 
 
     def add_sensor_reading_to_queue(self, reading, status_code=0):
@@ -238,7 +244,6 @@ class Controller(Observer, Subject):
                 appliance_reading_list.append(datapoint)
         for appliance_reading in appliance_reading_list:
             self.add_appliance_reading_to_queue(appliance_reading)
-
 
     def process_sensor_reading(self, sensor_reading):
         """
