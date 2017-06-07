@@ -134,7 +134,12 @@ class Controller(Observer, Subject):
         return self.datapoints_dict
 
     def build_appliance_binders(self):
-        return self.factory.build_objects_dict(self.factory.APPLIANCE_BINDER, self.get_recipe_obj().get_appliance_datapoints_binding_ids())
+        recipe_obj = self.get_recipe_obj()
+        binders_list = recipe_obj.get_appliance_datapoints_binding_ids()
+        self.appliance_binders_dict = self.factory.build_objects_dict(self.factory.APPLIANCE_BINDER,
+                                        binders_list)
+        debug_messenger("BINDERS: \n" + str(self.appliance_binders_dict))
+        return
 
     def bind_sensor_objects(self):
         """
@@ -257,10 +262,10 @@ class Controller(Observer, Subject):
         debug_messenger("PROCESS SENSOR QUEUE" + str(sensor_reading))
         with app.app_context():
             datapoints_result_list = self.process_sensor_reading(sensor_reading)
-        for datapoint in datapoints_result_list:
-            datapoint_list = self.process_datapoint_results_to_appliance(datapoint)
-            for datapoint in datapoint_list:
-                appliance_reading_list.append(datapoint)
+            for datapoint in datapoints_result_list:
+                datapoint_list = self.process_datapoint_results_to_appliance(datapoint)
+        for datapoint in datapoint_list:
+            appliance_reading_list.append(datapoint)
         for appliance_reading in appliance_reading_list:
             self.add_appliance_reading_to_queue(appliance_reading)
 
@@ -307,7 +312,7 @@ class Controller(Observer, Subject):
         return datapoint_result_list
 
     def process_datapoint_results_to_appliance(self, datapoint_readings):
-        debug_messenger("PROCESS DATAPOINT RESULTS TO APPLIANCE")
+        debug_messenger("PROCESS DATAPOINT RESULTS TO APPLIANCE" + str(datapoint_readings))
         if not datapoint_readings.get_component_type_id() == COMPONENT_TYPE_DATAPOINT:
             raise AttributeError
 
@@ -315,8 +320,9 @@ class Controller(Observer, Subject):
         binder_list = recipe.get_appliance_datapoints_binding_ids()
 
         for binder in binder_list:
-            if binder.get_datapoint_id() == datapoint_readings.get_component_id():
-                binder_obj = self.appliance_binders_dict.get(binder.get_id())
+            binder_obj = self.appliance_binders_dict.get(binder)
+
+            if binder_obj.get_datapoints_id() == datapoint_readings.get_component_id():
                 polarity = binder_obj.get_polarity()
                 appliance_response = self.response_to_datapoint(datapoint_readings.get_value(), polarity)
                 output_reading = GenericReading(binder_obj.get_appliance_id(), COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER, appliance_response,
@@ -338,7 +344,7 @@ class Controller(Observer, Subject):
         :return: 
         """
         debug_messenger("ADD APPLIANCE READING TO QUEUE")
-        if not reading.get_component_id() == COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER:
+        if not reading.get_component_type_id() == COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER:
             raise AttributeError
 
         self.appliance_queue.put_nowait(reading)
