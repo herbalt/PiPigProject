@@ -8,6 +8,8 @@ from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE
 from Queue import Queue
 from threading import Thread, Event
 from pipig import app
+from pipig.utilities import debug_messenger
+
 
 class Controller(Observer, Subject):
     """
@@ -60,8 +62,8 @@ class Controller(Observer, Subject):
         if self.get_curing_session_id() is None:
             return CuringSession("GenericSession")
         else:
-            with app.app_context():
-                session = CuringSession.get(self.get_curing_session_id())
+            # with app.app_context():
+            session = CuringSession.get(self.get_curing_session_id())
             if session is None:
                 return CuringSession("GenericSession")
             return CuringSession.get(self.get_curing_session_id())
@@ -97,8 +99,11 @@ class Controller(Observer, Subject):
         recipe_obj = self.get_recipe_obj()
         sensor_list = recipe_obj.get_sensor_ids()
         self.sensors_dict = self.factory.build_objects_dict(self.factory.SENSOR, sensor_list)
-        for sensor in self.sensors_dict:
-            self.sensor_processor.attach(sensor)
+        for sensor_id in self.sensors_dict:
+            sensor_object = self.sensors_dict.get(sensor_id)
+            sensor_object.attach(self.sensor_processor)
+            #self.sensor_processor.attach(sensor_object)
+        debug_messenger("SENSORS: \n" + str(self.sensors_dict))
         return self.sensors_dict
 
     def build_appliances(self):
@@ -110,6 +115,8 @@ class Controller(Observer, Subject):
         for appliance_id in self.appliances_dict:
             appliance_object = self.appliances_dict.get(appliance_id)
             appliance_object.attach(self.appliance_processor)
+            # self.appliance_processor.attach(appliance_object)
+        debug_messenger("APPLIANCES: \n" + str(self.appliances_dict))
         return self.appliances_dict
 
     def build_datapoints(self):
@@ -209,6 +216,7 @@ class Controller(Observer, Subject):
         Start every sensor in the list of Sensors
         :return: 
         """
+        debug_messenger("START SENSORS")
         for sensor_id in self.sensors_dict:
             sensor_obj = self.sensors_dict.get(sensor_id)
             sensor_obj.execute_operation()
@@ -231,14 +239,17 @@ class Controller(Observer, Subject):
         :param reading: A processed Sensor reading that is Recieved
         :return: 
         """
-
+        debug_messenger("ADD SENSOR READING TO QUEUE")
         self.sensor_queue.put_nowait(reading)
 
     def process_sensor_queue(self):
+
         appliance_reading_list = []
 
         sensor_reading = self.sensor_queue.get()
-        datapoints_result_list = self.process_sensor_reading(sensor_reading)
+        debug_messenger("PROCESS SENSOR QUEUE" + str(sensor_reading))
+        with app.app_context():
+            datapoints_result_list = self.process_sensor_reading(sensor_reading)
         for datapoint in datapoints_result_list:
             datapoint_list = self.process_datapoint_results_to_appliance(datapoint)
             for datapoint in datapoint_list:
@@ -251,18 +262,19 @@ class Controller(Observer, Subject):
         Take a Sensor Reading from the Queue and build an output Reading based on the interaction with the Datapoints
         :return: The Output Reading(s) that will be sent to the Appliance Queue
         """
-
+        debug_messenger("PROCESS SENSOR READING")
         # Check if Reading is of the right component type
-        if not sensor_reading.get_component_id() == COMPONENT_TYPE_SENSOR:
+        if not sensor_reading.get_component_type_id() == COMPONENT_TYPE_SENSOR:
             raise AttributeError
 
         # Get the relevant readings to be able to compare against a datapoints object
         recipe = self.get_recipe_obj()
         session = self.get_session_obj()
         sensor_id = sensor_reading.get_component_id()
-        reading_timestamp = sensor_reading.get_reading_timestamp()
-        time_elapsed = reading_timestamp - session.get_start_time()
-        reading_value = sensor_reading.get_reading_value()
+        reading_timestamp = sensor_reading.get_timestamp()
+        start_time = session.get_start_time()
+        time_elapsed = reading_timestamp - start_time
+        reading_value = sensor_reading.get_value()
 
         # Get all the corresponding datapoints to compare with
         datapoint_id_list = recipe.get_datapoints_for_sensor(sensor_id)
@@ -288,7 +300,7 @@ class Controller(Observer, Subject):
         return datapoint_result_list
 
     def process_datapoint_results_to_appliance(self, datapoint_readings):
-
+        debug_messenger("PROCESS DATAPOINT RESULTS TO APPLIANCE")
         if not datapoint_readings.get_component_id() == COMPONENT_TYPE_DATAPOINT:
             raise AttributeError
 
@@ -318,6 +330,7 @@ class Controller(Observer, Subject):
         :param reading: A output reading that is to be processed by the Appliances
         :return: 
         """
+        debug_messenger("ADD APPLIANCE READING TO QUEUE")
         if not reading.get_component_id() == COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER:
             raise AttributeError
 
@@ -329,10 +342,12 @@ class Controller(Observer, Subject):
         Take a Appliance Reading from the Queue and send to the relevant Appliance Objects
         :return: 
         """
+        debug_messenger("PROCESS APPLIANCE QUEUE")
         appliance_reading = self.appliance_queue.get()
-        for appliance in self.appliances_dict:
-            if appliance.get_id() == appliance_reading:
-                appliance.recieve(appliance_reading)
+        for appliance_id in self.appliances_dict:
+            appliance_obj = self.appliances_dict[appliance_id]
+            if appliance_obj.get_id() == appliance_reading:
+                appliance_obj.recieve(appliance_reading)
 
 
 

@@ -1,7 +1,7 @@
 from general.patterns import Observer, Subject
 from processors import ProcessorPrint, ProcessorDatabase, ProcessorAverageDelay, BaseProcessor
 from abc import abstractmethod, ABCMeta
-
+from utilities import debug_messenger
 
 class ProcessorChain(Observer, Subject):
 
@@ -24,7 +24,9 @@ class ProcessorChain(Observer, Subject):
         :param status_code:
         :return:
         """
-        result = self.delay_processor.receive(payload, status_code)
+        debug_messenger("RECEIVE PROCESSOR CHAIN: " + str(payload))
+        if payload is not None:
+            result = self.delay_processor.receive(payload, status_code)
         # self.notify(result, status_code)
 
     def create_chain(self, delay_quantity=1, average=False):
@@ -35,6 +37,7 @@ class ProcessorChain(Observer, Subject):
             self.delay_processor.attach(processor_object)
 
     def attach(self, observer):
+        debug_messenger("ATTACH PROCESSOR CHAIN: " + str(observer))
         self.delay_processor.attach(observer)
 
     @abstractmethod

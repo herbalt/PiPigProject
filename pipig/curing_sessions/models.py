@@ -4,7 +4,7 @@ from pipig.data import db, CRUDMixin
 class CuringSession(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String, nullable=False)
-    start_time = db.Column(db.DateTime, nullable=True)
+    start_time = db.Column(db.Float, nullable=True)
 
     def __init__(self, name, start_time=None):
         self.name = name

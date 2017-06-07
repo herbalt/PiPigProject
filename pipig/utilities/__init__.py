@@ -29,3 +29,9 @@ def calculate_quantity_of_readings(timeframe_in_seconds, interval_between_readin
     if interval_between_readings == 0:
         return 1
     return int(round(timeframe_in_seconds / interval_between_readings, 0))
+
+
+def debug_messenger(message):
+    from pipig.app_config import config_class
+    if config_class.DEBUG == True:
+        print str(message)

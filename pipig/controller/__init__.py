@@ -10,6 +10,8 @@ from pipig.data_points.models import DataPoints, DataPoint
 from pipig.appliances.models import Appliance
 from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
 from datetime import datetime
+from time import time
+
 if __name__ == "__main__":
 
 
@@ -18,7 +20,7 @@ if __name__ == "__main__":
 
     with app.app_context():
         recipe = Recipe.create(name="InitRecipe")
-        session = CuringSession.create(name="InitCuringSession", start_time=datetime.now())
+        session = CuringSession.create(name="InitCuringSession", start_time=time())
 
         recipe_id = recipe.get_id()
         session_id = session.get_id()

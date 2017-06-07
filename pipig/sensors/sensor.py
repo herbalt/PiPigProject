@@ -45,8 +45,9 @@ class BaseSensor(AsyncTask):
 
     def obj_sensor(self):
         obj = None
-        with app.app_context():
-            obj = Sensor.query.filter_by(id=self.get_id()).first()
+        # with app.app_context():
+        obj = Sensor.get(self.get_id())
+        # obj = Sensor.query.filter_by(id=self.get_id()).first()
         return obj
 
     def obj_type(self):
@@ -60,18 +61,18 @@ class BaseSensor(AsyncTask):
         return self.obj_sensor().name
 
     def get_interval_between_readings(self):
-        with app.app_context():
-            obj = self.obj_sensor()
-            interval = obj.get_interval_between_readings()
+        # with app.app_context():
+        obj = self.obj_sensor()
+        interval = obj.get_interval_between_readings()
         return interval
 
     def get_type_id(self):
         return self.obj_sensor().get_type_id()
 
     def get_minimum_refresh(self):
-        with app.app_context():
-            obj = self.obj_type()
-            min = obj.get_minimum_refresh()
+        # with app.app_context():
+        obj = self.obj_type()
+        min = obj.get_minimum_refresh()
         return min
 
     def get_units(self):

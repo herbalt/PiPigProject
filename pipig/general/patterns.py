@@ -249,7 +249,7 @@ class BasicAsyncTaskObserver(Observer):
 
     def receive(self, payload, status_code=0):
         self.results.append((status_code, payload))
-        print "Status Code: " + str(status_code) + " Payload: " + str(payload)
+        # print "Status Code: " + str(status_code) + " Payload: " + str(payload)
 
     def get_results(self):
         return self.results
