@@ -73,14 +73,14 @@ class Recipe(db.Model, CRUDMixin):
         binder_list = BindDatapointsSensors.query.filter_by(recipe_id=self.get_id()).all()
         binder_ids = []
         for binder in binder_list:
-            result = binder.get_sensor_id()
+            result = binder.get_datapoints_id()
             if result not in binder_ids:
                 binder_ids.append(result)
 
         binder_list = BindDatapointsAppliances.query.filter_by(recipe_id=self.get_id()).all()
 
         for binder in binder_list:
-            result = binder.get_appliance_id()
+            result = binder.get_datapoints_id()
             if result not in binder_ids:
                 binder_ids.append(result)
 
@@ -112,7 +112,7 @@ class Recipe(db.Model, CRUDMixin):
         appliance_binders = self.get_appliance_datapoints_binding_ids()
         for binder_id in appliance_binders:
             binder = BindDatapointsAppliances.get(binder_id)
-            if binder_id.get_datapoints_id() == datapoints_id:
+            if binder.get_datapoints_id() == datapoints_id:
                 output_list.append(binder.get_appliance_id())
         return output_list
 

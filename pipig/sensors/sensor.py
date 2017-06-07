@@ -24,6 +24,10 @@ class BaseSensor(AsyncTask):
     """
     __metaclass__ = ABCMeta
 
+    sensor = None
+    sensor_type = None
+    sensor_units = None
+
     def __init__(self, sensor_id):
         super(BaseSensor, self).__init__()
         self.sensor_id = sensor_id
@@ -44,18 +48,20 @@ class BaseSensor(AsyncTask):
         return self.sensor_id
 
     def obj_sensor(self):
-        obj = None
-        # with app.app_context():
-        obj = Sensor.get(self.get_id())
-        # obj = Sensor.query.filter_by(id=self.get_id()).first()
-        return obj
+        if self.sensor is None:
+            self.sensor = Sensor.get(self.get_id())
+
+        return self.sensor
 
     def obj_type(self):
-        obj = SensorType.get(self.obj_sensor().get_type_id())
-        return obj
+        if self.sensor_type is None:
+            self.sensor_type = SensorType.get(self.obj_sensor().get_type_id())
+        return self.sensor_type
 
     def obj_units(self):
-        return GenericUnits.get(self.obj_type().get_id())
+        if self.sensor_units is None:
+            self.sensor_units = GenericUnits.get(self.obj_type().get_id())
+        return self.sensor_units
 
     def get_name(self):
         return self.obj_sensor().name

@@ -4,7 +4,7 @@ from pipig.curing_sessions.models import CuringSession
 from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 from pipig.factories.abstract_factory import AbstractFactory
-from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE
+from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE, DATABASE_ONLY
 from Queue import Queue
 from threading import Thread, Event
 from pipig import app
@@ -32,8 +32,8 @@ class Controller(Observer, Subject):
         self.appliance_binders_dict = {}
 
         processor_factory = ProcessorChainFactory()
-        self.sensor_processor = processor_factory.build_object(PRINT_DATABASE)
-        self.appliance_processor = processor_factory.build_object(PRINT_DATABASE)
+        self.sensor_processor = processor_factory.build_object(DATABASE_ONLY)
+        self.appliance_processor = processor_factory.build_object(DATABASE_ONLY)
 
         self.sensor_queue = Queue()
         self.sensor_queue.empty()
@@ -111,7 +111,8 @@ class Controller(Observer, Subject):
         Build Appliances in a Dict
         :return: 
         """
-        self.appliances_dict = self.factory.build_objects_dict(self.factory.APPLIANCE, self.get_recipe_obj().get_appliance_ids())
+        appliance_list = self.get_recipe_obj().get_appliance_ids()
+        self.appliances_dict = self.factory.build_objects_dict(self.factory.APPLIANCE, appliance_list)
         for appliance_id in self.appliances_dict:
             appliance_object = self.appliances_dict.get(appliance_id)
             appliance_object.attach(self.appliance_processor)
@@ -124,7 +125,13 @@ class Controller(Observer, Subject):
         Build Datapoints in a Dict
         :return: 
         """
-        return self.factory.build_objects_dict(self.factory.DATAPOINTS, self.get_recipe_obj().get_datapoints_ids())
+        recipe_obj = self.get_recipe_obj()
+        datapoints_list = recipe_obj.get_datapoints_ids()
+        self.datapoints_dict = self.factory.build_objects_dict(self.factory.DATAPOINTS, datapoints_list)
+        # for datapoints_id in self.datapoints_dict:
+        #     datapoints_object = self.datapoints_dict.get(datapoints_id)
+        debug_messenger("DATAPOINTS: \n" + str(self.datapoints_dict))
+        return self.datapoints_dict
 
     def build_appliance_binders(self):
         return self.factory.build_objects_dict(self.factory.APPLIANCE_BINDER, self.get_recipe_obj().get_appliance_datapoints_binding_ids())
@@ -294,14 +301,14 @@ class Controller(Observer, Subject):
 
         # Return the list of Output Readings
 
-        for datapoint_result in datapoint_result_list:
-            recipe.get_appliances_for_datapoint(datapoint_result.get_component_id())
+        # for datapoint_result in datapoint_result_list:
+        #     recipe.get_appliances_for_datapoint(datapoint_result.get_component_id())
 
         return datapoint_result_list
 
     def process_datapoint_results_to_appliance(self, datapoint_readings):
         debug_messenger("PROCESS DATAPOINT RESULTS TO APPLIANCE")
-        if not datapoint_readings.get_component_id() == COMPONENT_TYPE_DATAPOINT:
+        if not datapoint_readings.get_component_type_id() == COMPONENT_TYPE_DATAPOINT:
             raise AttributeError
 
         recipe = self.get_recipe_obj()

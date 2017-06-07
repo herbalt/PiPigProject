@@ -57,8 +57,7 @@ class ProcessorPrint(BaseProcessor):
         """
         if payload is None:
             return None
-        print "\nStatusCode: " + str(status_code) + \
-              "\nPayload:" + str(payload)
+        print "\nStatusCode: " + str(status_code) + "\nPayload:" + str(payload)
         return payload
 
 
@@ -102,7 +101,7 @@ class ProcessorDatabase(BaseProcessor):
         super(ProcessorDatabase, self).__init__()
 
     def process(self, payload, status_code=0):
-        debug_messenger("READING TO DATABASE:\n" + str(payload))
+        debug_messenger("READING TO DATABASE: " + str(payload))
         gti= payload.get_component_id()
         gcti = payload.get_component_type_id()
         gv = payload.get_value()
