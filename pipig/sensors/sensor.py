@@ -49,7 +49,8 @@ class BaseSensor(AsyncTask):
 
     def obj_sensor(self):
         if self.sensor is None:
-            self.sensor = Sensor.get(self.get_id())
+            with app.app_context():
+                self.sensor = Sensor.get(self.get_id())
 
         return self.sensor
 
