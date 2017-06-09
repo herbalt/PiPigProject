@@ -101,12 +101,6 @@ class ProcessorDatabase(BaseProcessor):
         super(ProcessorDatabase, self).__init__()
 
     def process(self, payload, status_code=0):
-        debug_messenger("READING TO DATABASE: " + str(payload))
-        gti= payload.get_component_id()
-        gcti = payload.get_component_type_id()
-        gv = payload.get_value()
-        gt = payload.get_timestamp()
-        # GenericReading(component_id=1, component_type_id=1, reading_value=1, reading_timestamp=1)
         with app.app_context():
             result = GenericReading.create(component_id=payload.get_component_id(),
                                   component_type_id=payload.get_component_type_id(),

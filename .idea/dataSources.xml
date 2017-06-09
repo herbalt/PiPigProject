@@ -10,11 +10,11 @@
         <property name="enable_load_extension" value="true" />
       </driver-properties>
     </data-source>
-    <data-source source="LOCAL" name="development.db" uuid="5bf403a3-119d-402d-b48a-be3c4f1a929b">
+    <data-source source="LOCAL" name="development2.db" uuid="7b4cd0c1-5ea8-4e77-afc9-4b87dce14f78">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/development.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/development2.db</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
       </driver-properties>

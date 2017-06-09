@@ -24,7 +24,7 @@ class ProcessorChain(Observer, Subject):
         :param status_code:
         :return:
         """
-        debug_messenger("RECEIVE PROCESSOR CHAIN: " + str(payload))
+        # debug_messenger("RECEIVE PROCESSOR CHAIN: " + str(payload))
         if payload is not None:
             result = self.delay_processor.receive(payload, status_code)
         # self.notify(result, status_code)
@@ -37,7 +37,7 @@ class ProcessorChain(Observer, Subject):
             self.delay_processor.attach(processor_object)
 
     def attach(self, observer):
-        debug_messenger("ATTACH PROCESSOR CHAIN: " + str(observer))
+        # debug_messenger("ATTACH PROCESSOR CHAIN: " + str(observer))
         self.delay_processor.attach(observer)
 
     @abstractmethod
