@@ -113,7 +113,7 @@ class TrialCreator:
 if __name__ == "__main__":
 
     with app.app_context():
-        trial = TrialCreator("Trial 1", [(1, 2)], [(1, 2, -1)])
+        trial = TrialCreator("Trial 1", [(1, 2), (2, 2)], [(1, 2, -1), (1, 2, 1), (2, 2, -1)])
         controller = ControllerApi(trial.get_recipe_id(), trial.get_session_id())
         controller.start()
 

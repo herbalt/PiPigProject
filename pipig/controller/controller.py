@@ -6,9 +6,8 @@ from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 from pipig.factories.abstract_factory import AbstractFactory
 from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE, DATABASE_ONLY
-# from Queue import Queue
 from queues.Queues import BaseQueue
-from threading import Thread, Event, ThreadError
+from threading import Thread, ThreadError
 from pipig import app
 from pipig.utilities import debug_messenger
 
@@ -24,30 +23,34 @@ class Controller(Observer, Subject):
     def __init__(self, recipe_id, curing_session_id=None):
         super(Controller, self).__init__()
 
+        # Store init parameters
         self.recipe_id = recipe_id
         self.curing_session_id = curing_session_id
+
+        # Prepare the Queues for Reading entries
+        self.sensor_queue = BaseQueue()
+        self.appliance_queue = BaseQueue()
+
+        # Prepare Base Objects
         self.factory = AbstractFactory()
 
-        self.sensor_queue = BaseQueue()
-        self.sensor_queue.empty()
-        self.appliance_queue = BaseQueue()
-        self.sensor_queue.empty()
-
+        # Prepare Empty Object Lists
         self.sensors_dict = {}
         self.appliances_dict = {}
         self.datapoints_dict = {}
         self.appliance_binders_dict = {}
 
+        # Prepare Processors
         processor_factory = ProcessorChainFactory()
         self.sensor_processor = processor_factory.build_object(DATABASE_ONLY)
         self.appliance_processor = processor_factory.build_object(DATABASE_ONLY)
 
+        # Configure Object
         self.build_controller()
 
     """
     GET Methods
     """
-
     def get_recipe_id(self):
         return self.recipe_id
 
@@ -55,7 +58,6 @@ class Controller(Observer, Subject):
         return self.curing_session_id
 
     def get_recipe_obj(self):
-        # with app.app_context():
         recipe = Recipe.get(self.get_recipe_id())
         return recipe
 
@@ -63,7 +65,6 @@ class Controller(Observer, Subject):
         if self.get_curing_session_id() is None:
             return CuringSession("GenericSession")
         else:
-            # with app.app_context():
             session = CuringSession.get(self.get_curing_session_id())
             if session is None:
                 return CuringSession("GenericSession")
@@ -72,7 +73,6 @@ class Controller(Observer, Subject):
     """
     Build Methods
     """
-
     def build_controller(self):
         """
         Main method to call from init to construct the environment
@@ -80,7 +80,6 @@ class Controller(Observer, Subject):
         """
         self.build_objects()
         self.bind_sensor_objects()
-        self.bind_appliance_objects()
 
     def build_objects(self):
         """
@@ -103,7 +102,6 @@ class Controller(Observer, Subject):
         for sensor_id in self.sensors_dict:
             sensor_object = self.sensors_dict.get(sensor_id)
             sensor_object.attach(self.sensor_processor)
-            # self.sensor_processor.attach(sensor_object)
         debug_messenger("SENSORS: \n" + str(self.sensors_dict))
         return self.sensors_dict
 
@@ -117,7 +115,6 @@ class Controller(Observer, Subject):
         for appliance_id in self.appliances_dict:
             appliance_object = self.appliances_dict.get(appliance_id)
             appliance_object.attach(self.appliance_processor)
-            # self.appliance_processor.attach(appliance_object)
         debug_messenger("APPLIANCES: \n" + str(self.appliances_dict))
         return self.appliances_dict
 
@@ -129,12 +126,14 @@ class Controller(Observer, Subject):
         recipe_obj = self.get_recipe_obj()
         datapoints_list = recipe_obj.get_datapoints_ids()
         self.datapoints_dict = self.factory.build_objects_dict(self.factory.DATAPOINTS, datapoints_list)
-        # for datapoints_id in self.datapoints_dict:
-        #     datapoints_object = self.datapoints_dict.get(datapoints_id)
         debug_messenger("DATAPOINTS: \n" + str(self.datapoints_dict))
         return self.datapoints_dict
 
     def build_appliance_binders(self):
+        """
+        Build Appliance Datapoint Binder in a Dict
+        :return:
+        """
         recipe_obj = self.get_recipe_obj()
         binders_list = recipe_obj.get_appliance_datapoints_binding_ids()
         self.appliance_binders_dict = self.factory.build_objects_dict(self.factory.APPLIANCE_BINDER,
@@ -149,22 +148,9 @@ class Controller(Observer, Subject):
         """
         self.sensor_processor.attach(self)
 
-    def bind_appliance_objects(self):
-        """
-        NOT SURE IF I NEED THIS FUNCTION .... HOWEVER I DO MAKE AN EXPLICIT CALL TO THE RELEVANT APPLIANCE
-        Bind Processors to Appliances
-        then
-        Bind Controller to Appliances
-        :return: 
-        """
-
-        # self.attach(self.appliance_processor)
-        pass
-
     """
     Abstract Methods
     """
-
     def receive(self, result, status_code=0):
         """
         Receive a Sensor Reading to the Controller
@@ -177,7 +163,6 @@ class Controller(Observer, Subject):
     """
     Queue Management
     """
-
     def thread_sensor_queue_processing(self):
         """
         Begins the Thread for processing the incoming Sensor Readings
@@ -185,14 +170,14 @@ class Controller(Observer, Subject):
         """
         debug_messenger("SENSOR QUEUE WORKER STARTED")
 
-        while self.sensor_queue.get_state():
-            if self.sensor_queue.empty() is False:
-                worker = Thread(target=self.process_sensor_queue)
-                worker.setDaemon(True)
-                try:
-                    worker.start()
-                except ThreadError:
-                    debug_messenger("FAILED TO START SENSOR QUEUE: " + str(self.sensor_queue))
+        num_threads = 2
+        for i in range(num_threads):
+            worker = Thread(target=self.process_sensor_queue)
+            worker.setDaemon(True)
+            try:
+                worker.start()
+            except ThreadError:
+                debug_messenger("FAILED TO START SENSOR QUEUE: " + str(self.sensor_queue))
 
     def thread_appliance_queue_processing(self):
         """
@@ -201,16 +186,28 @@ class Controller(Observer, Subject):
         """
         debug_messenger("APPLIANCE QUEUE WORKER STARTED")
 
-        while self.appliance_queue.get_state():
+        num_threads = 2
+        for i in range(num_threads):
             worker = Thread(target=self.process_appliance_queue)
             worker.setDaemon(True)
-            worker.start()
+            try:
+                worker.start()
+            except ThreadError:
+                debug_messenger("FAILED TO START APPLIANCE QUEUE: " + str(self.sensor_queue))
 
     def start_sensor_queue_processing(self):
+        """
+        Start the Sensor Queue from being able to take readings from the Queue
+        :return:
+        """
         self.sensor_queue.set_state(True)
         self.thread_sensor_queue_processing()
 
     def start_appliance_queue_processing(self):
+        """
+        Start the Appliance Queue from being able to take readings from the Queue
+        :return:
+        """
         self.appliance_queue.set_state(True)
         self.thread_appliance_queue_processing()
 
@@ -219,7 +216,6 @@ class Controller(Observer, Subject):
         Stops the Sensor Queue from receiving Sensor Readings
         :return: 
         """
-        # self.add_sensor_reading_to_queue(Event())
         self.sensor_queue.set_state(False)
         self.sensor_queue.join()
 
@@ -234,7 +230,6 @@ class Controller(Observer, Subject):
     """
     Interactions
     """
-
     def start_sensors(self):
         """
         Start every sensor in the list of Sensors
@@ -244,8 +239,6 @@ class Controller(Observer, Subject):
         for sensor_id in self.sensors_dict:
             sensor_obj = self.sensors_dict.get(sensor_id)
             sensor_obj.execute_operation()
-
-        pass
 
     def stop_sensors(self):
         """
@@ -263,31 +256,38 @@ class Controller(Observer, Subject):
         :return: 
         """
         self.sensor_queue.put_nowait(reading)
-        debug_messenger("ADD SENSOR READING TO QUEUE: " + str(self.sensor_queue))
+        debug_messenger("1 - ADD SENSOR READING TO QUEUE: " + str(self.sensor_queue))
 
     def process_sensor_queue(self):
-        # if self.sensor_queue.get_state():
-        appliance_reading_list = []
+        """
+        Continually take a Reading from the Queue and interact with the specific datapoints.
+        Then create all the relevant Appliance readings to the Appliance Queue
+        :return:
+        """
+        while self.sensor_queue.get_state():
+            if self.sensor_queue.empty() is False:
+                appliance_reading_list = []
 
-        sensor_reading = self.sensor_queue.get()
-        debug_messenger("PROCESS SENSOR QUEUE: " + str(sensor_reading))
-        with app.app_context():
+                sensor_reading = self.sensor_queue.get()
+                debug_messenger("2 -    PROCESS SENSOR QUEUE: " + str(sensor_reading))
+                with app.app_context():
 
-            datapoints_result_list = self.process_sensor_reading(sensor_reading)
+                    datapoints_result_list = self.process_sensor_reading(sensor_reading)
 
-            datapoint_list = []
+                    datapoint_list = []
 
-            # TODO ISSUES WITH THIS SECTION OF CODE DUE TO ITERATORS NOT CODED WELL
-            for datapoint in datapoints_result_list:
-                # datapoint_list.append(self.process_datapoint_results_to_appliance(datapoint))
-                datapoint_list = self.process_datapoint_results_to_appliance(datapoint)
+                    # TODO ISSUES WITH THIS SECTION OF CODE DUE TO ITERATORS NOT CODED WELL
+                    for datapoint in datapoints_result_list:
+                        # datapoint_list.append(self.process_datapoint_results_to_appliance(datapoint))
+                        datapoint_list = self.process_datapoint_results_to_appliance(datapoint)
 
-                if datapoint_list is not None:
-                    for datapoint in datapoint_list:
-                        appliance_reading_list.append(datapoint)
+                        if datapoint_list is not None:
+                            for datapoint in datapoint_list:
+                                appliance_reading_list.append(datapoint)
 
-            for appliance_reading in appliance_reading_list:
-                self.add_appliance_reading_to_queue(appliance_reading)
+                    for appliance_reading in appliance_reading_list:
+                        self.add_appliance_reading_to_queue(appliance_reading)
+
 
     def process_sensor_reading(self, sensor_reading):
         """
@@ -326,17 +326,17 @@ class Controller(Observer, Subject):
                 reading = GenericReading(datapoint_id, COMPONENT_TYPE_DATAPOINT, compare_result, reading_timestamp)
                 datapoint_result_list.append(reading)
                 datapoint_message_list.append(str(reading))
-                # Create a Reading for every datapoint comparision that will be added to the Appliance Queue
 
-                # Return the list of Output Readings
-
-                # for datapoint_result in datapoint_result_list:
-                #     recipe.get_appliances_for_datapoint(datapoint_result.get_component_id())
-        debug_messenger("PROCESS SENSOR READING: " + str(datapoint_message_list))
+        debug_messenger("3 -        PROCESS SENSOR READING: " + str(datapoint_message_list))
         return datapoint_result_list
 
     def process_datapoint_results_to_appliance(self, datapoint_readings):
-        debug_messenger("PROCESS DATAPOINT RESULTS TO APPLIANCE: " + str(datapoint_readings))
+        """
+        Take a Datapoint Reading and converts it to an Appliance reading and adds it to the Appliance Queue
+        :param datapoint_readings:
+        :return:
+        """
+        debug_messenger("4 -            PROCESS DATAPOINT RESULTS TO APPLIANCE: " + str(datapoint_readings))
         with app.app_context():
             if not datapoint_readings.get_component_type_id() == COMPONENT_TYPE_DATAPOINT:
                 raise AttributeError
@@ -374,17 +374,17 @@ class Controller(Observer, Subject):
             raise AttributeError
 
         self.appliance_queue.put_nowait(reading)
-        debug_messenger("ADD APPLIANCE READING TO QUEUE: " + str(self.appliance_queue))
+        debug_messenger("5 -                ADD APPLIANCE READING TO QUEUE: " + str(self.appliance_queue))
 
     def process_appliance_queue(self):
         """
-        Take a Appliance Reading from the Queue and send to the relevant Appliance Objects
+        Continually take a Appliance Reading from the Queue and send to the relevant Appliance Objects
         :return: 
         """
-        # if self.appliance_queue.get_state():
-        appliance_reading = self.appliance_queue.get()
-        debug_messenger("PROCESS APPLIANCE QUEUE: " + str(appliance_reading))
-        for appliance_id in self.appliances_dict:
-            appliance_obj = self.appliances_dict[appliance_id]
-            if appliance_obj.get_id() == appliance_reading:
-                appliance_obj.recieve(appliance_reading)
+        while self.appliance_queue.get_state():
+            appliance_reading = self.appliance_queue.get()
+            debug_messenger("6 -                    PROCESS APPLIANCE QUEUE: " + str(appliance_reading))
+            for appliance_id in self.appliances_dict:
+                appliance_obj = self.appliances_dict[appliance_id]
+                if appliance_obj.get_id() == appliance_reading:
+                    appliance_obj.recieve(appliance_reading)
