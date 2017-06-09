@@ -27,6 +27,11 @@ class Controller(Observer, Subject):
         self.curing_session_id = curing_session_id
         self.factory = AbstractFactory()
 
+        self.sensor_queue = BaseQueue()
+        self.sensor_queue.empty()
+        self.appliance_queue = BaseQueue()
+        self.sensor_queue.empty()
+        
         self.sensors_dict = {}
         self.appliances_dict = {}
         self.datapoints_dict = {}
@@ -36,10 +41,7 @@ class Controller(Observer, Subject):
         self.sensor_processor = processor_factory.build_object(DATABASE_ONLY)
         self.appliance_processor = processor_factory.build_object(DATABASE_ONLY)
 
-        self.sensor_queue = BaseQueue()
-        self.sensor_queue.empty()
-        self.appliance_queue = BaseQueue()
-        self.sensor_queue.empty()
+
 
 
         self.build_controller()
@@ -184,28 +186,39 @@ class Controller(Observer, Subject):
         Begins the Thread for processing the incoming Sensor Readings
         :return: 
         """
-        num_threads = 3
+        # num_threads = 10
 
-        for i in range(num_threads):
+        # for i in range(num_threads):
+        self.sensor_queue.set_state(True)
+        debug_messenger("SENSOR QUEUE WORKER STARTED")
+        while self.sensor_queue.get_state():
             # worker = Thread(target=self.process_sensor_queue, args=(self.sensor_queue,))
             worker = Thread(target=self.process_sensor_queue)
             worker.setDaemon(True)
             worker.start()
-            debug_messenger("SENSOR QUEUE WORKER STARTED: " + str(worker))
+
+
 
     def start_appliance_queue_processing(self):
         """
         Begins the Thread for processing the outgoing Appliance Readings
         :return: 
         """
-        num_threads = 3
+        debug_messenger("APPLIANCE QUEUE WORKER STARTED")
 
-        for i in range(num_threads):
+        self.appliance_queue.set_state(True)
+
+        while self.appliance_queue.get_state():
+
+        # num_threads = 10
+
+        # for i in range(num_threads):
             # worker = Thread(target=self.process_appliance_queue, args=(self.appliance_queue,))
             worker = Thread(target=self.process_appliance_queue)
             worker.setDaemon(True)
             worker.start()
-            debug_messenger("APPLIANCE QUEUE WORKER STARTED: " + str(worker))
+
+
 
     def stop_sensor_queue_processing(self):
         """
@@ -213,6 +226,7 @@ class Controller(Observer, Subject):
         :return: 
         """
         # self.add_sensor_reading_to_queue(Event())
+        self.sensor_queue.set_state(False)
         self.sensor_queue.join()
 
     def stop_appliance_queue_processing(self):
@@ -220,6 +234,7 @@ class Controller(Observer, Subject):
         Stops the Appliance Queue from receiving Appliance Readings
         :return: 
         """
+        self.appliance_queue.set_state(False)
         self.appliance_queue.join()
 
     """
@@ -258,7 +273,7 @@ class Controller(Observer, Subject):
         debug_messenger("ADD SENSOR READING TO QUEUE: " + str(self.sensor_queue))
 
     def process_sensor_queue(self):
-
+        # if self.sensor_queue.get_state():
         appliance_reading_list = []
 
         sensor_reading = self.sensor_queue.get()
@@ -373,13 +388,13 @@ class Controller(Observer, Subject):
         Take a Appliance Reading from the Queue and send to the relevant Appliance Objects
         :return: 
         """
-
-        appliance_reading = self.appliance_queue.get()
-        debug_messenger("PROCESS APPLIANCE QUEUE: " + str(appliance_reading))
-        for appliance_id in self.appliances_dict:
-            appliance_obj = self.appliances_dict[appliance_id]
-            if appliance_obj.get_id() == appliance_reading:
-                appliance_obj.recieve(appliance_reading)
+        if self.appliance_queue.get_state():
+            appliance_reading = self.appliance_queue.get()
+            debug_messenger("PROCESS APPLIANCE QUEUE: " + str(appliance_reading))
+            for appliance_id in self.appliances_dict:
+                appliance_obj = self.appliances_dict[appliance_id]
+                if appliance_obj.get_id() == appliance_reading:
+                    appliance_obj.recieve(appliance_reading)
 
 
 

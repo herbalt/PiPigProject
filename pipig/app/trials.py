@@ -87,6 +87,9 @@ class TrialCreator:
         """
         list_of_sensor_binder = []
         for binder_tuple in list_of_sensor_binder_tuples:
+            # try:
+                # binders = BindDatapointsSensors.query
+                # binders = BindDatapointsSensors.get(datapoints_id=binder_tuple[0], sensor_id=binder_tuple[1])
             binder = BindDatapointsSensors.create(recipe_id=self.recipe.get_id(), datapoints_id=binder_tuple[0], sensor_id=binder_tuple[1])
             list_of_sensor_binder.append(binder.id)
         return list_of_sensor_binder

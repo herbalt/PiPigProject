@@ -9,9 +9,10 @@ class ControllerApi():
         Starts Sensors and Queues of the Controller
         :return: 
         """
+
+        self.controller.start_sensors()
         self.controller.start_sensor_queue_processing()
         self.controller.start_appliance_queue_processing()
-        self.controller.start_sensors()
 
     def stop(self):
         """
