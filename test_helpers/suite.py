@@ -16,12 +16,10 @@ from utilities.tests import UtilityTests
 from recipes.tests import RecipesModelTests
 from binders.tests import BindDataPointsSensorModelTests, BindDataPointsApplianceModelTests
 from factories.tests import FactoryTests, FactorySensorTests, FactoryApplianceTests
+from queues.tests import QueueTests
 
 from controller.tests import ControllerBuildTests, ControllerGetTests, ControllerInteractionTests, ControllerQueueTests
-# from controller.tests import ControllerBuildTests
-# from controller.tests import ControllerGetTests
-# from controller.tests import ControllerInteractionTests
-# from controller.tests import ControllerQueueTests
+
 
 class TestSuite:
     def __init__(self):
@@ -43,6 +41,7 @@ class TestSuite:
         self.factory_tests()
         # self.users_tests()
         self.utilities_tests()
+        self.queue_tests()
         return self.suite
 
     def appliances_tests(self):
@@ -126,6 +125,10 @@ class TestSuite:
 
     def utilities_tests(self):
         self.suite.addTest(unittest.makeSuite(UtilityTests))
+        return self.suite
+
+    def queue_tests(self):
+        self.suite.addTest(unittest.makeSuite(QueueTests))
         return self.suite
 
 runner = unittest.TextTestRunner()

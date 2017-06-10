@@ -1,14 +1,11 @@
 from abc import abstractmethod, ABCMeta
 from time import sleep
-import inspect
-from pipig.utilities import debug_messenger
 from general.patterns import Observer, Subject
 from sensors.sensor import SensorBasic
 from generics.models import GenericReading
 from utilities import average_readings, calculate_quantity_of_readings
-from pipig.data import db, CRUDMixin
-from sensors.factory import FactorySensor
 from pipig import app
+
 
 class BaseProcessor(Observer, Subject):
     """

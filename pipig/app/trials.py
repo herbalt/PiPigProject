@@ -19,8 +19,6 @@ from time import time
 from recipes.models import Recipe
 
 
-
-
 class TrialCreator:
     __metaclass__ = ABCMeta
 
@@ -87,9 +85,6 @@ class TrialCreator:
         """
         list_of_sensor_binder = []
         for binder_tuple in list_of_sensor_binder_tuples:
-            # try:
-                # binders = BindDatapointsSensors.query
-                # binders = BindDatapointsSensors.get(datapoints_id=binder_tuple[0], sensor_id=binder_tuple[1])
             binder = BindDatapointsSensors.create(recipe_id=self.recipe.get_id(), datapoints_id=binder_tuple[0], sensor_id=binder_tuple[1])
             list_of_sensor_binder.append(binder.id)
         return list_of_sensor_binder
@@ -110,13 +105,16 @@ class TrialCreator:
         return list_of_appliance_binder
 
 
-if __name__ == "__main__":
-
+def trial_run(name="", sensor_binders_tuples=[], appliance_binders_tuples=[], duration=10):
     with app.app_context():
-        trial = TrialCreator("Trial 1", [(1, 2), (2, 2)], [(1, 2, -1), (1, 2, 1), (2, 2, -1)])
+        trial = TrialCreator(name, sensor_binders_tuples, appliance_binders_tuples)
         controller = ControllerApi(trial.get_recipe_id(), trial.get_session_id())
         controller.start()
 
-        sleep(10)
+        sleep(duration)
 
         controller.stop()
+
+if __name__ == "__main__":
+    trial_run("Trial 1", [(1, 2), (2, 2)], [(1, 2, -1), (1, 2, 1), (2, 2, -1)], 1000)
+

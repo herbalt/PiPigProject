@@ -6,7 +6,7 @@ from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 from pipig.factories.abstract_factory import AbstractFactory
 from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE, DATABASE_ONLY
-from queues.Queues import BaseQueue
+from queues.queues import BaseQueue
 from threading import Thread, ThreadError
 from pipig import app
 from pipig.utilities import debug_messenger

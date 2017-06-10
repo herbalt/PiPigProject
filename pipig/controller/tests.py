@@ -114,9 +114,6 @@ class ControllerBuildTests(BaseTestCase):
         """
         unwritten_test(self)
 
-        # recipe = MockRecipe("ControllerBuildSensors")
-        # sensor_ids = recipe.get_sensor_ids()
-
     def test_build_appliances(self):
         """
         Builds all Appliances in a List
@@ -134,13 +131,6 @@ class ControllerBuildTests(BaseTestCase):
     def test_bind_sensor_objects(self):
         """
         Bind Sensor Objects to Controller
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_bind_appliance_objects(self):
-        """
-        Bind Controller to Appliances
         :return: 
         """
         unwritten_test(self)

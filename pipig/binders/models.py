@@ -9,7 +9,7 @@ class BindDatapointsSensors(db.Model, CRUDMixin):
     __tablename__ = 'bind_datapoints_sensors'
 
     """
-        Binds a Sensor to a Session
+    Binds a Sensor to a Session
     """
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
