@@ -1,7 +1,8 @@
-from appliances.appliance import BasicAppliance
+from appliances.appliance import BasicAppliance, RelayAppliance
 from appliances.models import Appliance, ApplianceType
 
 APPLIANCE_TYPE_NAME_BASIC = 'Basic Appliance'
+APPLIANCE_TYPE_NAME_RELAY = 'Relay Appliance'
 
 class FactoryAppliance:
 
@@ -14,6 +15,8 @@ class FactoryAppliance:
         type_name = appliance_type.get_type()
         if type_name == APPLIANCE_TYPE_NAME_BASIC:
             return BasicAppliance(appliance_id)
+        if type_name == APPLIANCE_TYPE_NAME_RELAY:
+            return RelayAppliance(appliance_id)
 
 
         else:

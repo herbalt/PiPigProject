@@ -51,7 +51,7 @@ class BaseSensor(AsyncTask):
         if self.sensor is None:
             with app.app_context():
                 self.sensor = Sensor.get(self.get_id())
-
+                GPIO.setup(self.get_gpio_pin(), GPIO.IN)
         return self.sensor
 
     def obj_type(self):
@@ -138,7 +138,6 @@ class SensorBasic(BaseSensor):
 
     def take_reading(self):
         self.counter += 1
-        # print self.get_name() + "\ntake_reading: " + str(self.counter) + "\n"
         return self.counter
 
 

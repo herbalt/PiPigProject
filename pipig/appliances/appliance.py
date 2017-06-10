@@ -2,11 +2,14 @@ from abc import abstractmethod, ABCMeta
 
 from appliances.models import Appliance, ApplianceType
 # from pipig.bindings_datapoints.datapoint_binding import IncorrectReadingTypeError
+from gpio_pins.models import GpioPin
 from pipig.binders.models import IncorrectReadingTypeError
 from general.patterns import Observer, Subject
 from generics.constants import COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
 from generics.models import GenericUnits
 from pipig import app
+
+from gpio.config import GPIO
 
 
 class BaseAppliance(Observer, Subject):
@@ -25,6 +28,7 @@ class BaseAppliance(Observer, Subject):
         obj = None
         with app.app_context():
             obj = Appliance.query.filter_by(id=self.get_id()).first()
+            GPIO.setup(obj.get_gpio_pin(), GPIO.OUT)
         return obj
 
     def get_type(self):
@@ -39,6 +43,11 @@ class BaseAppliance(Observer, Subject):
 
     def get_gpio_pin_id(self):
         return self.obj_appliance().get_gpio_pin_id()
+
+    def get_gpio_pin(self):
+        if self.obj_appliance().get_gpio_pin_id() is None:
+            return None
+        return GpioPin.get(self.obj_appliance().get_gpio_pin_id()).get_pin_number()
 
     def get_type_id(self):
         return self.obj_appliance().get_type_id()
@@ -67,11 +76,27 @@ class BaseAppliance(Observer, Subject):
         :param result:
         :return:
         """
-        print "%s is getting processed by the appliance %s" % (result, str(self))
+        # print "%s is getting processed by the appliance %s" % (result, str(self))
         return result
 
 
 class BasicAppliance(BaseAppliance):
     def process_result(self, result):
-        print "%s is getting processed by the appliance %s" % (result, str(self))
+        print "\n%s is getting processed by the appliance %s" % (result, str(self))
         return result
+
+
+class RelayAppliance(BaseAppliance):
+    """
+    Should turn on and off the relevant GPIO relay
+    """
+    def process_result(self, result):
+
+        result.get_component_id()
+
+        if result.get_value() > 0:
+            GPIO.output(self.get_gpio_pin(), True)
+        elif result.get_value() < 0:
+            GPIO.output(self.get_gpio_pin(), False)
+        return result
+

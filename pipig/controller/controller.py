@@ -105,6 +105,9 @@ class Controller(Observer, Subject):
         debug_messenger("SENSORS: \n" + str(self.sensors_dict))
         return self.sensors_dict
 
+    def configure_sensor_gpios(self):
+        pass
+
     def build_appliances(self):
         """
         Build Appliances in a Dict
@@ -118,6 +121,10 @@ class Controller(Observer, Subject):
         debug_messenger("APPLIANCES: \n" + str(self.appliances_dict))
         return self.appliances_dict
 
+    def configure_appliance_gpios(self):
+
+        GPIO.setup(7, GPIO.OUT)
+        pass
     def build_datapoints(self):
         """
         Build Datapoints in a Dict
@@ -386,5 +393,5 @@ class Controller(Observer, Subject):
             debug_messenger("6 -                    PROCESS APPLIANCE QUEUE: " + str(appliance_reading))
             for appliance_id in self.appliances_dict:
                 appliance_obj = self.appliances_dict[appliance_id]
-                if appliance_obj.get_id() == appliance_reading:
-                    appliance_obj.recieve(appliance_reading)
+                if appliance_obj.get_id() == appliance_reading.get_component_id():
+                    appliance_obj.receive(appliance_reading)

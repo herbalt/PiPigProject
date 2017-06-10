@@ -2,7 +2,7 @@ from abc import abstractmethod, ABCMeta
 
 from sensors.models import Sensor, SensorType
 from sensors.sensor import SensorBasic, SensorADC, SensorDHT22Temperature, SensorDHT22Humidity
-from appliances.appliance import BasicAppliance
+from appliances.appliance import BasicAppliance, RelayAppliance
 from appliances.models import Appliance, ApplianceType
 from data_points.models import DataPoints
 from binders.models import BindDatapointsAppliances
@@ -13,7 +13,9 @@ SENSOR_TYPE_NAME_ADC = 'ADC Temparture'
 SENSOR_TYPE_NAME_DHT22_CELSIUS = 'DHT22 Celsius'
 SENSOR_TYPE_NAME_DHT22_FAHRENHEIT = 'DHT22 Fahrenheit'
 SENSOR_TYPE_NAME_HUMIDITY = 'DHT22 Humidity'
+
 APPLIANCE_TYPE_NAME_BASIC = 'Basic Appliance'
+APPLIANCE_TYPE_NAME_RELAY = 'Relay Appliance'
 
 
 class BaseFactory:
@@ -78,6 +80,8 @@ class ApplianceFactory(BaseFactory):
     def get_object(self, lookup_value, object_id):
         if lookup_value == APPLIANCE_TYPE_NAME_BASIC:
             return BasicAppliance(object_id)
+        if lookup_value == APPLIANCE_TYPE_NAME_RELAY:
+            return RelayAppliance(object_id)
         else:
             return BasicAppliance(object_id)
 
