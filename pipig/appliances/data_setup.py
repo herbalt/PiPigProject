@@ -1,7 +1,6 @@
-from factories.factory import APPLIANCE_TYPE_NAME_BASIC
-from appliances.models import ApplianceType, Appliance
 from pipig import app
-
+from pipig.factories.factory import APPLIANCE_TYPE_NAME_BASIC
+from pipig.appliances.models import ApplianceType, Appliance
 
 def data_setup():
     with app.app_context():
@@ -10,9 +9,9 @@ def data_setup():
 
 
 def setup_appliance_type():
-    appliance = Appliance.query.filter_by(type_name=APPLIANCE_TYPE_NAME_BASIC).first()
+    appliance = Appliance.query.filter_by(name=APPLIANCE_TYPE_NAME_BASIC).first()
     if appliance is None:
-        ApplianceType.create(type_name=APPLIANCE_TYPE_NAME_BASIC, units_id=5)
+        ApplianceType.create(name=APPLIANCE_TYPE_NAME_BASIC, units_id=5)
     return True
 
 

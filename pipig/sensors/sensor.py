@@ -51,7 +51,7 @@ class BaseSensor(AsyncTask):
         if self.sensor is None:
             with app.app_context():
                 self.sensor = Sensor.get(self.get_id())
-                GPIO.setup(self.get_gpio_pin(), GPIO.IN)
+                # GPIO.setup(self.get_gpio_pin(), GPIO.IN)
         return self.sensor
 
     def obj_type(self):

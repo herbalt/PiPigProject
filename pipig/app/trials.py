@@ -1,19 +1,11 @@
 from abc import ABCMeta
 
-from binders.models import BindDatapointsSensors, BindDatapointsAppliances
-from curing_sessions.models import CuringSession
 from pipig.controller.controller_api import ControllerApi
-from time import sleep, time
-from app import data_setup as generics
+from time import sleep
 from pipig import app
 
-from pipig.recipes.models import Recipe
 from pipig.curing_sessions.models import CuringSession
-from pipig.sensors.models import Sensor
-from pipig.data_points.models import DataPoints, DataPoint
-from pipig.appliances.models import Appliance
 from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
-from datetime import datetime
 from time import time
 
 from recipes.models import Recipe
@@ -26,6 +18,7 @@ class TrialCreator:
         self.recipe = Recipe(trial_name)
         self.recipe = Recipe.create(name="recipe_" + trial_name)
         self.session = CuringSession.create(name="session_" + trial_name, start_time=time())
+
 
         self.list_of_sensor_binder_tuples = list_of_sensor_binder_tuples
         self.list_of_appliance_binder_tuples = list_of_appliance_binder_tuples
@@ -116,5 +109,6 @@ def trial_run(name="", sensor_binders_tuples=[], appliance_binders_tuples=[], du
         controller.stop()
 
 if __name__ == "__main__":
+
     trial_run("Trial 1", [(1, 2), (2, 2)], [(1, 2, -1), (1, 2, 1), (2, 2, -1)], 1000)
 

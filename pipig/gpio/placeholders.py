@@ -23,34 +23,34 @@ RPI_INFO = {'MANUFACTURER': 'Embest', 'P1_REVISION': 3}
 
 MOCK_NUMBERING_MODE = None
 MOCK_GPIO_STATES = [
-                    {'button1_pin': 3, 'bcm': 2, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 5, 'bcm': 3, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 7, 'bcm': 4, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 8, 'bcm': 14, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 10, 'bcm': 15, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 11, 'bcm': 17, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 12, 'bcm': 18, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 13, 'bcm': 27, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 15, 'bcm': 22, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 16, 'bcm': 23, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 18, 'bcm': 24, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 19, 'bcm': 10, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 21, 'bcm': 9, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 22, 'bcm': 25, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 23, 'bcm': 11, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 24, 'bcm': 8, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 26, 'bcm': 7, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 27, 'bcm': 0, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 28, 'bcm': 1, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 29, 'bcm': 5, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 31, 'bcm': 6, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 32, 'bcm': 12, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 33, 'bcm': 13, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 35, 'bcm': 19, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 36, 'bcm': 16, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 37, 'bcm': 26, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 38, 'bcm': 20, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
-                    {'button1_pin': 40, 'bcm': 21, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW}
+                    {'pin_number': 3, 'bcm': 2, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 5, 'bcm': 3, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 7, 'bcm': 4, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 8, 'bcm': 14, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 10, 'bcm': 15, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 11, 'bcm': 17, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 12, 'bcm': 18, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 13, 'bcm': 27, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 15, 'bcm': 22, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 16, 'bcm': 23, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 18, 'bcm': 24, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 19, 'bcm': 10, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 21, 'bcm': 9, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 22, 'bcm': 25, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 23, 'bcm': 11, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 24, 'bcm': 8, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 26, 'bcm': 7, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 27, 'bcm': 0, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 28, 'bcm': 1, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 29, 'bcm': 5, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 31, 'bcm': 6, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 32, 'bcm': 12, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 33, 'bcm': 13, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 35, 'bcm': 19, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 36, 'bcm': 16, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 37, 'bcm': 26, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 38, 'bcm': 20, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
+                    {'pin_number': 40, 'bcm': 21, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW}
                     ]
 
 
@@ -95,7 +95,7 @@ def cleanup(gpio_pin=None):
                 if MOCK_GPIO_STATES[pin]['bcm'] == gpio_pin:
                     update = True
             elif MOCK_NUMBERING_MODE == BOARD:
-                if MOCK_GPIO_STATES[pin]['button1_pin'] == gpio_pin:
+                if MOCK_GPIO_STATES[pin]['pin_number'] == gpio_pin:
                     update = True
             else:
                 update = False
@@ -112,7 +112,7 @@ def cleanup(gpio_pin=None):
 def gpio_function(gpio_pin):
     """
     Return the current Gpio function (IN, OUT, PWM, SERIAL, I2C, SPI)
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return:
     """
     global MOCK_NUMBERING_MODE
@@ -120,7 +120,7 @@ def gpio_function(gpio_pin):
     for pin in range(0, len(MOCK_GPIO_STATES)):
         if MOCK_NUMBERING_MODE == BCM & MOCK_GPIO_STATES[pin]['bcm'] == gpio_pin:
             return MOCK_GPIO_STATES[pin]['state']
-        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['button1_pin'] == gpio_pin:
+        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['pin_number'] == gpio_pin:
             return MOCK_GPIO_STATES[pin]['state']
         else:
             pass
@@ -130,7 +130,7 @@ def gpio_function(gpio_pin):
 def input(gpio_pin):
     """
     Input from a Gpio channel.  Returns HIGH=1=True or LOW=0=False
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return:
     """
     global MOCK_NUMBERING_MODE
@@ -139,7 +139,7 @@ def input(gpio_pin):
     for pin in range(0, len(MOCK_GPIO_STATES)):
         if MOCK_NUMBERING_MODE == BCM & MOCK_GPIO_STATES[pin]['bcm'] == gpio_pin:
             return MOCK_GPIO_STATES[pin]['value']
-        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['button1_pin'] == gpio_pin:
+        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['pin_number'] == gpio_pin:
             return MOCK_GPIO_STATES[pin]['value']
         else:
             pass
@@ -150,7 +150,7 @@ def output(gpio_pin, value):
     """
     Output to a Gpio channel or list of channels
     :param value: 0/1 or False/True or LOW/HIGH
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return:
     """
 
@@ -161,7 +161,7 @@ def output(gpio_pin, value):
         if MOCK_NUMBERING_MODE == BCM & MOCK_GPIO_STATES[pin]['bcm'] == gpio_pin:
             MOCK_GPIO_STATES[pin]['value'] = value
             return  MOCK_GPIO_STATES[pin]['value']
-        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['button1_pin'] == gpio_pin:
+        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['pin_number'] == gpio_pin:
             MOCK_GPIO_STATES[pin]['value'] = value
             return MOCK_GPIO_STATES[pin]['value']
         else:
@@ -174,7 +174,7 @@ def setup(gpio_pin, direction, pupd=None):
     Set up a Gpio channel or list of channels with a direction and (optional) pull/up down control
     :param pupd: Pull Up, Pull Down Control
     :param direction: IN or OUT
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return:
     """
     global MOCK_NUMBERING_MODE
@@ -185,7 +185,7 @@ def setup(gpio_pin, direction, pupd=None):
             MOCK_GPIO_STATES[pin]['state'] = direction
             MOCK_GPIO_STATES[pin]['PUPD'] = pupd
             return  MOCK_GPIO_STATES[pin]['state']
-        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['button1_pin'] == gpio_pin:
+        elif MOCK_NUMBERING_MODE == BOARD & MOCK_GPIO_STATES[pin]['pin_number'] == gpio_pin:
             MOCK_GPIO_STATES[pin]['state'] = direction
             MOCK_GPIO_STATES[pin]['PUPD'] = pupd
             return MOCK_GPIO_STATES[pin]['state']
@@ -197,7 +197,7 @@ def setup(gpio_pin, direction, pupd=None):
 def event_detected(gpio_pin):
     """
     Returns True if an edge has occured on a given Gpio.  You need to enable edge detection using add_event_detect() first.
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return:
     """
 
@@ -205,7 +205,7 @@ def event_detected(gpio_pin):
 def remove_event_detect(gpio_pin):
     """
     Remove edge detection for a particular Gpio channel
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return:
     """
 
@@ -216,7 +216,7 @@ def wait_for_edge(gpio_pin, edge, bouncetime=0, timeout=None):
     :param timeout: timeout in ms
     :param bouncetime: time allowed between calls to allow for switchbounce
     :param edge: RISING, FALLING or BOTH
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return: Returns the channel number or None on timeout.
     """
     pass
@@ -310,7 +310,7 @@ def add_event_callback(gpio_pin, callback):
     """
     Add a callback for an event already defined using add_event_detect()
     :param callback: a callback function
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     """
     pass
 
@@ -320,7 +320,7 @@ def add_event_detect(gpio_pin, edge, callback=None, bouncetime=None):
     :param bouncetime: Switch bounce timeout in ms for callback
     :param callback: A callback function for the event (optional)
     :param edge: RISING, FALLING or BOTH
-    :param gpio_pin: either board button1_pin number or BCM number depending on which mode is set.
+    :param gpio_pin: either board pin_number number or BCM number depending on which mode is set.
     :return:
     """
     pass

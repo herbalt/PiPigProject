@@ -1,4 +1,5 @@
 #!flask/bin/python
+
 from migrate.versioning import api
 from pipig.data import db
 from pipig import app
@@ -21,7 +22,6 @@ with app.app_context():
     from pipig.sensors.models import Sensor, SensorType
     # from pipig.units.models import
     from pipig.users.models import UserAccount, UserAccountStatus, UserProfile
-
     db.create_all()
     if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
         api.create(SQLALCHEMY_MIGRATE_REPO, 'database repository')

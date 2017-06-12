@@ -3,8 +3,13 @@ from sensors.models import Sensor
 from binders.models import BindDatapointsAppliances, BindDatapointsSensors
 from binders.models import BindDatapointsSensors
 
+
 class Recipe(db.Model, CRUDMixin):
     __tablename__ = 'recipe'
+    """
+    A Recipe is the complete set of Sensors, Appliances and DataPoints along with their binders.
+    A Recipe object does not hold any functionality, it is just a pointer to all the relevant IDs
+    """
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String, nullable=False)
 
@@ -31,6 +36,9 @@ class Recipe(db.Model, CRUDMixin):
         equal_datapoints_ids = self.get_datapoints_ids() == other.get_datapoints_ids()
         return equal_id and equal_name and equal_sensor_bindings and equal_appliance_bindings and equal_sensor_ids and equal_appliance_ids and equal_datapoints_ids
 
+    """
+    GET METHODS
+    """
     def get_id(self):
         return self.id
 
@@ -88,7 +96,8 @@ class Recipe(db.Model, CRUDMixin):
 
     def get_datapoints_for_sensor(self, sensor_id):
         """
-        
+        Based on a sensor id this will iterate all the Sensor Binders.
+        Will return a list of all the datapoint IDs that are connected
         :param sensor_id: 
         :return: The corresponding Datapoint IDs for the relevant Sensor
         """
@@ -103,7 +112,8 @@ class Recipe(db.Model, CRUDMixin):
 
     def get_appliances_for_datapoint(self, datapoints_id):
         """
-        
+        Based on a datapoints ID this will iterate all the Appliance Binders
+        Will return a list of all the Appliance IDs that are connected
         :param datapoints_id: 
         :return: The corresponding Appliance IDs for the relevant Datapoint
         """

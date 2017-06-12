@@ -1,5 +1,5 @@
 from random import SystemRandom
-from hmac import compare_digest
+# from hmac import compare_digest
 from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from backports.pbkdf2 import pbkdf2_hmac, compare_digest

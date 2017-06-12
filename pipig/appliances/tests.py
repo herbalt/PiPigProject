@@ -6,10 +6,6 @@ from appliances.appliance import BaseAppliance
 from gpio_pins.models import GpioPin
 
 from test_helpers.test_base import BaseTestCase
-from test_helpers.test_generics import unwritten_test
-
-
-from data import db
 
 
 #________________________________________________________________
