@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABCMeta
-
+from pipig import app
 from appliances.models import Appliance, ApplianceType
 from gpio_pins.models import GpioPin
 from general.patterns import Observer, Subject
@@ -11,6 +11,8 @@ from gpio.config import GPIO
 class BaseAppliance(Observer, Subject):
     # TODO Requires a way to  setup the GPIO Pin Setup to GPIO.OUT
     __metaclass__ = ABCMeta
+
+    gpio_pin = None
 
     def __init__(self, appliance_id):
         Observer.__init__(self)
@@ -34,9 +36,15 @@ class BaseAppliance(Observer, Subject):
         return self.obj_appliance().get_gpio_pin_id()
 
     def get_gpio_pin(self):
+        if self.gpio_pin is not None:
+            return self.gpio_pin.get_pin_number()
         if self.obj_appliance().get_gpio_pin_id() is None:
             return None
-        return GpioPin.get(self.obj_appliance().get_gpio_pin_id()).get_pin_number()
+
+        pin = None
+        with app.app_context():
+            pin = GpioPin.get(self.obj_appliance().get_gpio_pin_id()).get_pin_number()
+        return pin
 
     def get_type_id(self):
         return self.obj_appliance().get_type_id()
@@ -51,7 +59,9 @@ class BaseAppliance(Observer, Subject):
     OBJECT METHODS
     """
     def obj_appliance(self):
-        return Appliance.get(id=self.get_id())
+        with app.app_context():
+            appliance = Appliance.get(id=self.get_id())
+        return appliance
 
     def obj_type(self):
         return ApplianceType.get(self.obj_appliance().get_type_id())
@@ -110,10 +120,10 @@ class RelayAppliance(BaseAppliance):
     def process_result(self, result):
 
         result.get_component_id()
-
-        if result.get_value() > 0:
-            GPIO.output(self.get_gpio_pin(), True)
-        elif result.get_value() < 0:
-            GPIO.output(self.get_gpio_pin(), False)
+        value = result.get_value()
+        if value > 0:
+            GPIO.output(self.get_gpio_pin(), GPIO.HIGH)
+        elif value < 0:
+            GPIO.output(self.get_gpio_pin(), GPIO.LOW)
         return result
 

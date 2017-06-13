@@ -110,5 +110,5 @@ def trial_run(name="", sensor_binders_tuples=[], appliance_binders_tuples=[], du
 
 if __name__ == "__main__":
 
-    trial_run("Trial 1", [(1, 2), (2, 2)], [(1, 2, -1), (1, 2, 1), (2, 2, -1)], 1000)
+    trial_run("Trial 2", [(2, 8), (2, 7)], [(1, 9, -1), (2, 12, 1), (2, 12, -1)], 10)
 

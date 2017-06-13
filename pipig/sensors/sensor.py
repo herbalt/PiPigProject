@@ -27,6 +27,7 @@ class BaseSensor(AsyncTask):
     sensor = None
     sensor_type = None
     sensor_units = None
+    gpio_pin = None
 
     def __init__(self, sensor_id):
         super(BaseSensor, self).__init__()
@@ -89,9 +90,15 @@ class BaseSensor(AsyncTask):
         return self.state
 
     def get_gpio_pin(self):
+        if self.gpio_pin is not None:
+            return self.gpio_pin.get_pin_number()
         if self.obj_sensor().get_gpio_pin_id() is None:
             return None
-        return GpioPin.get(self.obj_sensor().get_gpio_pin_id()).get_pin_number()
+
+        pin = None
+        with app.app_context():
+            pin = GpioPin.get(self.obj_sensor().get_gpio_pin_id()).get_pin_number()
+        return pin
 
     # ---------------------------------------------------------------------
     # ASYNCTASK OVER RIDE METHODS

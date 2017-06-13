@@ -2,6 +2,10 @@ from pipig.appliances.models import Appliance
 from pipig.data_points.models import DataPoints, DataPoint
 from pipig.sensors.models import Sensor
 from pipig import app
+from pipig.appliances.data_setup import helper_setup_appliances
+from pipig.sensors.data_setup import helper_setup_sensors
+from pipig.factories.factory import APPLIANCE_TYPE_NAME_RELAY, APPLIANCE_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_DHT22_CELSIUS
+
 
 
 def data_setup_sensors():
@@ -9,11 +13,16 @@ def data_setup_sensors():
     Setup the generic data models for the Sensors
     :return: List of the IDs created
     """
-    sensor_1 = Sensor.create(name="Sensor1", type_id=1, interval_between_readings=0.5, gpio_pin_id=None)
-    sensor_2 = Sensor.create(name="Sensor2", type_id=1, interval_between_readings=0.25, gpio_pin_id=None)
-    sensor_3 = Sensor.create(name="Sensor3", type_id=1, interval_between_readings=0.5, gpio_pin_id=None)
-
-    return [sensor_1.get_id(), sensor_2.get_id(), sensor_3.get_id()]
+    sensor_list = []
+    sensor_list.append(helper_setup_sensors(factory_type_constant=SENSOR_TYPE_NAME_BASIC, sensor_name="Sensor1",
+                                            interval_between_readings=0.5, gpio_pin_id=None))
+    sensor_list.append(helper_setup_sensors(factory_type_constant=SENSOR_TYPE_NAME_BASIC, sensor_name="Sensor2",
+                                            interval_between_readings=0.25, gpio_pin_id=None))
+    sensor_list.append(helper_setup_sensors(factory_type_constant=SENSOR_TYPE_NAME_BASIC, sensor_name="Sensor3",
+                                            interval_between_readings=0.5, gpio_pin_id=None))
+    sensor_list.append(helper_setup_sensors(factory_type_constant=SENSOR_TYPE_NAME_DHT22_CELSIUS, sensor_name="GPIO Temperature1",
+                                            interval_between_readings=2.0, gpio_pin_id=7))
+    return sensor_list
 
 
 def data_setup_datapoints():
@@ -43,13 +52,15 @@ def data_setup_appliances():
     Setup the generic data models for the Appliances
     :return: List of the IDs created
     """
-    appliance_1 = Appliance.create(name="appliance1", type_id=1, gpio_pin_id=None)
-    appliance_2 = Appliance.create(name="appliance2", type_id=1, gpio_pin_id=None)
-    appliance_3 = Appliance.create(name="appliance3", type_id=1, gpio_pin_id=None)
-    appliance_4 = Appliance.create(name="appliance4", type_id=1, gpio_pin_id=None)
-    appliance_5 = Appliance.create(name="appliance5", type_id=1, gpio_pin_id=None)
-
-    return [appliance_1.get_id(), appliance_2.get_id(), appliance_3.get_id(), appliance_4.get_id(), appliance_5.get_id()]
+    appliance_list = []
+    appliance_list.append(helper_setup_appliances(APPLIANCE_TYPE_NAME_BASIC, "appliance1", gpio_pin_id=None))
+    appliance_list.append(helper_setup_appliances(APPLIANCE_TYPE_NAME_BASIC, "appliance2", gpio_pin_id=None))
+    appliance_list.append(helper_setup_appliances(APPLIANCE_TYPE_NAME_BASIC, "appliance3", gpio_pin_id=None))
+    appliance_list.append(helper_setup_appliances(APPLIANCE_TYPE_NAME_BASIC, "appliance4", gpio_pin_id=None))
+    appliance_list.append(helper_setup_appliances(APPLIANCE_TYPE_NAME_BASIC, "appliance5", gpio_pin_id=None))
+    appliance_list.append(helper_setup_appliances(APPLIANCE_TYPE_NAME_RELAY, "gpio_appliance1", gpio_pin_id=13))
+    appliance_list.append(helper_setup_appliances(APPLIANCE_TYPE_NAME_RELAY, "gpio_appliance2", gpio_pin_id=15))
+    return appliance_list
 
 if __name__ == "__main__":
     """
