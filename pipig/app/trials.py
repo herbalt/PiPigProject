@@ -9,7 +9,7 @@ from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
 from time import time
 
 from recipes.models import Recipe
-
+from pipig.gpio.config import gpio_configure_sensors, gpio_configure_appliances
 
 class TrialCreator:
     __metaclass__ = ABCMeta
@@ -102,6 +102,10 @@ def trial_run(name="", sensor_binders_tuples=[], appliance_binders_tuples=[], du
     with app.app_context():
         trial = TrialCreator(name, sensor_binders_tuples, appliance_binders_tuples)
         controller = ControllerApi(trial.get_recipe_id(), trial.get_session_id())
+
+        gpio_configure_sensors(controller.get_sensor_objects())
+        gpio_configure_appliances(controller.get_appliance_objects())
+
         controller.start()
 
         sleep(duration)
