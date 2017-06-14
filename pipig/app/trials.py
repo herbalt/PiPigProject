@@ -8,6 +8,8 @@ from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
 from pipig.controller.controller_api import ControllerApi
 from pipig.curing_sessions.models import CuringSession
 from recipes.models import Recipe
+from pipig.pi_gpio.raspberry_pi import BaseRaspberryPi, PI_2_MODEL_B
+
 
 
 class TrialCreator:
@@ -102,8 +104,21 @@ def trial_run(name="", sensor_binders_tuples=[], appliance_binders_tuples=[], du
         trial = TrialCreator(name, sensor_binders_tuples, appliance_binders_tuples)
         controller = ControllerApi(trial.get_recipe_id(), trial.get_session_id())
 
-        gpio_configure_sensors(controller.get_sensor_objects())
-        gpio_configure_appliances(controller.get_appliance_objects())
+        sensor_objs = controller.get_sensor_objects()
+        appliance_objs = controller.get_appliance_objects()
+
+        sensor_gpio_list = []
+        for sensor in sensor_objs:
+            if sensor.get_gpio_pin_id() is not None:
+                sensor_gpio_list.append(sensor.get_gpio_pin_id())
+
+        appliance_gpio_list = []
+        for appliance in appliance_objs:
+            if appliance.get_gpio_pin_id() is not None:
+                appliance_gpio_list.append(appliance.get_gpio_pin_id())
+
+        rpi = BaseRaspberryPi(pi_model=PI_2_MODEL_B, input_pin_list=sensor_gpio_list, output_pin_list=appliance_gpio_list)
+
 
         controller.start()
 

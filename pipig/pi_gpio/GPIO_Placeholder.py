@@ -1,4 +1,8 @@
 # coding=utf-8
+
+MOCK_NUMBERING_MODE = None
+IN = 1
+LOW = 0
 BCM = 11
 BOARD = 10
 BOTH = 33
@@ -6,11 +10,8 @@ FALLING = 32
 HARD_PWM = 43
 HIGH = 1
 I2C = 42
-IN = 1
-LOW = 0
 OUT = 0
 PUD_DOWN = 21
-PUD_OFF = 20
 PUD_UP = 22
 RISING = 31
 RPI_REVISION = 3
@@ -20,8 +21,6 @@ UNKNOWN = -1
 VERSION = '0.6.1'
 RPI_INFO = {'MANUFACTURER': 'Embest', 'P1_REVISION': 3}
 
-
-MOCK_NUMBERING_MODE = None
 MOCK_GPIO_STATES = [
                     {'pin_number': 3, 'bcm': 2, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
                     {'pin_number': 5, 'bcm': 3, 'state': IN, 'PUPD': None, 'event_detection': None, 'value': LOW},
@@ -240,6 +239,10 @@ def stop_waiting_for_interrupts():
     Stop waiting for interupts
     """
 
+
+PUD_OFF = 20
+
+
 def add_interrupt_callback(gpio_id, callback,
                            edge='both',
                            pull_up_down=PUD_OFF,
@@ -324,4 +327,5 @@ def add_event_detect(gpio_pin, edge, callback=None, bouncetime=None):
     :return:
     """
     pass
+
 
