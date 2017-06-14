@@ -1,11 +1,12 @@
 from abc import abstractmethod, ABCMeta
-from pipig import app
+
 from appliances.models import Appliance, ApplianceType
-from gpio_pins.models import GpioPin
 from general.patterns import Observer, Subject
 from generics.constants import COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
 from generics.models import GenericUnits
-from gpio.config import GPIO
+from pi_gpio.config import GPIO
+from pi_gpio.models import GpioPin
+from pipig import app
 
 
 class BaseAppliance(Observer, Subject):

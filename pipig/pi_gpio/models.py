@@ -1,5 +1,6 @@
+from pi_gpio import config
+from abc import abstractmethod, ABCMeta
 from pipig.data import db, CRUDMixin
-from gpio import config
 
 
 class GpioPin(db.Model, CRUDMixin):
@@ -27,4 +28,20 @@ class GpioPin(db.Model, CRUDMixin):
 
     def get_pin_name(self):
         return self.pin_name
+
+
+class RaspberryPi(db.Model, CRUDMixin):
+    __metaclass__ = ABCMeta
+
+    __tablename__ = "raspberry_pi"
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    pin_count = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String)
+
+    def __init__(self, pin_count, name):
+        self.pin_count = pin_count
+        self.name = name
+
+    def get_pin_count(self):
+        return self.pin_count
 

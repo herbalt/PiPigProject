@@ -1,14 +1,12 @@
 from abc import abstractmethod, ABCMeta
 from time import sleep, time
 
+from general.patterns import AsyncTask
 from generics.constants import COMPONENT_TYPE_SENSOR
+from generics.models import GenericReading, GenericUnits
+from pi_gpio.models import GpioPin
 from pipig import app
 from pipig.sensors.models import Sensor, SensorType
-from generics.models import GenericReading, GenericUnits
-from general.patterns import AsyncTask
-from gpio_pins.models import GpioPin
-
-from gpio.config import GPIO, PI_CONNECTED
 
 try:
     import Adafruit_DHT

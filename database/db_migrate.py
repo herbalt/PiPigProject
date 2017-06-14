@@ -15,7 +15,7 @@ from pipig.binders.models import BindDatapointsSensors, BindDatapointsAppliances
 from pipig.curing_sessions.models import CuringSession
 from pipig.data_points.models import DataPoints, DataPoint
 from pipig.generics.models import GenericReading, GenericUnits
-from pipig.gpio_pins.models import GpioPin
+from pipig.pi_gpio.models import GpioPin
 from pipig.recipes.models import Recipe
 from pipig.sensors.models import Sensor, SensorType
 # from pipig.units.models import

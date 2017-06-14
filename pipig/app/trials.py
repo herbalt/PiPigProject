@@ -1,15 +1,14 @@
 from abc import ABCMeta
-
-from pipig.controller.controller_api import ControllerApi
 from time import sleep
-from pipig import app
-
-from pipig.curing_sessions.models import CuringSession
-from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
 from time import time
 
+from pi_gpio.config import gpio_configure_sensors, gpio_configure_appliances
+from pipig import app
+from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
+from pipig.controller.controller_api import ControllerApi
+from pipig.curing_sessions.models import CuringSession
 from recipes.models import Recipe
-from pipig.gpio.config import gpio_configure_sensors, gpio_configure_appliances
+
 
 class TrialCreator:
     __metaclass__ = ABCMeta

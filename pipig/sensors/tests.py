@@ -12,7 +12,7 @@ from pipig.sensors.models import Sensor, SensorType
 from generics.models import GenericReading, GenericUnits
 
 from sensor import BaseSensor
-from gpio_pins.models import GpioPin
+from pi_gpio.models import GpioPin
 from time import sleep
 
 from test_helpers.test_generics import unwritten_test

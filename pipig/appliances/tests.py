@@ -3,7 +3,7 @@ from binders.models import IncorrectReadingTypeError
 from generics.constants import COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
 from generics.models import GenericReading, GenericUnits
 from appliances.appliance import BaseAppliance
-from gpio_pins.models import GpioPin
+from pi_gpio.models import GpioPin
 
 from test_helpers.test_base import BaseTestCase
 

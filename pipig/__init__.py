@@ -45,7 +45,7 @@ from pipig.recipes.views import recipes
 from pipig.binders.views import binders
 from pipig.data_points.views import data_points
 from pipig.generics.views import generics
-from pipig.gpio_pins.views import gpio_pins
+from pipig.pi_gpio.views import gpio_pins
 
 
 app.register_blueprint(sensors)

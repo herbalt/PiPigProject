@@ -6,7 +6,7 @@ from appliances.tests import ApplianceModelTests, ApplianceObjectTests
 # from binding_session.tests import BindSessionApplianceModelTests, BindSessionApplianceObjectTests, BindSessionSensorModelTests, BindSessionSensorObjectTests
 from data_points.tests import DataPointsObjectTests, DataPointsObjectTestsDataPoint
 from general.tests import ObjectTestsAsyncTask
-# from gpio_pins.tests import GpioTests
+# from pi_gpio.tests import GpioTests
 from processors.tests import ProcessorObjectTests
 from sensors.tests import SensorViewTests, SensorObjectTests, SensorReadingModelTests, SensorFormTests
 from curing_sessions.tests import CuringSessionsModelTests
