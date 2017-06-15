@@ -14,17 +14,17 @@ PI_MODEL_ZERO = "Pi Zero"
 class BaseRaspberryPi:
     model_object = None
     dict_map = None
+    configured = False
 
-    def __init__(self, pi_model, input_pin_list, output_pin_list):
+    def __init__(self, pi_model):
         self.pi_model = pi_model
-        self.__configure_application(input_pin_list, output_pin_list)
 
     def obj_rasp_pi(self):
         if self.model_object is None:
             self.model_object = RaspberryPi.query.filter_by(name=self.pi_model).first()
         return self.model_object
 
-    def get_pin_count(self):
+    def __get_pin_count(self):
         return self.obj_rasp_pi().get_pin_count()
 
     def map_pins_to_dict(self):
@@ -39,7 +39,7 @@ class BaseRaspberryPi:
         if self.dict_map is None:
             pin_dict = {}
 
-            for i in range(0, self.get_pin_count()):
+            for i in range(0, self.__get_pin_count()):
                 if not pin_dict.has_key(i):
                     pin = GpioPin.query.filter_by(pin_position=i).first()
                     pin_dict[i] = pin
@@ -47,7 +47,7 @@ class BaseRaspberryPi:
 
         return self.dict_map
 
-    def __configure_application(self, input_pin_list, output_pin_list):
+    def configure_application(self, input_pin_list=None, output_pin_list=None):
         """
 
         :param input_pin_list: List of Pin Positions that will require configuration for GPIO Input
@@ -55,7 +55,12 @@ class BaseRaspberryPi:
         :return:
         """
         for input_pin in input_pin_list:
-            GPIO.setup(input_pin, GPIO.IN)
+            if input_pin is not None:
+                GPIO.setup(input_pin, GPIO.IN)
 
         for output_pin in output_pin_list:
-            GPIO.setup(output_pin, GPIO.OUT)
+            if output_pin is not None:
+                GPIO.setup(output_pin, GPIO.OUT)
+
+        self.configured = True
+

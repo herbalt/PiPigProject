@@ -22,7 +22,7 @@ class ApplianceType(db.Model, CRUDMixin):
 
 
 class Appliance(db.Model, CRUDMixin):
-    __tablename__ = 'appliance'
+    __tablename__ = 'appliance_model'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     type_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String, nullable=False)

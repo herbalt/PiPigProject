@@ -226,7 +226,7 @@ class ControllerInteractionTests(BaseTestCase):
     def helper_response_to_datapoint(self, controller, diff_value, polarity, expected):
         result = controller.response_to_datapoint(diff_sensor_datapoint_value=diff_value, polarity=polarity)
         expected_result = expected
-        run_equals_test(result=result, expected=expected_result, test_title="Response to Datapoint Reading", test_message="Incorrectly generated the wrong output value to send to an appliance", test_case=self)
+        run_equals_test(result=result, expected=expected_result, test_title="Response to Datapoint Reading", test_message="Incorrectly generated the wrong output value to send to an appliance_model", test_case=self)
 
 
 # ________________________________________________________________

@@ -7,6 +7,7 @@ from generics.models import GenericUnits
 from pi_gpio.config import GPIO
 from pi_gpio.models import GpioPin
 from pipig import app
+from utilities import debug_messenger
 
 
 class BaseAppliance(Observer, Subject):
@@ -14,6 +15,9 @@ class BaseAppliance(Observer, Subject):
     __metaclass__ = ABCMeta
 
     gpio_pin = None
+    appliance_model = None
+    type_model = None
+    units_model = None
 
     def __init__(self, appliance_id):
         Observer.__init__(self)
@@ -39,13 +43,12 @@ class BaseAppliance(Observer, Subject):
     def get_gpio_pin(self):
         if self.gpio_pin is not None:
             return self.gpio_pin.get_pin_number()
-        if self.obj_appliance().get_gpio_pin_id() is None:
+        if self.get_gpio_pin_id() is None:
+            debug_messenger("Appliance GPIO does not exist in Database")
             return None
-
-        pin = None
         with app.app_context():
-            pin = GpioPin.get(self.obj_appliance().get_gpio_pin_id()).get_pin_number()
-        return pin
+            self.gpio_pin = GpioPin.get(self.get_gpio_pin_id()).get_pin_number()
+        return self.gpio_pin
 
     def get_type_id(self):
         return self.obj_appliance().get_type_id()
@@ -60,15 +63,20 @@ class BaseAppliance(Observer, Subject):
     OBJECT METHODS
     """
     def obj_appliance(self):
-        with app.app_context():
-            appliance = Appliance.get(id=self.get_id())
-        return appliance
+        if self.appliance_model is None:
+            with app.app_context():
+                self.appliance_model = Appliance.get(id=self.get_id())
+        return self.appliance_model
 
     def obj_type(self):
-        return ApplianceType.get(self.obj_appliance().get_type_id())
+        if self.type_model is None:
+            self.type_model = ApplianceType.get(self.obj_appliance().get_type_id())
+        return self.type_model
 
     def obj_units(self):
-        return GenericUnits.get(self.obj_type().get_id())
+        if self.units_model is None:
+            self.units_model = GenericUnits.get(self.obj_type().get_id())
+        return self.units_model
 
     """
     OVER RIDE METHODS
@@ -110,7 +118,7 @@ class PrintAppliance(BaseAppliance):
     The Generic Appliance that prints the result
     """
     def process_result(self, result):
-        print "\n%s is getting processed by the appliance %s" % (result, str(self))
+        print "\n%s is getting processed by the appliance_model %s" % (result, str(self))
         return result
 
 
@@ -118,6 +126,7 @@ class RelayAppliance(BaseAppliance):
     """
     Should turn on and off the relevant GPIO relay
     """
+
     def process_result(self, result):
 
         result.get_component_id()

@@ -31,21 +31,26 @@ def data_setup_datapoints():
     Includes steps to set the points
     :return: List of the IDs created
     """
-    datapoints_1 = DataPoints.create(name="datapoints1")
-    datapoints_1_id = datapoints_1.get_id()
-    DataPoint.create(data_points_id=datapoints_1_id, value=10, time_elapsed=0)
-    DataPoint.create(data_points_id=datapoints_1_id, value=5, time_elapsed=1)
-    DataPoint.create(data_points_id=datapoints_1_id, value=15, time_elapsed=2)
-    DataPoint.create(data_points_id=datapoints_1_id, value=5, time_elapsed=3)
+    datapoints_list = []
+    datapoints_list.append(helper_datapoints("datapoints1", [(10, 0), (5, 1), (15, 2), (5, 3)]).get_id())
+    datapoints_list.append(helper_datapoints("datapoints2", [(1, 0), (2, 0.5), (3, 1.0), (4, 1.5)]).get_id())
+    return datapoints_list
 
-    datapoints_2 = DataPoints.create(name="datapoints2")
-    datapoints_2_id = datapoints_2.get_id()
-    DataPoint.create(data_points_id=datapoints_2_id, value=1, time_elapsed=0)
-    DataPoint.create(data_points_id=datapoints_2_id, value=2, time_elapsed=0.5)
-    DataPoint.create(data_points_id=datapoints_2_id, value=3, time_elapsed=1.0)
-    DataPoint.create(data_points_id=datapoints_2_id, value=4, time_elapsed=1.5)
 
-    return [datapoints_1.get_id(), datapoints_2.get_id()]
+def helper_datapoints(name, list_value_time_elapsed_pairs):
+    datapoints = DataPoints.create(name=name)
+    datapoints_id = datapoints.get_id()
+    for value_time_pair in list_value_time_elapsed_pairs:
+        helper_datapoint(datapoints_id, value=value_time_pair[0], time_elapsed=value_time_pair[1])
+    return datapoints
+
+
+def helper_datapoint(datapoints_id, value, time_elapsed):
+    datapoint = DataPoint.query.filter_by(data_points_id=datapoints_id).filter_by(value=value).filter_by(time_elapsed=time_elapsed).first()
+    if datapoint is None:
+        datapoint = DataPoint.create(data_points_id=datapoints_id, value=value, time_elapsed=time_elapsed)
+    return datapoint
+
 
 def data_setup_appliances():
     """
