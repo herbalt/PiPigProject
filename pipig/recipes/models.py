@@ -1,7 +1,5 @@
 from pipig.data import db, CRUDMixin
-from sensors.models import Sensor
 from binders.models import BindDatapointsAppliances, BindDatapointsSensors
-from binders.models import BindDatapointsSensors
 
 
 class Recipe(db.Model, CRUDMixin):
@@ -140,6 +138,21 @@ class Recipe(db.Model, CRUDMixin):
             if binder_id.get_datapoints_id() == datapoints_id:
                 output_list.append(binder_id)
         return output_list
+
+    def get_list_sensor_binder_id_tuples(self):
+        tuple_list = []
+        for sensor_id in self.get_sensor_ids():
+            for datapoints_id in self.get_datapoints_for_sensor(sensor_id):
+                tuple_list.append((datapoints_id, sensor_id))
+        return tuple_list
+
+    def get_list_appliance_binder_id_tuples(self):
+        tuple_list = []
+        for datapoints_id in self.get_datapoints_ids():
+            for appliance_id in self.get_appliances_for_datapoint(datapoints_id):
+                tuple_list.append((datapoints_id, appliance_id))
+        return tuple_list
+
 
 
 
