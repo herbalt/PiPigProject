@@ -35,10 +35,10 @@ class BaseAppliance(Observer, Subject):
         return self.appliance_id
 
     def get_name(self):
-        return self.obj_appliance().get_name()
+        return self.obj_appliance_model().get_name()
 
     def get_gpio_pin_id(self):
-        return self.obj_appliance().get_gpio_pin_id()
+        return self.obj_appliance_model().get_gpio_pin_id()
 
     def get_gpio_pin(self):
         if self.gpio_pin is not None:
@@ -47,11 +47,11 @@ class BaseAppliance(Observer, Subject):
             debug_messenger("Appliance GPIO does not exist in Database")
             return None
         with app.app_context():
-            self.gpio_pin = GpioPin.get(self.get_gpio_pin_id()).get_pin_number()
-        return self.gpio_pin
+            self.gpio_pin = GpioPin.get(self.get_gpio_pin_id())
+        return self.gpio_pin.get_pin_number()
 
     def get_type_id(self):
-        return self.obj_appliance().get_type_id()
+        return self.obj_appliance_model().get_type_id()
 
     def get_units(self):
         return self.obj_units().get_display_units()
@@ -62,15 +62,18 @@ class BaseAppliance(Observer, Subject):
     """
     OBJECT METHODS
     """
-    def obj_appliance(self):
+    def obj_appliance_model(self):
         if self.appliance_model is None:
             with app.app_context():
                 self.appliance_model = Appliance.get(id=self.get_id())
+                if self.appliance_model is None:
+                    raise IndexError
+
         return self.appliance_model
 
     def obj_type(self):
         if self.type_model is None:
-            self.type_model = ApplianceType.get(self.obj_appliance().get_type_id())
+            self.type_model = ApplianceType.get(self.obj_appliance_model().get_type_id())
         return self.type_model
 
     def obj_units(self):

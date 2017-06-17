@@ -70,6 +70,19 @@ class Controller(Observer, Subject):
                 return CuringSession("GenericSession")
             return CuringSession.get(self.get_curing_session_id())
 
+    def get_sensor_objects(self):
+        sensor_list = []
+        for sensor_id in self.sensors_dict.keys():
+            sensor_list.append(self.sensors_dict.get(sensor_id))
+        return sensor_list
+
+    def get_appliance_objects(self):
+        appliance_list = []
+        for appliance_id in self.appliances_dict.keys():
+            appliance_list.append(self.appliances_dict.get(appliance_id))
+        return appliance_list
+
+
     """
     Build Methods
     """
@@ -121,10 +134,6 @@ class Controller(Observer, Subject):
         debug_messenger("APPLIANCES: \n" + str(self.appliances_dict))
         return self.appliances_dict
 
-    def configure_appliance_gpios(self):
-
-        GPIO.setup(7, GPIO.OUT)
-        pass
     def build_datapoints(self):
         """
         Build Datapoints in a Dict
@@ -237,6 +246,26 @@ class Controller(Observer, Subject):
     """
     Interactions
     """
+
+    def start(self):
+        """
+        Starts Sensors and Queues of the Controller
+        :return:
+        """
+
+        self.start_sensors()
+        self.start_sensor_queue_processing()
+        self.start_appliance_queue_processing()
+
+    def stop(self):
+        """
+        Stops the Sensors and Queues of the Controller
+        :return:
+        """
+        self.stop_sensors()
+        self.stop_sensor_queue_processing()
+        self.stop_appliance_queue_processing()
+
     def start_sensors(self):
         """
         Start every sensor in the list of Sensors

@@ -88,11 +88,12 @@ class TrialCreator:
             # Build list of GPIO ids to configure the Raspberry Pi
             sensor_gpio_list = []
             for sensor in sensor_objs:
-                sensor_gpio_list.append(sensor.get_gpio_pin_id())
+                sensor_gpio_list.append(sensor.get_gpio_pin())
 
             appliance_gpio_list = []
             for appliance in appliance_objs:
-                appliance_gpio_list.append(appliance.get_gpio_pin_id())
+                if appliance.get_gpio_pin() is not None:
+                    appliance_gpio_list.append(appliance.get_gpio_pin())
 
             self.rasp_pi = BaseRaspberryPi(pi_model=pi_model)
             self.rasp_pi.configure_application(input_pin_list=sensor_gpio_list, output_pin_list=appliance_gpio_list)
@@ -118,12 +119,13 @@ class TrialCreator:
 
 if __name__ == "__main__":
 
-    recipe_id = recipe_creator(recipe_name="Trial 3",
-                               list_of_sensor_binder_tuples=[(2, 8), (2, 7)],
-                               list_of_appliance_binder_tuples=[(1, 9, -1), (2, 12, 1), (2, 12, -1)])
+    with app.app_context():
+        recipe_id = recipe_creator(recipe_name="Trial 3",
+                                   list_of_sensor_binder_tuples=[(2, 8), (2, 7)],
+                                   list_of_appliance_binder_tuples=[(1, 9, -1), (2, 8, 1), (2, 9, -1)])
 
-    trial = TrialCreator(pi_model=PI_2_MODEL_B, recipe_id=recipe_id)
+        trial = TrialCreator(pi_model=PI_2_MODEL_B, recipe_id=recipe_id)
 
-    trial.run(10)
+        trial.run(10)
 
 
