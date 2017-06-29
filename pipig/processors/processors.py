@@ -92,7 +92,7 @@ class ProcessorAverageDelay(BaseProcessor):
             return return_reading
         return None
 
-
+"""
 class ProcessorDatabase(BaseProcessor):
     def __init__(self):
         super(ProcessorDatabase, self).__init__()
@@ -104,15 +104,15 @@ class ProcessorDatabase(BaseProcessor):
                                   reading_value=payload.get_value(),
                                   reading_timestamp=payload.get_timestamp())
         return result
-
+"""
 
 def build_processor_chain(delay_quantity=1, average=False):
     processor_print = ProcessorPrint()
-    processor_database = ProcessorDatabase()
+    # processor_database = ProcessorDatabase()
     processor_delay = ProcessorAverageDelay(delay_quantity=delay_quantity, average=average)
 
     processor_delay.attach(processor_print)
-    processor_delay.attach(processor_database)
+    # processor_delay.attach(processor_database)
 
     return processor_delay
 

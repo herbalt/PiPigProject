@@ -5,7 +5,7 @@ from pipig.curing_sessions.models import CuringSession
 from pipig.recipes.models import Recipe
 from pipig.general.patterns import Subject, Observer
 from pipig.factories.abstract_factory import AbstractFactory
-from pipig.processors.factory import ProcessorChainFactory, PRINT_DATABASE, DATABASE_ONLY
+from pipig.processors.factory import ProcessorChainFactory, DATABASE_ONLY, PRINT_PROCESSOR
 from queues.queues import BaseQueue
 from threading import Thread, ThreadError
 from pipig import app
@@ -20,7 +20,7 @@ class Controller(Observer, Subject):
     Pass the Appliance Reading to another Queue that is pushes results to the relevant appliances
     """
 
-    def __init__(self, recipe_id, curing_session_id=None):
+    def __init__(self, recipe_id, curing_session_id=None, processor_type=DATABASE_ONLY):
         super(Controller, self).__init__()
 
         # Store init parameters
@@ -42,8 +42,8 @@ class Controller(Observer, Subject):
 
         # Prepare Processors
         processor_factory = ProcessorChainFactory()
-        self.sensor_processor = processor_factory.build_object(DATABASE_ONLY)
-        self.appliance_processor = processor_factory.build_object(DATABASE_ONLY)
+        self.sensor_processor = processor_factory.build_object(processor_type)
+        self.appliance_processor = processor_factory.build_object(processor_type)
 
         # Configure Object
         self.build_controller()
@@ -345,6 +345,13 @@ class Controller(Observer, Subject):
             time_elapsed = reading_timestamp - start_time
             reading_value = sensor_reading.get_value()
 
+            # Store the Original Sensor Reading in the Database
+            GenericReading.create(component_id=sensor_id,
+                                  component_type_id=COMPONENT_TYPE_SENSOR,
+                                  reading_value=reading_value,
+                                  reading_timestamp=reading_timestamp,
+                                  recipe_id=recipe.get_id())
+
             # Get all the corresponding datapoints to compare with
             datapoint_id_list = recipe.get_datapoints_for_sensor(sensor_id)
 
@@ -359,7 +366,7 @@ class Controller(Observer, Subject):
 
                 compare_result = reading_value - datapoint.get_value()
 
-                reading = GenericReading(datapoint_id, COMPONENT_TYPE_DATAPOINT, compare_result, reading_timestamp)
+                reading = GenericReading(datapoint_id, COMPONENT_TYPE_DATAPOINT, compare_result, reading_timestamp, self.get_recipe_id())
                 datapoint_result_list.append(reading)
                 datapoint_message_list.append(str(reading))
 
@@ -386,9 +393,11 @@ class Controller(Observer, Subject):
                 if binder_obj.get_datapoints_id() == datapoint_readings.get_component_id():
                     polarity = binder_obj.get_polarity()
                     appliance_response = self.response_to_datapoint(datapoint_readings.get_value(), polarity)
-                    output_reading = GenericReading(binder_obj.get_appliance_id(),
-                                                    COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER, appliance_response,
-                                                    datapoint_readings.get_timestamp())
+                    output_reading = GenericReading.create(component_id=binder_obj.get_appliance_id(),
+                                                    component_type_id=COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER,
+                                                    reading_value=appliance_response,
+                                                    reading_timestamp=datapoint_readings.get_timestamp(),
+                                                    recipe_id=self.get_recipe_id())
                     self.add_appliance_reading_to_queue(output_reading)
 
     def response_to_datapoint(self, diff_sensor_datapoint_value, polarity):

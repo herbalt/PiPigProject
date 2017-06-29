@@ -9,6 +9,7 @@ from pipig.curing_sessions.models import CuringSession
 from pipig.pi_gpio.raspberry_pi import BaseRaspberryPi, PI_2_MODEL_B
 from recipes.data_setup import recipe_creator
 from recipes.models import Recipe
+from pipig.processors.factory import DATABASE_ONLY, PRINT_PROCESSOR
 
 class TrialCreator:
     """
@@ -33,7 +34,7 @@ class TrialCreator:
             self.session_id = self.session.get_id()
 
         # Init Interaction objects
-        self.get_controller()
+        self.get_controller(PRINT_PROCESSOR)
         self.get_rasp_pi(pi_model)
 
     """
@@ -75,9 +76,9 @@ class TrialCreator:
                 appliance_list.append(binder[1])
         return appliance_list
 
-    def get_controller(self):
+    def get_controller(self, processor_type=DATABASE_ONLY):
         if self.controller is None:
-            self.controller = Controller(self.get_recipe_id(), self.get_session_id())
+            self.controller = Controller(self.get_recipe_id(), self.get_session_id(), processor_type)
         return self.controller
 
     def get_rasp_pi(self, pi_model):

@@ -1,5 +1,5 @@
 from general.patterns import Observer, Subject
-from processors import ProcessorPrint, ProcessorDatabase, ProcessorAverageDelay, BaseProcessor
+from processors import ProcessorPrint, ProcessorAverageDelay, BaseProcessor
 from abc import abstractmethod, ABCMeta
 from utilities import debug_messenger
 
@@ -31,7 +31,7 @@ class ProcessorChain(Observer, Subject):
 
     def create_chain(self, delay_quantity=1, average=False):
         self.create_delay_processor(delay_quantity, average)
-        processor_objects = self.list_of_processors()
+        processor_objects = self.processors_to_attach()
 
         for processor_object in processor_objects:
             self.delay_processor.attach(processor_object)
@@ -41,7 +41,7 @@ class ProcessorChain(Observer, Subject):
         self.delay_processor.attach(observer)
 
     @abstractmethod
-    def list_of_processors(self):
+    def processors_to_attach(self):
         """
         A list of all the Processor objects that is to be attached to the delay processor
         :return: 
@@ -49,29 +49,39 @@ class ProcessorChain(Observer, Subject):
         return []
 
 
+class ProductionProcessorChain(ProcessorChain):
+    def __init__(self, delay_quantity=1, average=False):
+        super(ProductionProcessorChain, self).__init__(delay_quantity=delay_quantity, average=average)
+
+    def processors_to_attach(self):
+        return []
+
+
 class DebugProcessorChain(ProcessorChain):
     def __init__(self, delay_quantity=1, average=False):
         super(DebugProcessorChain, self).__init__(delay_quantity=delay_quantity, average=average)
 
-    def list_of_processors(self):
+    def processors_to_attach(self):
         processor_print = ProcessorPrint()
         return [processor_print]
 
-
+"""
 class DatabaseProcessorChain(ProcessorChain):
-    def __init__(self, delay_quantity=1, average=False):
-        super(DatabaseProcessorChain, self).__init__(delay_quantity=delay_quantity, average=average)
+    def __init__(self, delay_quantity=1, average=False, recipe_id=None):
+        super(DatabaseProcessorChain, self).__init__(delay_quantity=delay_quantity, average=average, recipe_id=recipe_id)
 
-    def list_of_processors(self):
+    def processors_to_attach(self):
         processor_database = ProcessorDatabase()
         return [processor_database]
 
 
 class DatabasePrintProcessorChain(ProcessorChain):
-    def __init__(self, delay_quantity=1, average=False):
-        super(DatabasePrintProcessorChain, self).__init__(delay_quantity=delay_quantity, average=average)
+    def __init__(self, delay_quantity=1, average=False, recipe_id=None):
+        super(DatabasePrintProcessorChain, self).__init__(delay_quantity=delay_quantity, average=average, recipe_id=recipe_id)
 
-    def list_of_processors(self):
+    def processors_to_attach(self):
         processor_print = ProcessorPrint()
-        processor_database = ProcessorDatabase()
-        return [processor_print, processor_database]
+        # processor_database = ProcessorDatabase()
+        # return [processor_print, processor_database]
+        return [processor_print]
+"""

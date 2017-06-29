@@ -5,19 +5,22 @@ class GenericReading(db.Model, CRUDMixin):
     """
     Determines the output of a Sensor measurement
     """
+    # TODO SHOULD ADD RECIPE IF KNOWN
     __tablename__ = "readings"
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     component_id = db.Column(db.Integer)
     component_type_id = db.Column(db.Integer)
     reading_value = db.Column(db.Float)
     reading_timestamp = db.Column(db.Float)
+    recipe_id = db.Column(db.Integer)
     type = db.Column(db.String(140))
 
-    def __init__(self, component_id, component_type_id, reading_value, reading_timestamp):
+    def __init__(self, component_id, component_type_id, reading_value, reading_timestamp, recipe_id=None):
         self.component_id = component_id
         self.component_type_id = component_type_id
         self.reading_value = reading_value
         self.reading_timestamp = reading_timestamp
+        self.recipe_id = recipe_id
 
     def __str__(self):
         return "COMPONENT ID: " + str(self.component_id) + " TYPE ID: " + str(self.component_type_id) + " VALUE: " + str(self.reading_value) + " TIMESTAMP: " + str(self.reading_timestamp)
@@ -33,6 +36,9 @@ class GenericReading(db.Model, CRUDMixin):
 
     def get_timestamp(self):
         return self.reading_timestamp
+
+    def get_recipe_id(self):
+        return self.recipe_id
 
 
 class GenericUnits(db.Model, CRUDMixin):

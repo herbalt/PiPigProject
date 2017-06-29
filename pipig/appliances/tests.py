@@ -96,7 +96,7 @@ def build_appliance_model(base_name, display_units, gpio_pin_number=None):
     type = ApplianceType.create(type_name="%sApplianceType" % base_name, units_id=units.get_id())
 
     if gpio_pin_number is not None:
-        gpio_id = GpioPin.create(pin_number=gpio_pin_number, pin_name="%sPin%d" % (base_name, gpio_pin_number)).get_id()
+        gpio_id = GpioPin.create(pin_position=gpio_pin_number, pin_number=gpio_pin_number, bcm_pin=None,  pin_name="%sPin%d" % (base_name, gpio_pin_number)).get_id()
     else:
         gpio_id = None
     appliance = Appliance.create(name="%sAppliance" % base_name, type_id=type.get_id(), gpio_pin_id=gpio_id)

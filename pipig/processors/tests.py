@@ -2,7 +2,7 @@ from test_helpers.test_base import BaseTestCase
 from test_helpers.test_forms import FormTestCase
 
 from test_helpers.test_generics import unwritten_test
-from processors import ProcessorAverageDelay, BaseProcessor, ProcessorDatabase
+from processors import ProcessorAverageDelay, BaseProcessor
 from generics.models import GenericReading
 from general.patterns import Observer, Subject
 from pipig import app
@@ -66,6 +66,8 @@ class ProcessorObjectTests(BaseTestCase):
         expected.append((GenericReading(1, 1, 9, 1000), 2))
         self.helper_delay_processor(expected, 9, False)
 
+    # TODO This test should be moved to test if the Controller can process to the database
+    """
     def test_database_commits_reading(self):
         database_processor = ProcessorDatabase()
         sensor = ObjectMockSensorSubject()
@@ -80,6 +82,7 @@ class ProcessorObjectTests(BaseTestCase):
             reading = GenericReading.get(1)
         self.assertIsNotNone(reading)
         self.assertTrue(self.compare_sensor_readings(GenericReading(1, 1, 1, 200), reading))
+    """
 
 
 

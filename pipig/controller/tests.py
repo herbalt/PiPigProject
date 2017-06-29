@@ -107,33 +107,7 @@ class ControllerBuildTests(BaseTestCase):
         run_equals_test(self, [build_sensors, build_appliances, build_datapoints], [True, True, True], "objects",
                         "Object Method Calls were trigged incorrectly. Should be SENSORS, APPLIANCES, DATAPOINTS")
 
-    def test_build_sensors(self):
-        """
-        Builds all Sensors in a List
-        :return: 
-        """
-        unwritten_test(self)
 
-    def test_build_appliances(self):
-        """
-        Builds all Appliances in a List
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_build_datapoints(self):
-        """
-        Builds all Datapoints in a List
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_bind_sensor_objects(self):
-        """
-        Bind Sensor Objects to Controller
-        :return: 
-        """
-        unwritten_test(self)
 
 
 class ControllerQueueTests(BaseTestCase):
@@ -141,83 +115,14 @@ class ControllerQueueTests(BaseTestCase):
     Queue Management
     """
 
-    def test_start_sensor_queue_processing(self):
-        """
-        Begins the Thread for processing the incoming Sensor Readings
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_start_appliance_queue_processing(self):
-        """
-        Begins the Thread for processing the outgoing Appliance Readings
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_stop_sensor_queue_processing(self):
-        """
-        Stops the Sensor Queue from receiving Sensor Readings
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_stop_appliance_queue_processing(self):
-        """
-        Stops the Appliance Queue from receiving Appliance Readings
-        :return: 
-        """
-        unwritten_test(self)
+    def mock(self):
+        pass
 
 
 class ControllerInteractionTests(BaseTestCase):
     """
     Interactions
     """
-
-    def test_start_sensors(self):
-        """
-        Start every sensor in the list of Sensors
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_stop_sensors(self):
-        """
-        Stop every sensor in the list of Sensors
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_add_sensor_reading_to_queue(self):
-        """
-        Takes the reading and add it to the Sensor Reading Queue
-        :param reading: A processed Sensor reading that is Recieved
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_process_sensor_reading(self):
-        """
-        Take a Sensor Reading from the Queue and build an output Reading based on the interaction with the Datapoints
-        :return: The Output Reading(s) that will be sent to the Appliance Queue
-        """
-        unwritten_test(self)
-
-    def test_add_appliance_reading_to_queue(self):
-        """
-        Add the Appliance Reading to the Appliance Queue
-        :param reading: A output reading that is to be processed by the Appliances
-        :return: 
-        """
-        unwritten_test(self)
-
-    def test_process_appliance_queue(self):
-        """
-        Take a Appliance Reading from the Queue and send to the relevant Appliance Objects
-        :return: 
-        """
-        unwritten_test(self)
 
     def test_response_to_datapoint(self):
         obj = build_test_controller()

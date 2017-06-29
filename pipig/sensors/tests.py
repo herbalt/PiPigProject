@@ -197,7 +197,10 @@ class SensorObjectTests(BaseTestCase):
                         "Sensor should init with a False State")
 
     def test_get_gpio_pin(self):
+        GpioPin.create(pin_position=1, pin_number=1, bcm_pin=1, pin_name="test_gpio")
         test_obj = self.mock_base_sensor_with_gpio_pin()
+        print str(test_obj)
+        print str(test_obj.get_gpio_pin())
         self.assertTrue(test_obj.get_gpio_pin() == 1)
 
     def test_get_gpio_pin_defaults_none(self):
@@ -245,11 +248,12 @@ def build_sensor_model(base_name, display_units, minimum_refresh, interval_betwe
     type = SensorType.create(type_name="%sSensorType" % base_name, units_id=units.get_id(),
                              minimum_refresh=minimum_refresh)
     if gpio_pin_number is not None:
-        gpio_id = GpioPin.create(pin_number=gpio_pin_number, pin_name="%sPin%d" % (base_name, gpio_pin_number)).get_id()
+        gpio_id = GpioPin.create(pin_position=gpio_pin_number, pin_number=gpio_pin_number, bcm_pin=gpio_pin_number, pin_name="%sPin%d" % (base_name, gpio_pin_number)).get_id()
+        # gpio_id = GpioPin.create(pin_number=gpio_pin_number, pin_name="%sPin%d" % (base_name, gpio_pin_number)).get_id()
     else:
         gpio_id = None
     sensor = Sensor.create(name="%sSensor" % base_name, type_id=type.get_id(),
-                           interval_between_readings=interval_between_readings, gpio_pin_id=gpio_id)
+                           interval_between_readings=interval_between_readings, gpio_pin_id=gpio_id )
     return sensor
 
 
