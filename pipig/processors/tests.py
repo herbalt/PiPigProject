@@ -70,13 +70,13 @@ class ProcessorObjectTests(BaseTestCase):
     """
     def test_database_commits_reading(self):
         database_processor = ProcessorDatabase()
-        sensor = ObjectMockSensorSubject()
+        serial_sensor = ObjectMockSensorSubject()
         queue = ObjectObserver()
 
         database_processor.attach(queue)
-        sensor.attach(database_processor)
+        serial_sensor.attach(database_processor)
 
-        sensor.trigger(loop_times=2)
+        serial_sensor.trigger(loop_times=2)
 
         with app.app_context():
             reading = GenericReading.get(1)

@@ -1,7 +1,7 @@
 from factories.factory import SensorFactory, ApplianceFactory, DatapointFactory, ApplianceBinderFactory
 
 class AbstractFactory:
-    SENSOR = 'sensor'
+    SENSOR = 'serial_sensor'
     APPLIANCE = 'appliance_model'
     DATAPOINTS = 'datapoints'
     APPLIANCE_BINDER = 'applianceBinder'

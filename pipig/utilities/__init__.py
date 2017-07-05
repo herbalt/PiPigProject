@@ -21,7 +21,7 @@ def average_readings(list_to_average):
 
 def calculate_quantity_of_readings(timeframe_in_seconds, interval_between_readings):
     """
-    Use to convert a seconds reading into the number of sensor readings that would occur
+    Use to convert a seconds reading into the number of serial_sensor readings that would occur
     :param timeframe_in_seconds:
     :param interval_between_readings:
     :return: An integer of the number of readings

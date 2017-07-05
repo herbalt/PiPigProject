@@ -38,7 +38,7 @@ class BaseFactory:
         """
 
         :param object_id_list: 
-        :return: A Dictionary of Sensor objects where the key is the sensor ID
+        :return: A Dictionary of Sensor objects where the key is the serial_sensor ID
         """
         object_dict = {}
         for object_id in object_id_list:

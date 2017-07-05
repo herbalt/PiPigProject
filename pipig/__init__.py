@@ -1,25 +1,24 @@
-from flask import Flask, render_template
+from flask import Flask, Blueprint
 
-from pipig.auth import login_manager
-import pipig.errors as errors
-import pipig.logs as logs
+from api.sensors.endpoint import sensor_namespace
+from api.appliances.endpoint import appliance_namespace
 from app_config import config_class as config
 from mail import mail
-
-
-
-# BLUEPRINTS
-#from pipig.users.views import users
-# from database.views import database
-
-
-
+from pipig.api import api as api_plus
+from pipig.auth import login_manager
 
 app = Flask(__name__)
 app.config.from_object(config)
 
-from pipig.data import db
+blueprint = Blueprint('api', __name__, url_prefix='/api')
+api_plus.init_app(blueprint)
+api_plus.add_namespace(sensor_namespace)
+api_plus.add_namespace(appliance_namespace)
+app.register_blueprint(blueprint)
 
+
+
+from pipig.data import db
 # Setup extensions
 db.init_app(app)
 login_manager.init_app(app)
@@ -57,7 +56,12 @@ app.register_blueprint(data_points)
 app.register_blueprint(generics)
 app.register_blueprint(gpio_pins)
 
+
+
+
+"""
 @app.route('/')
 def index():
     return render_template('index.html', user=None)
+"""
 

@@ -66,7 +66,7 @@ class FactoryTests(BaseTestCase):
         """
 
         :param object_id_list: 
-        :return: A Dictionary of Sensor objects where the key is the sensor ID
+        :return: A Dictionary of Sensor objects where the key is the serial_sensor ID
         
         object_id_list = paramter
         object_dict = {}

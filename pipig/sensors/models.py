@@ -37,7 +37,7 @@ class Sensor(db.Model, CRUDMixin):
     Determines the configuration of a Sensor
     Can add a GPIO pin if required
     """
-    __tablename__ = "sensor"
+    __tablename__ = "serial_sensor"
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     type_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String, nullable=False)
@@ -123,7 +123,7 @@ class Sensor(db.Model, CRUDMixin):
         low_sensor_reading = None
         high_sensor_reading = None
 
-        # Loop through the sensor reading list to assess each against the tracking variables
+        # Loop through the serial_sensor reading list to assess each against the tracking variables
         for index in range(0, len(all_points)):
             # Populate the low variable if currently not set and has a time value less than the input
             if low_sensor_reading is None and all_points[index].get_timestamp() <= reading_time:

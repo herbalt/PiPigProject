@@ -94,7 +94,7 @@ class Recipe(db.Model, CRUDMixin):
 
     def get_datapoints_for_sensor(self, sensor_id):
         """
-        Based on a sensor id this will iterate all the Sensor Binders.
+        Based on a serial_sensor id this will iterate all the Sensor Binders.
         Will return a list of all the datapoint IDs that are connected
         :param sensor_id: 
         :return: The corresponding Datapoint IDs for the relevant Sensor

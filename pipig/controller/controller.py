@@ -268,7 +268,7 @@ class Controller(Observer, Subject):
 
     def start_sensors(self):
         """
-        Start every sensor in the list of Sensors
+        Start every serial_sensor in the list of Sensors
         :return: 
         """
         debug_messenger("START SENSORS\n\n")
@@ -278,7 +278,7 @@ class Controller(Observer, Subject):
 
     def stop_sensors(self):
         """
-        Stop every sensor in the list of Sensors
+        Stop every serial_sensor in the list of Sensors
         :return: 
         """
         for sensor_id in self.sensors_dict:

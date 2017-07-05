@@ -64,7 +64,7 @@ class DataPoint(db.Model, CRUDMixin):
 
 class DataPoints(db.Model, CRUDMixin):
     """
-    A series of Data Point objects that will be used to trigger appliances based on sensor inputs
+    A series of Data Point objects that will be used to trigger appliances based on serial_sensor inputs
     """
     __tablename__ = "data_points"
     id = db.Column(db.Integer, primary_key=True, nullable=False)

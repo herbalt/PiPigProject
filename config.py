@@ -31,6 +31,12 @@ class BaseConfiguration(object):
     SENSOR_PROCESSOR_CHAIN = 'database'
     APPLIANCE_PROCESSOR_CHAIN = 'database'
 
+    # Flask-Restplus settings
+    RESTPLUS_SWAGGER_UI_DOC_EXPANSION = 'list'
+    RESTPLUS_VALIDATE = True
+    RESTPLUS_MASK_SWAGGER = False
+    RESTPLUS_ERROR_404_HELP = False
+
 
 class TestConfiguration(BaseConfiguration):
     NAME = 'TestConfiguration'
@@ -74,6 +80,7 @@ class TestDatabaseConfiguration(BaseConfiguration):
 class DebugConfiguration(BaseConfiguration):
     NAME = 'DebugConfiguration'
     DEBUG = True
+    RESTPLUS_VALIDATE = False
 
 
 

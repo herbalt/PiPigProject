@@ -11,7 +11,7 @@ class BaseProcessor(Observer, Subject):
     """
     Template Pattern for processing a Sensor Reading
 
-    Attach the Processor to a sensor or another Processor
+    Attach the Processor to a serial_sensor or another Processor
     Notify all attached observers of the Processed message
     """
     __metaclass__ = ABCMeta
@@ -48,9 +48,9 @@ class ProcessorPrint(BaseProcessor):
     def process(self, payload, status_code=0):
         """
 
-        :param payload: A sensor reading payload
+        :param payload: A serial_sensor reading payload
         :param status_code: The status code from the Async Task
-        :return: A sensor reading payload
+        :return: A serial_sensor reading payload
         """
         if payload is None:
             return None
@@ -119,7 +119,7 @@ def build_processor_chain(delay_quantity=1, average=False):
 if __name__ == '__main__':
     sensor = SensorBasic(1)
     # sensor_factory = FactorySensor()
-    # sensor = sensor_factory.build_object(1)
+    # serial_sensor = sensor_factory.build_object(1)
     processor_print = ProcessorPrint()
     # processor_print = ProcessorDatabase()
     interval = sensor.get_interval_between_readings()
