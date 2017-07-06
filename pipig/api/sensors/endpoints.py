@@ -62,7 +62,7 @@ class SensorItems(Resource):
         return Sensor.query.filter(Sensor.id == sensor_id).one()
 
     @sensor_namespace.marshal_with(serial_sensor)
-    def post(self):
+    def put(self):
         """
         Update a Sensor with new values.
         Any values with a None value will not be updated, except for GPIO which a Zero value will mean it is not updated

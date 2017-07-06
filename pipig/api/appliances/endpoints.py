@@ -48,14 +48,14 @@ class ApplianceItems(Resource):
         return Appliance.query.filter(Appliance.id == appliance_id).one()
 
     @appliance_namespace.marshal_with(serial_appliance)
-    def post(self):
+    def put(self):
         """
         Update a Appliance with new values.
         Any values with a None value will not be updated, except for GPIO which a Zero value will mean it is not updated
         """
         data = request.json
-        sensor_id = update_appliance(data)
-        return sensor_id, 201
+        appliance_id = update_appliance(data)
+        return appliance_id, 201
 
     @appliance_namespace.response(code=200, description='The Appliance was successfully deleted from the Database')
     def delete(self, appliance_id):
@@ -63,7 +63,7 @@ class ApplianceItems(Resource):
         Delete a Appliance from the Database.
         :return: The confirmation of the Appliance ID that was deleted
         """
-        sensor = Appliance.query.filter(Appliance.id == appliance_id).one()
-        sensor.delete()
+        appliance = Appliance.query.filter(Appliance.id == appliance_id).one()
+        appliance.delete()
         return {'Deleted Appliance': appliance_id}
 
