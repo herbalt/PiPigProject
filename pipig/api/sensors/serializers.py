@@ -16,3 +16,6 @@ serial_new_sensor = api.model('Sensor creation parameters', {
     'interval_between_readings': fields.Float(description='The time difference in seconds that the Sensor will take its readings'),
     'gpio_pin_id': fields.Integer(default=None, description='The PiPig unique ID for the GPIO pin that is connected to the Sensor to take readings')
 })
+
+
+

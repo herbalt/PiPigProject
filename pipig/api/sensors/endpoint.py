@@ -15,13 +15,13 @@ As a User I would like to be able to view the streaming set of appliance interac
 from flask import request
 from flask_restplus import Resource
 
-from api.sensors.business import create_sensor
+from api.sensors.business import create_sensor, update_sensor
 from api.sensors.serializers import serial_sensor, serial_new_sensor
 from pipig.api import api as api_plus
-from pipig.sensors.models import Sensor
+from pipig.sensors.models import Sensor, SensorType
 
 sensor_namespace = api_plus.namespace('sensors',
-                                      description='API to access sensor details from the database')
+                                      description='A Sensor sends readings through the PiPig chain')
 
 
 @sensor_namespace.route('/')
@@ -57,78 +57,27 @@ class SensorItems(Resource):
     def get(self, sensor_id):
         """
         Returns a Sensor related to a single Sensor ID
-        :param sensor_id:
         :return: Sensor JSON Object
         """
         return Sensor.query.filter(Sensor.id == sensor_id).one()
 
+    @sensor_namespace.marshal_with(serial_sensor)
+    def post(self):
+        """
+        Update a Sensor with new values.
+        Any values with a None value will not be updated, except for GPIO which a Zero value will mean it is not updated
+        """
+        data = request.json
+        sensor_id = update_sensor(data)
+        return sensor_id, 201
 
+    @sensor_namespace.response(code=200, description='The Sensor was successfully deleted from the Database')
+    def delete(self, sensor_id):
+        """
+        Delete a Sensor from the Database. Historic Data may fail if a Sensor was used in historic operation.
+        :return: The confirmation of the sensor ID that was deleted
+        """
+        sensor = Sensor.query.filter(Sensor.id == sensor_id).one()
+        sensor.delete()
+        return {'Deleted Sensor': sensor_id}
 
-
-"""
-@api.route('/edit_sensor/<int:key>', methods=['POST'])
-def edit_sensor(key):
-    if Request.method == 'POST':
-        pass
-
-
-@api.route('/add_appliance', methods=['POST'])
-def add_appliance():
-    if Request.method == 'POST':
-        pass
-
-
-@api.route('/get_appliance/<int:key>', methods=['GET'])
-def get_appliance(key):
-    if Request.method == 'GET':
-        pass
-
-
-@api.route('/edit_appliance/<int:key>', methods=['POST'])
-def edit_appliance(key):
-    if Request.method == 'POST':
-        pass
-
-
-@api.route('/add_datapoints', methods=['POST'])
-def add_datapoints():
-    if Request.method == 'POST':
-        pass
-
-
-@api.route('/get_datapoints/<int:key>', methods=['GET'])
-def get_datapoints(key):
-    if Request.method == 'GET':
-        pass
-
-
-@api.route('/edit_datapoints/<int:key>', methods=['POST'])
-def edit_datapoints(key):
-    if Request.method == 'POST':
-        pass
-
-
-@api.route('/add_recipe', methods=['POST'])
-def add_recipe():
-    if Request.method == 'POST':
-        pass
-
-
-@api.route('/get_recipe/<int:key>', methods=['GET'])
-def get_recipe(key):
-    if Request.method == 'GET':
-        pass
-
-
-@api.route('/edit_recipe/<int:key>', methods=['POST'])
-def edit_recipe(key):
-    if Request.method == 'POST':
-        pass
-
-
-@api.route('/get_sensor_readings/<int:recipe>/<int:serial_sensor>/<float:start_time_elapsed>/<float:end_time_elapsed', methods=['GET'])
-def get_sensor_readings(recipe, serial_sensor, start_time_elapsed=None, end_time_elapsed=None):
-    if Request.method == 'GET':
-        pass
-
-"""

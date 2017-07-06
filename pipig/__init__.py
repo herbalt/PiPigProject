@@ -1,11 +1,13 @@
 from flask import Flask, Blueprint
 
-from api.sensors.endpoint import sensor_namespace
-from api.appliances.endpoint import appliance_namespace
 from app_config import config_class as config
 from mail import mail
 from pipig.api import api as api_plus
 from pipig.auth import login_manager
+
+from api.sensors.endpoint import sensor_namespace
+from api.appliances.endpoint import appliance_namespace
+from api.recipes.endpoint import recipe_namespace
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -14,6 +16,7 @@ blueprint = Blueprint('api', __name__, url_prefix='/api')
 api_plus.init_app(blueprint)
 api_plus.add_namespace(sensor_namespace)
 api_plus.add_namespace(appliance_namespace)
+api_plus.add_namespace(recipe_namespace)
 app.register_blueprint(blueprint)
 
 
