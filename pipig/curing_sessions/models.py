@@ -5,10 +5,12 @@ class CuringSession(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String, nullable=False)
     start_time = db.Column(db.Float, nullable=True)
+    notes = db.Column(db.String, nullable=True)
 
-    def __init__(self, name, start_time=None):
+    def __init__(self, name, start_time=None, notes=""):
         self.name = name
         self.start_time = start_time
+        self.notes = notes
 
     def __str__(self):
         return "Session\nID: " + str(self.get_id()) + "\nName: " + self.get_name() + "\nStart Time: " + str(self.get_start_time())
@@ -24,6 +26,22 @@ class CuringSession(db.Model, CRUDMixin):
 
     def get_name(self):
         return self.name
+
+    def get_notes(self):
+        return self.notes
+
+    def set_notes(self, updated_notes, append=False):
+        """
+
+        :param updated_notes: The new note to add
+        :param append: Attaches the updated notes to the end of the existing notes
+        :return: New notes
+        """
+        if append:
+            self.notes = self.notes + "\n" + updated_notes
+        else:
+            self.notes = updated_notes
+        return self.get_notes()
 
     def set_start_time(self, start_time):
         self.start_time = start_time
