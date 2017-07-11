@@ -1,5 +1,46 @@
-from pipig import app
-from pipig.sensors.models import Sensor
+from sqlalchemy.orm.exc import NoResultFound
+
+from pipig.sensors.models import Sensor, SensorType
+from pipig.generics.models import GenericUnits
+from pipig.pi_gpio.models import GpioPin
+
+
+
+def get_sensor(sensor_model):
+
+    type_id = sensor_model.get_type_id()
+
+    try:
+        sensor_type = SensorType.query.filter(SensorType.id == type_id).one()
+    except NoResultFound:
+        return None
+
+    units_id = sensor_type.get_units_id()
+    units = GenericUnits.query.filter(GenericUnits.id == units_id).one()
+    try:
+        gpio_pin = GpioPin.query.filter(GpioPin.id == sensor_model.get_gpio_pin_id()).one()
+    except NoResultFound:
+        gpio_pin = GpioPin(None, None, None, 'No GPIO Connection')
+
+    sensor_dict = {
+        'sensor': {
+            'id': sensor_model.get_id(),
+            'name': sensor_model.get_name(),
+            'sensor type': {
+                'type id': sensor_type.get_id(),
+                'type name': sensor_type.get_type(),
+                'unit name': units.get_code_name(),
+                'unit display name': units.get_display_units()
+            },
+            'gpio': {
+                'pin number': gpio_pin.get_pin_number(),
+                'pin name': gpio_pin.get_pin_name()
+            }
+        }
+    }
+
+    return sensor_dict
+
 
 def create_sensor(data):
     name = data.get('name')
@@ -14,23 +55,23 @@ def create_sensor(data):
     return sensor.get_id()
 
 
-def update_sensor(data):
-    id = data.get('sensor_id')
-    name = data.get('name')
+def update_sensor(sensor_id, data):
     type_id = data.get('type_id')
-    ibr = data.get('interval_between_readings')
+    name = data.get('name')
     gpio_pin_id = data.get('gpio_pin_id')
+    ibr = data.get('interval_between_readings')
+
+    sensor = Sensor.query.filter_by(id=sensor_id).one()
+    if type_id is not None:
+        sensor.update(type_id=type_id)
 
     if name is not None:
-        Sensor.update(sensor_id=id, name=name)
-
-    if type_id is not None:
-        Sensor.update(sensor_id=id, type_id=1)
+        sensor.update(name=name)
 
     if ibr is not None:
-        Sensor.update(sensor_id=id, interval_between_readings=ibr)
+        sensor.update(interval_between_readings=ibr)
 
     if gpio_pin_id is not 0:
-        Sensor.update(sensor_id=id, gpio_pin_id=gpio_pin_id)
+        sensor.update(gpio_pin_id=gpio_pin_id)
 
-    return Sensor.query.filter_by(id=id).one()
+    return sensor

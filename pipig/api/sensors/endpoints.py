@@ -12,13 +12,15 @@ As a User I would like to start a new session with a specific recipe
 As a User I would like to be able to view the streaming set of sensor readings for a running and archived session
 As a User I would like to be able to view the streaming set of appliance interactions for a running and archived session
 """
-from flask import request
+from flask import request, abort
 from flask_restplus import Resource
 
 from api.sensors.business import create_sensor, update_sensor
 from api.sensors.serializers import serial_sensor, serial_new_sensor
 from pipig.api import api as api_plus
 from pipig.sensors.models import Sensor, SensorType
+from pipig.api.sensors.business import get_sensor
+from pipig.api.sensors.parsers import update_sensor_parser
 
 sensor_namespace = api_plus.namespace('sensors',
                                       description='A Sensor sends readings through the PiPig chain')
@@ -26,7 +28,7 @@ sensor_namespace = api_plus.namespace('sensors',
 
 @sensor_namespace.route('/')
 class Sensors(Resource):
-    @sensor_namespace.marshal_list_with(serial_sensor)
+    # @sensor_namespace.marshal_list_with(serial_sensor)
     @sensor_namespace.response(200, description='Successfully returned list of sensors', model=serial_sensor)
     def get(self):
         """
@@ -35,7 +37,10 @@ class Sensors(Resource):
         """
         # with app.app_context():
         sensors = Sensor.query.all()
-        return sensors
+        result_list = []
+        for sensor in sensors:
+            result_list.append(get_sensor(sensor))
+        return result_list
 
     @sensor_namespace.expect(serial_new_sensor)
     @sensor_namespace.response(201, description='Created a new Sensor', model=serial_new_sensor)
@@ -52,24 +57,28 @@ class Sensors(Resource):
 @sensor_namespace.doc(params={'sensor_id': 'The Sensor ID to grab the Sensor JSON object'})
 @sensor_namespace.response(500, 'Sensor not found')
 class SensorItems(Resource):
-    @sensor_namespace.marshal_with(serial_sensor)
+    # @sensor_namespace.marshal_with(serial_sensor)
     @sensor_namespace.response(code=200, description='The JSON of the specific Sensor', model=serial_sensor)
     def get(self, sensor_id):
         """
         Returns a Sensor related to a single Sensor ID
         :return: Sensor JSON Object
         """
-        return Sensor.query.filter(Sensor.id == sensor_id).one()
+        sensor = Sensor.query.filter(Sensor.id == sensor_id).one()
+        result = get_sensor(sensor)
+        if result is None:
+            abort(400, 'The Sensor failed to configure a sub-component as was not vaildated when entered into the db')
+        return result
 
-    @sensor_namespace.marshal_with(serial_sensor)
-    def put(self):
+    @sensor_namespace.expect(update_sensor_parser)
+    def put(self, appliance_id):
         """
         Update a Sensor with new values.
         Any values with a None value will not be updated, except for GPIO which a Zero value will mean it is not updated
         """
-        data = request.json
-        sensor_id = update_sensor(data)
-        return sensor_id, 201
+        args = request.args
+        sensor = update_sensor(appliance_id, args)
+        return get_sensor(sensor), 201
 
     @sensor_namespace.response(code=200, description='The Sensor was successfully deleted from the Database')
     def delete(self, sensor_id):
