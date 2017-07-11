@@ -14,6 +14,7 @@ As a User I would like to be able to view the streaming set of appliance interac
 """
 from flask import request, abort
 from flask_restplus import Resource
+from sqlalchemy.orm.exc import NoResultFound
 
 from api.sensors.business import create_sensor, update_sensor
 from api.sensors.serializers import serial_sensor, serial_new_sensor
@@ -39,7 +40,9 @@ class Sensors(Resource):
         sensors = Sensor.query.all()
         result_list = []
         for sensor in sensors:
-            result_list.append(get_sensor(sensor))
+            json_sensor = get_sensor(sensor)
+            if json_sensor is not None:
+                result_list.append(json_sensor)
         return result_list
 
     @sensor_namespace.expect(serial_new_sensor)
@@ -49,8 +52,8 @@ class Sensors(Resource):
         Create a new Sensor
         """
         data = request.json
-        sensor_id = create_sensor(data)
-        return sensor_id, 201
+        sensor = create_sensor(data)
+        return sensor, 201
 
 
 @sensor_namespace.route('/<int:sensor_id>')
@@ -66,18 +69,21 @@ class SensorItems(Resource):
         """
         sensor = Sensor.query.filter(Sensor.id == sensor_id).one()
         result = get_sensor(sensor)
-        if result is None:
-            abort(400, 'The Sensor failed to configure a sub-component as was not vaildated when entered into the db')
         return result
 
     @sensor_namespace.expect(update_sensor_parser)
-    def put(self, appliance_id):
+    @sensor_namespace.response(code=201, description='The Sensor JSON object in its amended form')
+    @sensor_namespace.response(code=400, description='The parameters are invalid to build this sensor')
+    def put(self, sensor_id):
         """
         Update a Sensor with new values.
         Any values with a None value will not be updated, except for GPIO which a Zero value will mean it is not updated
         """
         args = request.args
-        sensor = update_sensor(appliance_id, args)
+        try:
+            sensor = update_sensor(sensor_id, args)
+        except NoResultFound:
+            return None, 400
         return get_sensor(sensor), 201
 
     @sensor_namespace.response(code=200, description='The Sensor was successfully deleted from the Database')

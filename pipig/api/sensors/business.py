@@ -9,12 +9,7 @@ from pipig.pi_gpio.models import GpioPin
 def get_sensor(sensor_model):
 
     type_id = sensor_model.get_type_id()
-
-    try:
-        sensor_type = SensorType.query.filter(SensorType.id == type_id).one()
-    except NoResultFound:
-        return None
-
+    sensor_type = SensorType.query.filter(SensorType.id == type_id).one()
     units_id = sensor_type.get_units_id()
     units = GenericUnits.query.filter(GenericUnits.id == units_id).one()
     try:
@@ -48,11 +43,20 @@ def create_sensor(data):
     ibr = data.get('interval_between_readings')
     gpio_pin_id = data.get('gpio_pin_id')
 
+    sensor_type = SensorType.get(type_id)
+    units = sensor_type.get_units_id()
+    if sensor_type is None or units is None:
+        return None
+
     if gpio_pin_id == 0:
         gpio_pin_id = None
+    else:
+        gpio = GpioPin.get(gpio_pin_id)
+        if gpio is None:
+            return None
 
     sensor = Sensor.create(name=name, type_id=type_id, interval_between_readings=ibr, gpio_pin_id=gpio_pin_id)
-    return sensor.get_id()
+    return sensor
 
 
 def update_sensor(sensor_id, data):
@@ -62,6 +66,15 @@ def update_sensor(sensor_id, data):
     ibr = data.get('interval_between_readings')
 
     sensor = Sensor.query.filter_by(id=sensor_id).one()
+
+    sensor_type = SensorType.get(type_id)
+    if sensor_type is None:
+        raise NoResultFound
+
+    unit_model = GenericUnits.get(sensor_type.get_units_id())
+    if unit_model is None:
+        raise NoResultFound
+
     if type_id is not None:
         sensor.update(type_id=type_id)
 
