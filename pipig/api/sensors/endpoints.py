@@ -15,6 +15,7 @@ As a User I would like to be able to view the streaming set of appliance interac
 from flask import request, abort
 from flask_restplus import Resource
 from sqlalchemy.orm.exc import NoResultFound
+from flask_restplus import abort
 
 from api.sensors.business import create_sensor, update_sensor
 from api.sensors.serializers import serial_sensor, serial_new_sensor
@@ -30,6 +31,7 @@ sensor_namespace = api_plus.namespace('sensors',
 @sensor_namespace.route('/')
 class Sensors(Resource):
     # @sensor_namespace.marshal_list_with(serial_sensor)
+    @sensor_namespace.doc(serial_sensor)
     @sensor_namespace.response(200, description='Successfully returned list of sensors', model=serial_sensor)
     def get(self):
         """
@@ -46,13 +48,16 @@ class Sensors(Resource):
         return result_list
 
     @sensor_namespace.expect(serial_new_sensor)
-    @sensor_namespace.response(201, description='Created a new Sensor', model=serial_new_sensor)
+    @sensor_namespace.response(201, description='Created a new Sensor', model=serial_sensor)
     def post(self):
         """
         Create a new Sensor
         """
         data = request.json
         sensor = create_sensor(data)
+        sensor = get_sensor(sensor)
+        if sensor is None:
+            abort(400, "The sensor did not get created due to invalid values")
         return sensor, 201
 
 
@@ -67,23 +72,27 @@ class SensorItems(Resource):
         Returns a Sensor related to a single Sensor ID
         :return: Sensor JSON Object
         """
-        sensor = Sensor.query.filter(Sensor.id == sensor_id).one()
+        sensor = Sensor.get(sensor_id)
+        if sensor is None:
+            abort(400, 'The sensor ID does not exist in the Database')
         result = get_sensor(sensor)
+        if result is None:
+            abort(400, 'The sensor components cannot be built as Type or Units IDs are out of bounds')
         return result
 
     @sensor_namespace.expect(update_sensor_parser)
     @sensor_namespace.response(code=201, description='The Sensor JSON object in its amended form')
-    @sensor_namespace.response(code=400, description='The parameters are invalid to build this sensor')
+    @sensor_namespace.response(code=400, description='The parameters are invalid to build this sensor', model=update_sensor_parser)
     def put(self, sensor_id):
         """
         Update a Sensor with new values.
         Any values with a None value will not be updated, except for GPIO which a Zero value will mean it is not updated
         """
         args = request.args
-        try:
-            sensor = update_sensor(sensor_id, args)
-        except NoResultFound:
-            return None, 400
+
+        sensor = update_sensor(sensor_id, args)
+        if sensor is None:
+            return args, 400
         return get_sensor(sensor), 201
 
     @sensor_namespace.response(code=200, description='The Sensor was successfully deleted from the Database')

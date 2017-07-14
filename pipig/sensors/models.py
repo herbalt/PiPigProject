@@ -2,6 +2,9 @@ from generics.constants import COMPONENT_TYPE_SENSOR
 from generics.models import GenericReading
 from pipig.data import db, CRUDMixin
 
+from pipig.generics.models import GenericUnits
+from pipig.pi_gpio.models import GpioPin
+
 
 class SensorType(db.Model, CRUDMixin):
     """
@@ -56,6 +59,39 @@ class Sensor(db.Model, CRUDMixin):
                " TypeId: " + str(self.type_id) + \
                " Interval: " + str(self.interval_between_readings)
 
+    def get_json(self):
+        sensor_type = SensorType.get(self.type_id)
+
+        if sensor_type is None:
+            return None
+
+        units = GenericUnits.get(sensor_type.get_units_id())
+
+        try:
+            gpio = GpioPin.get(self.gpio_pin_id)
+        except TypeError:
+            gpio = GpioPin(None, None, None, 'No GPIO Connection')
+
+        json = {
+                'id': self.get_id(),
+                'name': self.get_name(),
+                'interval between readings': self.get_interval_between_readings(),
+                'Sensor GPIO': {'pin number': gpio.get_pin_number(),
+                                'pin name': gpio.get_pin_name()
+                                },
+                'Sensor Type': {'id': sensor_type.get_id(),
+                                'name': sensor_type.get_type(),
+                                'units': {'id': units.get_id(),
+                                          'name': units.get_code_name(),
+                                          'display': units.get_display_units()
+                                          }
+                                }
+            }
+
+
+
+        return json
+
     def get_interval_between_readings(self):
         return self.interval_between_readings
 
@@ -107,7 +143,6 @@ class Sensor(db.Model, CRUDMixin):
 
         # Processes Sensor Readings if multiple readings at time_elapsed
         initial_query = GenericReading.query.filter_by(component_id=self.get_id(), reading_timestamp=reading_time).all()
-
 
         if initial_query is not None:
             initial_result = self.process_sensor_reading_list_to_single_point(initial_query)
@@ -162,11 +197,7 @@ class Sensor(db.Model, CRUDMixin):
             return last_sensor_reading
 
         # Average the low and high variable values and set with the time_elapsed input
-        processed_sensor_reading = self.process_sensor_reading_list_to_single_point([low_sensor_reading, high_sensor_reading])
+        processed_sensor_reading = self.process_sensor_reading_list_to_single_point(
+            [low_sensor_reading, high_sensor_reading])
         processed_sensor_reading.reading_timestamp = reading_time
         return processed_sensor_reading
-
-
-
-
-
