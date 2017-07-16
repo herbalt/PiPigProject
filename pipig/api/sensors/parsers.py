@@ -1,5 +1,8 @@
 from flask_restplus import reqparse
 
+"""
+Constructs the Arguments to Update a Sensor with new Parameters
+"""
 update_sensor_parser = reqparse.RequestParser()
 update_sensor_parser.add_argument('type_id', type=int, help='The updated value for Sensor Type ID')
 update_sensor_parser.add_argument('name', type=str, help='The updated value for name for the Sensor')

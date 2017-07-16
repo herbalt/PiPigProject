@@ -34,6 +34,16 @@ class SensorType(db.Model, CRUDMixin):
     def get_units_id(self):
         return self.units_id
 
+    def get_json(self):
+        units = GenericUnits.get(self.units_id)
+        json = {
+            'id': self.get_id(),
+            'type name': self.get_type(),
+            'Units': units.get_json(),
+            'minimum refresh': self.get_minimum_refresh()
+        }
+        return json
+
 
 class Sensor(db.Model, CRUDMixin):
     """
@@ -60,6 +70,11 @@ class Sensor(db.Model, CRUDMixin):
                " Interval: " + str(self.interval_between_readings)
 
     def get_json(self):
+
+
+
+
+
         sensor_type = SensorType.get(self.type_id)
 
         if sensor_type is None:
@@ -79,17 +94,8 @@ class Sensor(db.Model, CRUDMixin):
                 'Sensor GPIO': {'pin number': gpio.get_pin_number(),
                                 'pin name': gpio.get_pin_name()
                                 },
-                'Sensor Type': {'id': sensor_type.get_id(),
-                                'name': sensor_type.get_type(),
-                                'units': {'id': units.get_id(),
-                                          'name': units.get_code_name(),
-                                          'display': units.get_display_units()
-                                          }
-                                }
+                'Sensor Type': sensor_type.get_json()
             }
-
-
-
         return json
 
     def get_interval_between_readings(self):

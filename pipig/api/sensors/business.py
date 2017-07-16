@@ -1,18 +1,13 @@
-from sqlalchemy.orm.exc import NoResultFound
-
 from pipig.sensors.models import Sensor, SensorType
 from pipig.generics.models import GenericUnits
 from pipig.pi_gpio.models import GpioPin
 
-
-def get_sensor(sensor_model):
-    if sensor_model is None:
-        return None
-    return sensor_model.get_json()
-
-
-
 def create_sensor(data):
+    """
+    Creates a new Sensor from JSON Data
+    :param data: The JSON Object
+    :return: The Sensor Model Object
+    """
     name = data.get('name')
     type_id = data.get('type_id')
     ibr = data.get('interval_between_readings')
@@ -38,32 +33,30 @@ def create_sensor(data):
 
 
 def update_sensor(sensor_id, data):
+    """
+    Updates a Sensor with JSON Parameters
+    :param sensor_id: The sensor to update
+    :param data: The JSON object
+    :return:
+    """
     type_id = data.get('type_id')
     name = data.get('name')
     gpio_pin_id = data.get('gpio_pin_id')
     ibr = data.get('interval_between_readings')
 
     sensor = Sensor.get(sensor_id)
-    # sensor = Sensor.query.filter_by(id=sensor_id).one()
-
-    sensor_type = SensorType.get(type_id)
-    if sensor_type is None:
-        return None
-
-    unit_model = GenericUnits.get(sensor_type.get_units_id())
-    if unit_model is None:
-        return None
-
+    # TODO Should add validation to these DB Entries
     if type_id is not None:
         sensor.update(type_id=type_id)
 
     if name is not None:
         sensor.update(name=name)
 
-    if ibr is not None:
-        sensor.update(interval_between_readings=ibr)
-
     if gpio_pin_id is not 0:
         sensor.update(gpio_pin_id=gpio_pin_id)
 
-    return sensor
+    if ibr is not None:
+        sensor.update(interval_between_readings=ibr)
+
+    return sensor.get_json()
+

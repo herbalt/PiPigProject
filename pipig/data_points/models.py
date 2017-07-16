@@ -51,6 +51,15 @@ class DataPoint(db.Model, CRUDMixin):
         """
         return self.get_data_points_id(), self.get_value(), self.get_time_elapsed()
 
+    def get_json(self):
+        json = {
+            'id': self.get_id(),
+            'value': self.get_value(),
+            'time elapsed': self.get_time_elapsed(),
+            'datapoints id': self.get_data_points_id()
+        }
+        return json
+
     def set_value(self, value=None):
         if value is not None:
             self.update(value=value)
@@ -88,6 +97,18 @@ class DataPoints(db.Model, CRUDMixin):
         """
         data_point_id_list = DataPoint.query.filter_by(data_points_id=self.id).order_by(DataPoint.time_elapsed).all()
         return data_point_id_list
+
+    def get_json(self):
+        json_points = []
+        points = self.get_points()
+        for point in points:
+            json_points.append(point.get_json())
+        json = {
+            'id': self.get_id(),
+            'name': self.name,
+            'List of Datapoints': json_points
+        }
+        return json
 
     def process_data_point_list_to_single_point(self, list_of_data_point_objects=None):
         """

@@ -1,3 +1,5 @@
+from generics.models import GenericUnits
+from pi_gpio.models import GpioPin
 from pipig.data import db, CRUDMixin
 
 
@@ -19,6 +21,15 @@ class ApplianceType(db.Model, CRUDMixin):
 
     def get_units_id(self):
         return self.units_id
+
+    def get_json(self):
+        units = GenericUnits.get(self.get_units_id())
+        json = {
+            'id': self.get_id(),
+            'type name': self.get_type(),
+            'Units': units.get_json()
+        }
+        return json
 
 
 class Appliance(db.Model, CRUDMixin):
@@ -49,6 +60,22 @@ class Appliance(db.Model, CRUDMixin):
     def get_gpio_pin_id(self):
         return self.gpio_pin_id
 
+    def get_json(self):
+        appliance_type = ApplianceType.get(self.type_id)
 
+        if appliance_type is None:
+            return None
 
+        try:
+            gpio = GpioPin.get(self.gpio_pin_id)
+        except TypeError:
+            gpio = GpioPin(None, None, None, 'No GPIO Connection')
+
+        json = {
+                'id': self.get_id(),
+                'name': self.get_name(),
+                'Appliance GPIO': gpio.get_json(),
+                'Appliance Type': appliance_type.get_json()
+            }
+        return json
 

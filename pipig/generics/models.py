@@ -66,3 +66,11 @@ class GenericUnits(db.Model, CRUDMixin):
 
     def get_display_units(self):
         return self.display_units
+
+    def get_json(self):
+        json = {
+            'id': self.get_id(),
+            'name': self.get_code_name(),
+            'display': self.get_display_units()
+        }
+        return json

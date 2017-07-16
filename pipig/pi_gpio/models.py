@@ -24,6 +24,12 @@ class GpioPin(db.Model, CRUDMixin):
         self.event_detection = None
         self.value = LOW
 
+    def get_json(self):
+        json = {
+            'pin number': self.get_pin_number(),
+            'pin name': self.get_pin_name()
+        }
+        return json
     """
     GETTERS
     """
