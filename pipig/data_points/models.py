@@ -106,7 +106,7 @@ class DataPoints(db.Model, CRUDMixin):
         json = {
             'id': self.get_id(),
             'name': self.name,
-            'List of Datapoints': json_points
+            'list of points': json_points
         }
         return json
 
@@ -208,7 +208,6 @@ class DataPoints(db.Model, CRUDMixin):
         """
         return DataPoint.query.filter_by(id=id).first()
 
-
     def update_point(self, datapoint_id=None, value=None, time_elapsed=None):
         """
         Updates or Adds a Data Point
@@ -222,23 +221,16 @@ class DataPoints(db.Model, CRUDMixin):
             # Use DataPointID = None to add a new data point
             if value is None or time_elapsed is None:
                 return None
-
             data_point = DataPoint.create(data_points_id=self.id, value=value, time_elapsed=time_elapsed)
-            # db.session.commit()
+
         else:
-            # with app.app_context():
-            # data_point = DataPoint.query.filter_by(id=datapoint_id).first()
-            data_point = DataPoint.get(id=datapoint_id)
-            data_point.set_value(value)
-            data_point.set_time_elapsed(time_elapsed)
-            # if value is not None:
-            #     data_point.value = value
-
-            # if time_elapsed is not None:
-            #    data_point.time_elapsed = time_elapsed
-
-            # db.session.commit()
-
+            # TODO This conditional check of the DataPoint always returns a None Object for some reason
+            data_point = self.get_point_by_id(datapoint_id)
+            if data_point is None:
+                data_point = DataPoint.create(data_points_id=self.id, value=value, time_elapsed=time_elapsed)
+            else:
+                data_point.set_value(value)
+                data_point.set_time_elapsed(time_elapsed)
         return data_point
 
     def delete_point(self, data_point_id=None):
@@ -249,7 +241,6 @@ class DataPoints(db.Model, CRUDMixin):
         :return: Boolean based on the success of the Delete action
         """
         if data_point_id is not None:
-            # with app.app_context():
             data_point = DataPoint.query.filter_by(id=data_point_id).first()
             db.session.delete(data_point)
             db.session.commit()

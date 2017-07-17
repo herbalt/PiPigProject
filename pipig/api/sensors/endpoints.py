@@ -90,7 +90,8 @@ class SensorItems(Resource):
     @sensor_namespace.response(code=500, description='The Sensor does not exist')
     def delete(self, sensor_id):
         """
-        Delete a Sensor from the Database. Historic Data may fail if a Sensor was used in historic operation.
+        Delete a Sensor from the Database.
+        Historic Data may fail if a Sensor was used in historic operation. \n
         Returns the confirmation of the sensor ID that was deleted
         """
         sensor = Sensor.get(sensor_id)
