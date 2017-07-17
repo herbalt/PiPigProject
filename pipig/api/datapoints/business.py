@@ -32,20 +32,3 @@ def update_datapoints(datapoints_id, data):
             return DataPoints.get(datapoints_id).get_json(), 400
     return DataPoints.get(datapoints_id).get_json(), 201
 
-
-"""
-def create_datapoint(datapoints_id, data):
-    value = data.get('value')
-    time_elapsed = data.get('time_elapsed')
-
-    datapoint = DataPoint.create(data_points_id=datapoints_id, value=value, time_elapsed=time_elapsed)
-    return datapoint
-
-def update_datapoint(datapoints_id, data):
-    datapoint_id = data.get('id')
-    value = data.get('value')
-    time_elapsed = data.get('time_elapsed')
-    datapoint = DataPoint.get(datapoint_id)
-    datapoint.update(datapoint_id, datapoints_id=datapoints_id, value=value, time_elapsed=time_elapsed)
-    return DataPoint.get(datapoint_id)
-"""

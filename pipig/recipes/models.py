@@ -34,6 +34,26 @@ class Recipe(db.Model, CRUDMixin):
         equal_datapoints_ids = self.get_datapoints_ids() == other.get_datapoints_ids()
         return equal_id and equal_name and equal_sensor_bindings and equal_appliance_bindings and equal_sensor_ids and equal_appliance_ids and equal_datapoints_ids
 
+    def get_json(self):
+        sensor_binders = self.get_list_sensor_binder_id_tuples()
+        appliance_binders = self.get_list_appliance_binder_id_tuples()
+
+        sbind_list = []
+        for sbind in sensor_binders:
+            binder = {'datapoints id': sbind[0], 'sensor id': sbind[1]}
+            sbind_list.append(binder)
+
+        abind_list = []
+        for abind in appliance_binders:
+            binder = {'datapoints id': abind[0], 'appliance id': abind[1]}
+
+        json = {
+            'name': self.get_name(),
+            'list of sensor bindings': sbind_list,
+            'list of appliance bindings': abind_list
+        }
+        return json
+
     """
     GET METHODS
     """
