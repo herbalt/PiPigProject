@@ -70,11 +70,6 @@ class Sensor(db.Model, CRUDMixin):
                " Interval: " + str(self.interval_between_readings)
 
     def get_json(self):
-
-
-
-
-
         sensor_type = SensorType.get(self.type_id)
 
         if sensor_type is None:

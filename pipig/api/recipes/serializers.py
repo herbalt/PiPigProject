@@ -19,7 +19,9 @@ serial_sensor_bindings = api.model('Recipe Sensor Binders', {
 })
 
 serial_appliance_bindings = api.model('Recipe Appliance Binders', {
-'list of appliance bindings': fields.List(fields.Nested(serial_appliance_binder, required=False, description='The Datapoint objects associated with the Datapoint'))
+'list of appliance bindings': fields.List(
+    fields.Nested(serial_appliance_binder, required=False, description='The Datapoint objects associated with the Datapoint')
+)
 })
 
 """
@@ -27,8 +29,8 @@ The Models for the Recipe Objects
 """
 serial_recipe = api.model('Recipe',  {
     'name': fields.String(required=True, description='The name of the Recipe'),
-    'list of sensor bindings': serial_sensor_bindings,
-    'list of appliance bindings': serial_appliance_bindings
+    # 'list of sensor bindings': serial_sensor_bindings,
+    # 'list of appliance bindings': serial_appliance_bindings
 })
 
 

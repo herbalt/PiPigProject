@@ -3,11 +3,11 @@ from binders.models import BindDatapointsAppliances, BindDatapointsSensors
 
 
 class Recipe(db.Model, CRUDMixin):
-    __tablename__ = 'recipe'
     """
     A Recipe is the complete set of Sensors, Appliances and DataPoints along with their binders.
     A Recipe object does not hold any functionality, it is just a pointer to all the relevant IDs
     """
+    __tablename__ = 'recipe'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String, nullable=False)
 
