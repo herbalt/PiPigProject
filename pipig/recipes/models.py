@@ -40,14 +40,16 @@ class Recipe(db.Model, CRUDMixin):
 
         sbind_list = []
         for sbind in sensor_binders:
-            binder = {'datapoints id': sbind[0], 'sensor id': sbind[1]}
+            binder = {'datapoint id': sbind[0], 'sensor id': sbind[1]}
             sbind_list.append(binder)
 
         abind_list = []
         for abind in appliance_binders:
-            binder = {'datapoints id': abind[0], 'appliance id': abind[1]}
+            binder = {'datapoint id': abind[0], 'appliance id': abind[1], 'polarity': abind[2]}
+            abind_list.append(binder)
 
         json = {
+            'recipe id': self.get_id(),
             'name': self.get_name(),
             'list of sensor bindings': sbind_list,
             'list of appliance bindings': abind_list
@@ -170,7 +172,19 @@ class Recipe(db.Model, CRUDMixin):
         tuple_list = []
         for datapoints_id in self.get_datapoints_ids():
             for appliance_id in self.get_appliances_for_datapoint(datapoints_id):
-                tuple_list.append((datapoints_id, appliance_id))
+                tuple_list.append((datapoints_id, appliance_id, polarity))
+        return tuple_list
+
+    def get_list_appliance_binder_id_tuples(self):
+        binders = self.get_appliance_datapoints_binding_ids()
+        tuple_list = []
+        for binder_id in binders:
+            appliance_binder = BindDatapointsAppliances.get(binder_id)
+            datapoints = appliance_binder.get_datapoints_id()
+            appliance = appliance_binder.get_appliance_id()
+            polarity = appliance_binder.get_polarity()
+            tuple_list.append((datapoints, appliance, polarity))
+
         return tuple_list
 
 
