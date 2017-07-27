@@ -20,15 +20,15 @@ class TrialCreator:
     controller = None
     rasp_pi = None
 
-    def __init__(self, pi_model, recipe_id):
+    def __init__(self, pi_model, recipe_id, session_name):
         """
 
         """
         self.recipe_id = recipe_id
-        with app.app_context():
-            self.recipe = Recipe.get(id=self.recipe_id)
-            self.session = CuringSession.create(name=self.recipe.get_name(), start_time=time())
-            self.session_id = self.session.get_id()
+        # with app.app_context():
+        self.recipe = Recipe.get(id=self.recipe_id)
+        self.session = CuringSession.create(name=session_name, start_time=time())
+        self.session_id = self.session.get_id()
 
         # Init Interaction objects
         self.get_controller(PRINT_PROCESSOR)

@@ -102,7 +102,7 @@ class RaspberryPi(db.Model, CRUDMixin):
 
     def get_json(self):
         pin_list = []
-        for i in range(0, self.pin_count):
+        for i in range(1, self.pin_count + 1):
             pin = GpioPin.get(i)
             pin_list.append(pin.get_json())
 

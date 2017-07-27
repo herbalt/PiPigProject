@@ -6,8 +6,9 @@ from pipig.api import api as api_plus
 from pipig.api.raspberry_pi.serializers import serial_pi
 from pipig.pi_gpio.models import RaspberryPi
 
-pi_namespace = api_plus.namespace('sensors',
-                                      description='A Sensor sends readings through the PiPig chain')
+pi_namespace = api_plus.namespace('pis', description='The Raspberry PI device allows for interaction with the real world')
+
+
 @pi_namespace.route('/')
 class RaspberryPiDevices(Resource):
 
@@ -27,7 +28,7 @@ class RaspberryPiDevices(Resource):
         return result_list, 200
 
 
-@pi_namespace.route('/<int:pi_id>/')
+@pi_namespace.route('/<int:pi_id>')
 class RaspberryPiItem(Resource):
 
     @pi_namespace.marshal_with(serial_pi)
