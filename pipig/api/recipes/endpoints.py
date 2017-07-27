@@ -42,7 +42,8 @@ class RecipeItems(Resource):
     @recipe_namespace.expect(serial_recipe)
     def post(self):
         """
-        Create a new recipe using components that have already been created.
+        Create a new recipe.
+        All objects IDs used in Recipe require them to already exist in the Database.
         The JSON Request object will contain only the IDs of all the connecting components.
         """
 
@@ -54,21 +55,8 @@ class RecipeItems(Resource):
         return recipe_json, 201
 
 
-@recipe_namespace.route('/a')
-class RecipeTest(Resource):
-    @recipe_namespace.expect(recipe_parser)
-    def post(self):
-        args = request.args
-        recipe = create_recipe_from_tuples(args)
-        recipe_json = recipe.get_json()
-        if recipe_json is None:
-            abort(400, "The Recipe did not get created due to invalid values")
-        return recipe_json, 201
-
-
 @recipe_namespace.route('/<int:recipe_id>')
 class RecipeDetail(Resource):
-
 
     @recipe_namespace.marshal_list_with(serial_recipe_detail)
     def get(self, recipe_id):
@@ -82,8 +70,10 @@ class RecipeDetail(Resource):
         recipe_json = get_recipe_detail(recipe)
         return recipe_json
 
+
 @recipe_namespace.route('/<int:recipe_id>/sensors')
 class RecipeSensorItems(Resource):
+
     @recipe_namespace.marshal_list_with(serial_sensor)
     @recipe_namespace.response(code=200, description='The list of JSON sensors that relate to a Recipe')
     def get(self, recipe_id):
@@ -102,8 +92,10 @@ class RecipeSensorItems(Resource):
 
         return list_of_sensors
 
+
 @recipe_namespace.route('/<int:recipe_id>/appliances')
 class RecipeApplianceItems(Resource):
+
     @recipe_namespace.marshal_list_with(serial_appliance)
     @recipe_namespace.response(code=200, description='The list of JSON Appliances that relate to a Recipe')
     def get(self, recipe_id):

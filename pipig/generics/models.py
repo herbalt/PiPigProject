@@ -40,6 +40,17 @@ class GenericReading(db.Model, CRUDMixin):
     def get_recipe_id(self):
         return self.recipe_id
 
+    def get_json(self):
+        reading_json = {
+            'reading id': self.id,
+            'component id': self.get_component_id(),
+            'component type': self.get_component_type_id(),
+            'value': self.get_value(),
+            'timestamp': self.get_timestamp(),
+            'recipe': self.get_recipe_id()
+        }
+        return reading_json
+
 
 class GenericUnits(db.Model, CRUDMixin):
     """

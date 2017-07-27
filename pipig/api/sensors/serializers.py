@@ -12,7 +12,8 @@ serial_units = api.model('Units', {
 
 serial_gpio = api.model('GPIO', {
         'pin number': fields.Integer(required=True, description='The PiPig unique ID for the GPIO pin that is connected to the Sensor that receives readings'),
-        'pin name': fields.String(required=False, description='The name of the GPIO Pin')
+        'pin name': fields.String(required=False, description='The name of the GPIO Pin'),
+        'pin position': fields.Integer(required=False, description='The position of the GPIO Pin on the Raspberry Pi')
     })
 
 serial_sensor_type = api.model('Type', {

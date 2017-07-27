@@ -1,10 +1,11 @@
 from flask import request, abort
 from flask_restplus import Resource
 from flask_restplus import abort
+from pipig.api import api as api_plus
 
 from api.sensors.business import create_sensor, update_sensor
 from api.sensors.serializers import serial_sensor, serial_new_sensor
-from pipig.api import api as api_plus
+
 from pipig.sensors.models import Sensor
 from pipig.api.sensors.parsers import update_sensor_parser
 

@@ -86,9 +86,7 @@ class Sensor(db.Model, CRUDMixin):
                 'id': self.get_id(),
                 'name': self.get_name(),
                 'interval between readings': self.get_interval_between_readings(),
-                'Sensor GPIO': {'pin number': gpio.get_pin_number(),
-                                'pin name': gpio.get_pin_name()
-                                },
+                'Sensor GPIO': gpio.get_json(),
                 'Sensor Type': sensor_type.get_json()
             }
         return json

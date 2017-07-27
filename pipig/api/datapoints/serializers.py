@@ -22,24 +22,21 @@ serial_datapoints = api.model('Datapoints',  {
     'name': fields.String(required=True, description='The name of the Datapoints')
 })
 
-serial_datapoints_detail = api.inherit('Datapoints Detail', serial_datapoints, serial_points)
+serial_datapoints_detail = api.model('Datapoints Detail',
+                                     {
+                                         'list of points': fields.List(fields.Nested(serial_datapoint, required=False, description='The Datapoint objects associated with the Datapoint')),
+                                         'id': fields.Integer(readOnly=True, description='Unique ID for the Datapoints'),
+                                        'name': fields.String(required=True, description='The name of the Datapoints')
+                                     }
+                                     )
+
 
 serial_datapoints_new = api.model('New Datapoints',  {
     'name': fields.String(required=True, description='The name of the Datapoints')
 })
 
 
-"""
-serial_datapoint_update = api.model('Update existing Datapoint',  {
-    'id': fields.Integer(readOnly=True, description='Unique ID for the Datapoint'),
-    'value': fields.Float(required=True, description='The reading value the Datapoint is set for at a given time'),
-    'time elapsed': fields.Float(required=True, description='The time elapsed value the Datapoint')
-})
 
-serial_datapoint_new_known_datapoints_id = api.model('New Datapoint values',  {
-    'value': fields.Float(required=True, description='The reading value the Datapoint is set for at a given time'),
-    'time elapsed': fields.Float(required=True, description='The time elapsed value the Datapoint')
-})
-"""
+
 
 

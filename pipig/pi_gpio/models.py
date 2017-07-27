@@ -27,7 +27,8 @@ class GpioPin(db.Model, CRUDMixin):
     def get_json(self):
         json = {
             'pin number': self.get_pin_number(),
-            'pin name': self.get_pin_name()
+            'pin name': self.get_pin_name(),
+            'pin position': self.get_pin_position()
         }
         return json
     """
@@ -41,6 +42,9 @@ class GpioPin(db.Model, CRUDMixin):
             return self.bcm_pin
         else:
             return self.pin_number
+
+    def get_pin_position(self):
+        return self.pin_position
 
     def get_pin_name(self):
         return self.pin_name
@@ -92,4 +96,21 @@ class RaspberryPi(db.Model, CRUDMixin):
 
     def get_pin_count(self):
         return self.pin_count
+
+    def get_model(self):
+        return self.name
+
+    def get_json(self):
+        pin_list = []
+        for i in range(0, self.pin_count):
+            pin = GpioPin.get(i)
+            pin_list.append(pin.get_json())
+
+        pi_json = {
+            'id': self.id,
+            'model': self.get_model(),
+            'pi pins': pin_list
+        }
+
+        return pi_json
 

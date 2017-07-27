@@ -23,9 +23,6 @@ class TrialCreator:
     def __init__(self, pi_model, recipe_id):
         """
 
-        :param trial_name:
-        :param list_of_sensor_binder_tuples:
-        :param list_of_appliance_binder_tuples:
         """
         self.recipe_id = recipe_id
         with app.app_context():

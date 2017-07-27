@@ -324,7 +324,6 @@ class Controller(Observer, Subject):
                     for appliance_reading in appliance_reading_list:
                         self.add_appliance_reading_to_queue(appliance_reading)
 
-
     def process_sensor_reading(self, sensor_reading):
         """
         Take a Sensor Reading from the Queue and build an output Reading based on the interaction with the Datapoints
