@@ -1,7 +1,7 @@
 from pi_gpio import config
 from pipig.data import db, CRUDMixin
 from pi_gpio.GPIO_Placeholder import BCM, BOARD, HIGH, IN, LOW, OUT
-
+from pi_gpio.config import GPIO
 
 class GpioPin(db.Model, CRUDMixin):
     __tablename__ = "gpio_pin"
@@ -114,3 +114,17 @@ class RaspberryPi(db.Model, CRUDMixin):
 
         return pi_json
 
+    def configure_application(self, input_pin_list=None, output_pin_list=None):
+        """
+
+        :param input_pin_list: List of Pin Positions that will require configuration for GPIO Input
+        :param output_pin_list: List of Pin Positions that will require configuration for GPIO Output
+        :return:
+        """
+        for input_pin in input_pin_list:
+            if input_pin is not None:
+                GPIO.setup(input_pin, GPIO.IN)
+
+        for output_pin in output_pin_list:
+            if output_pin is not None:
+                GPIO.setup(output_pin, GPIO.OUT)

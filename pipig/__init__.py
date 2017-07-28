@@ -11,6 +11,7 @@ from api.appliances.endpoints import appliance_namespace
 from api.recipes.endpoints import recipe_namespace
 from api.datapoints.endpoints import datapoints_namespace
 from api.raspberry_pi.endpoints import pi_namespace
+from api.pipig.endpoints import pipig_namespace
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -23,6 +24,7 @@ api_plus.add_namespace(appliance_namespace)
 api_plus.add_namespace(recipe_namespace)
 api_plus.add_namespace(datapoints_namespace)
 api_plus.add_namespace(pi_namespace)
+api_plus.add_namespace(pipig_namespace)
 
 
 app.register_blueprint(blueprint)
@@ -56,6 +58,7 @@ from pipig.binders.views import binders
 from pipig.data_points.views import data_points
 from pipig.generics.views import generics
 from pipig.pi_gpio.views import gpio_pins
+
 
 
 

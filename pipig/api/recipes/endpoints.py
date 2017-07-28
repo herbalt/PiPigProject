@@ -12,7 +12,6 @@ from pipig.recipes.models import Recipe
 from pipig.sensors.models import Sensor
 from pipig.appliances.models import Appliance
 from pipig.data_points.models import DataPoints
-from pipig.api.recipes.parsers import recipe_parser
 
 recipe_namespace = api_plus.namespace('recipes',
                                       description='Instructions for a monitored and controlled Charcuterie Chamber operation')
