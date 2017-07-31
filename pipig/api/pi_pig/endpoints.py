@@ -3,7 +3,7 @@ from flask_restplus import Resource
 from flask_restplus import abort
 from pipig.api import api as api_plus
 
-from .serializers import serial_pipig, serial_pipig_config, serial_pipig_snapshot, serial_pipig_status
+from .serializers import serial_pipig, serial_pipig_config, serial_pipig_snapshot, serial_pipig_status_input
 from .business import configure_pipig
 from pi_gpio.models import RaspberryPi
 from pi_pig.models import PiPigModel
@@ -11,10 +11,10 @@ from pi_pig.models import PiPigModel
 pipig_namespace = api_plus.namespace('pipig', description='PiPig is the core API that controllers the application')
 
 
-@pipig_namespace.route('/configurations')
-class PiPigConfig(Resource):
+@pipig_namespace.route('/')
+class PiPigAll(Resource):
 
-    @pipig_namespace.marshal_list_with(serial_pipig)
+    @pipig_namespace.marshal_with(serial_pipig)
     def get(self):
         """
         Get the all PiPig Configurations.
@@ -29,6 +29,18 @@ class PiPigConfig(Resource):
             if result is not None:
                 result_list.append(result)
         return result_list, 200
+
+
+@pipig_namespace.route('/configurations')
+class PiPigConfig(Resource):
+
+    @pipig_namespace.marshal_with(serial_pipig)
+    def get(self):
+        """
+        Get the current Instance of PiPig Opertaion.
+        """
+        global pipig_instance
+        return pipig_instance
 
     @pipig_namespace.expect(serial_pipig_config)
     @pipig_namespace.marshal_with(serial_pipig)
@@ -50,15 +62,13 @@ class PiPigConfig(Resource):
     @pipig_namespace.route('/status/<int:pipig_id>')
     class PiPigStatusUpdate(Resource):
 
-        @pipig_namespace.marshal_with(serial_pipig_status)
+        # @pipig_namespace.marshal_with(serial_pipig_status_input)
         def get(self, pipig_id):
             """
             Get current status of the PiPig instance
             :return:
             """
-            pipig_model = PiPigModel.get(pipig_id)
-            return pipig_model.get_status()
-
+            pass
 
         def post(self, pipig_id):
             """

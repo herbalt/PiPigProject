@@ -74,7 +74,7 @@ app.register_blueprint(gpio_pins)
 app.register_blueprint(pipig_blueprint)
 
 
-
+pipig_instance = None
 
 """
 @app.route('/')
