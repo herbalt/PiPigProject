@@ -1,21 +1,10 @@
 from flask_restplus import fields
 from pipig.api import api
-
+from pipig.api.raspberry_pi.serializers import serial_gpio
+from pipig.api.general.serializers import serial_units
 """
 NESTED JSON MODELS
 """
-serial_units = api.model('Units', {
-            'id': fields.Integer(readOnly=True, description='Unique ID for the Unit'),
-            'name': fields.String(required=True, description='The name of the Unit'),
-            'display': fields.String(required=True, description='The characters to represent the units to use in the display')
-})
-
-serial_gpio = api.model('GPIO', {
-        'pin number': fields.Integer(required=True, description='The PiPig unique ID for the GPIO pin that is connected to the Sensor that receives readings'),
-        'pin name': fields.String(required=False, description='The name of the GPIO Pin'),
-        'pin position': fields.Integer(required=False, description='The position of the GPIO Pin on the Raspberry Pi')
-    })
-
 
 serial_appliance_type = api.model('Type', {
         'id': fields.Integer(readOnly=True, description='Unique ID for the Type of Object'),
