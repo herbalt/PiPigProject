@@ -18,8 +18,9 @@ from pipig.generics.models import GenericReading, GenericUnits
 from pipig.pi_gpio.models import GpioPin
 from pipig.recipes.models import Recipe
 from pipig.sensors.models import Sensor, SensorType
-# from pipig.units.models import
+# from pi_pig.units.models import
 from pipig.users.models import UserAccount, UserAccountStatus, UserProfile
+from pipig.pi_pig.models import PiPigModel, PiPigStatus
 
 
 v = api.db_version(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)

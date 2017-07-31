@@ -1,5 +1,5 @@
 from test_helpers.test_base import BaseTestCase
-from pipig.general.patterns import AsyncTask, Observer
+from general.patterns import AsyncTask, Observer
 from time import sleep, time
 
 #________________________________________________________________

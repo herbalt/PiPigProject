@@ -1,6 +1,6 @@
 from test_helpers.test_base import BaseTestCase
 
-from pipig.data_points.models import DataPoint, DataPoints
+from data_points.models import DataPoint, DataPoints
 
 #________________________________________________________________
 #

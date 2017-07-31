@@ -68,13 +68,13 @@ class BaseFactory:
 
 class ApplianceFactory(BaseFactory):
     def get_database_object(self, object_id):
-        with app.app_context():
-            appliance = Appliance.get(id=object_id)
+        # with app.app_context():
+        appliance = Appliance.get(id=object_id)
         return appliance
 
     def get_type_object(self, type_id):
-        with app.app_context():
-            appliance_type = ApplianceType.get(type_id)
+        # with app.app_context():
+        appliance_type = ApplianceType.get(type_id)
         return appliance_type
 
     def get_object(self, lookup_value, object_id):
@@ -148,6 +148,6 @@ class ApplianceBinderFactory:
         return object_dict
 
     def get_database_object(self, object_id):
-        with app.app_context():
-            binder = BindDatapointsAppliances.get(object_id)
+        # with app.app_context():
+        binder = BindDatapointsAppliances.get(object_id)
         return binder

@@ -1,10 +1,10 @@
-from pipig.recipes.models import Recipe
-from pipig.recipes.data_setup import recipe_creator
+from recipes.models import Recipe
+from recipes.data_setup import recipe_creator
 
-from pipig.binders.models import BindDatapointsSensors, BindDatapointsAppliances
-from pipig.data_points.models import DataPoints
-from pipig.sensors.models import Sensor
-from pipig.appliances.models import Appliance
+from binders.models import BindDatapointsSensors, BindDatapointsAppliances
+from data_points.models import DataPoints
+from sensors.models import Sensor
+from appliances.models import Appliance
 
 def get_recipe_detail(recipe):
     """

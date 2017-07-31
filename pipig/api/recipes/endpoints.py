@@ -4,14 +4,14 @@ from flask_restplus import Resource
 
 from pipig.api.recipes.business import create_recipe, create_recipe_from_tuples, get_recipe_detail
 from pipig.api.recipes.serializers import serial_recipe, serial_recipe_detail
-from api.sensors.serializers import serial_sensor
+from pipig.api.sensors.serializers import serial_sensor
 from pipig.api.appliances.serializers import serial_appliance
 from pipig.api.datapoints.serializers import serial_datapoints_detail
 from pipig.api import api as api_plus
-from pipig.recipes.models import Recipe
-from pipig.sensors.models import Sensor
-from pipig.appliances.models import Appliance
-from pipig.data_points.models import DataPoints
+from recipes.models import Recipe
+from sensors.models import Sensor
+from appliances.models import Appliance
+from data_points.models import DataPoints
 
 recipe_namespace = api_plus.namespace('recipes',
                                       description='Instructions for a monitored and controlled Charcuterie Chamber operation')

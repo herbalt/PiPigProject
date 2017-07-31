@@ -3,8 +3,8 @@ from flask_login import current_user
 from wtforms import fields
 from wtforms.validators import InputRequired
 
-from pipig.users.forms import RegistrationForm, LoginForm, UpdateProfileForm
-from pipig.users.models import UserAccount
+from .forms import RegistrationForm, LoginForm, UpdateProfileForm
+from .models import UserAccount
 from test_helpers.test_base import BaseTestCase
 from test_helpers.test_forms import FormTestCase
 

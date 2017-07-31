@@ -1,5 +1,5 @@
 from pipig import app
-from pipig.pi_gpio.models import GpioPin, RaspberryPi
+from pi_gpio.models import GpioPin, RaspberryPi
 
 
 def data_setup():
@@ -60,7 +60,7 @@ def helper_gpio_create(pin_position, pin_number, bcm_pin, pin_name=""):
 
 def rasp_pi_data_setup():
     with app.app_context():
-        from pipig.pi_gpio.raspberry_pi import PI_1_MODEL_A_PLUS, PI_1_MODEL_AB_REVISION_2, PI_1_MODEL_B_PLUS, PI_1_MODEL_B_REVISION_1, PI_2_MODEL_B, PI_MODEL_3, PI_MODEL_ZERO
+        from pi_pig.pi_gpio.raspberry_pi import PI_1_MODEL_A_PLUS, PI_1_MODEL_AB_REVISION_2, PI_1_MODEL_B_PLUS, PI_1_MODEL_B_REVISION_1, PI_2_MODEL_B, PI_MODEL_3, PI_MODEL_ZERO
         print str(helper_rasp_pi_data_setup(name=PI_1_MODEL_B_REVISION_1, pin_count=26))
         print str(helper_rasp_pi_data_setup(name=PI_1_MODEL_AB_REVISION_2, pin_count=26))
         print str(helper_rasp_pi_data_setup(name=PI_1_MODEL_B_PLUS, pin_count=40))

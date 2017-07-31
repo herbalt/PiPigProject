@@ -1,10 +1,10 @@
-from pipig.appliances.models import Appliance
-from pipig.data_points.models import DataPoints, DataPoint
-from pipig.sensors.models import Sensor
+from appliances.models import Appliance
+from data_points.models import DataPoints, DataPoint
+from sensors.models import Sensor
 from pipig import app
-from pipig.appliances.data_setup import helper_setup_appliances
-from pipig.sensors.data_setup import helper_setup_sensors
-from pipig.factories.factory import APPLIANCE_TYPE_NAME_RELAY, APPLIANCE_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_DHT22_CELSIUS
+from appliances.data_setup import helper_setup_appliances
+from sensors.data_setup import helper_setup_sensors
+from factories.factory import APPLIANCE_TYPE_NAME_RELAY, APPLIANCE_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_BASIC, SENSOR_TYPE_NAME_DHT22_CELSIUS
 
 
 

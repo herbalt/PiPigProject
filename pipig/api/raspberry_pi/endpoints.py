@@ -3,8 +3,8 @@ from flask_restplus import Resource
 from flask_restplus import abort
 from pipig.api import api as api_plus
 
-from pipig.api.raspberry_pi.serializers import serial_pi
-from pipig.pi_gpio.models import RaspberryPi
+from .serializers import serial_pi
+from pi_gpio.models import RaspberryPi
 
 pi_namespace = api_plus.namespace('pis', description='The Raspberry PI device allows for interaction with the real world')
 

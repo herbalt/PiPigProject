@@ -1,6 +1,6 @@
 from datetime import datetime
 from pipig import app
-from pipig.users.models import UserAccountStatus, UserAccount
+from .models import UserAccountStatus, UserAccount
 
 
 def data_setup():

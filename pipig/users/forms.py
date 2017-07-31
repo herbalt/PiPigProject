@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from wtforms import fields
 from wtforms.validators import Email, InputRequired, ValidationError
-from models import UserAccount
+from .models import UserAccount
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from pipig.data import db
 

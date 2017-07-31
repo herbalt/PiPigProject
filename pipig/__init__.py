@@ -3,15 +3,17 @@ from flask import Flask, Blueprint
 # import logs
 from app_config import config_class as config
 from mail import mail
-from pipig.api import api as api_plus
-from pipig.auth import login_manager
 
-from api.sensors.endpoints import sensor_namespace
-from api.appliances.endpoints import appliance_namespace
-from api.recipes.endpoints import recipe_namespace
-from api.datapoints.endpoints import datapoints_namespace
-from api.raspberry_pi.endpoints import pi_namespace
-from api.pipig.endpoints import pipig_namespace
+from .api import api as api_plus
+from .auth import login_manager
+
+from .api.sensors.endpoints import sensor_namespace
+from .api.appliances.endpoints import appliance_namespace
+from .api.recipes.endpoints import recipe_namespace
+from .api.datapoints.endpoints import datapoints_namespace
+from .api.raspberry_pi.endpoints import pi_namespace
+from .api.pi_pig.endpoints import pipig_namespace
+
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -28,7 +30,6 @@ api_plus.add_namespace(pipig_namespace)
 
 
 app.register_blueprint(blueprint)
-
 
 
 from pipig.data import db
@@ -49,16 +50,16 @@ mail.init_app(app)
 
 
 
-from pipig.sensors.views import sensors
-from pipig.curing_sessions.views import sessions
-from pipig.appliances.views import appliances
-from pipig.recipes.views import recipes
+from .sensors.views import sensors
+from .curing_sessions.views import sessions
+from .appliances.views import appliances
+from .recipes.views import recipes
 
-from pipig.binders.views import binders
-from pipig.data_points.views import data_points
-from pipig.generics.views import generics
-from pipig.pi_gpio.views import gpio_pins
-
+from .binders.views import binders
+from .data_points.views import data_points
+from .generics.views import generics
+from .pi_gpio.views import gpio_pins
+from .pi_pig.views import pipig_blueprint as pipig_blueprint
 
 
 
@@ -70,6 +71,7 @@ app.register_blueprint(binders)
 app.register_blueprint(data_points)
 app.register_blueprint(generics)
 app.register_blueprint(gpio_pins)
+app.register_blueprint(pipig_blueprint)
 
 
 

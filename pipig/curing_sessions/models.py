@@ -5,12 +5,15 @@ class CuringSession(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String, nullable=False)
     start_time = db.Column(db.Float, nullable=True)
+    end_time = db.Column(db.Float, nullable=True)
     notes = db.Column(db.String, nullable=True)
 
     def __init__(self, name, start_time=None, notes=""):
         self.name = name
         self.start_time = start_time
+        self.end_time = None
         self.notes = notes
+
 
     def __str__(self):
         return "Session\nID: " + str(self.get_id()) + "\nName: " + self.get_name() + "\nStart Time: " + str(self.get_start_time())
@@ -20,6 +23,16 @@ class CuringSession(db.Model, CRUDMixin):
         equal_name = self.get_name() == other.get_name()
         equal_start_time = self.get_start_time() == other.get_start_time()
         return equal_id and equal_name and equal_start_time
+
+    def get_json(self):
+        json = {
+            'id': self.get_id(),
+            'name': self.get_name(),
+            'start time': self.get_start_time(),
+            'end time': self.get_end_time(),
+            'notes': self.get_notes()
+        }
+        return json
 
     def get_id(self):
         return self.id
@@ -46,10 +59,18 @@ class CuringSession(db.Model, CRUDMixin):
     def set_start_time(self, start_time):
         self.start_time = start_time
 
+    def set_end_time(self, end_time):
+        self.end_time = end_time
+
     def get_start_time(self):
         if self.start_time is None:
             return 0
         return self.start_time
+
+    def get_end_time(self):
+        if self.end_time is None:
+            return 0
+        return self.end_time
 
     def get_time_elapsed(self, reading_time):
         if reading_time < self.start_time:

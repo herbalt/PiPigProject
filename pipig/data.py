@@ -1,5 +1,5 @@
 from sqlite3 import IntegrityError
-from pipig import app
+# from pi_pig import app
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()

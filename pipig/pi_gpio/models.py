@@ -94,6 +94,9 @@ class RaspberryPi(db.Model, CRUDMixin):
         self.pin_count = pin_count
         self.name = name
 
+    def get_id(self):
+        return self.id
+
     def get_pin_count(self):
         return self.pin_count
 

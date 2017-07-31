@@ -64,10 +64,10 @@ class BaseAppliance(Observer, Subject):
     """
     def obj_appliance_model(self):
         if self.appliance_model is None:
-            with app.app_context():
-                self.appliance_model = Appliance.get(id=self.get_id())
-                if self.appliance_model is None:
-                    raise IndexError
+            # with app.app_context():
+            self.appliance_model = Appliance.get(id=self.get_id())
+            if self.appliance_model is None:
+                raise IndexError
 
         return self.appliance_model
 

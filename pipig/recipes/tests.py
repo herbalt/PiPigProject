@@ -1,6 +1,6 @@
 from test_helpers.test_base import BaseTestCase
 from test_helpers.test_generics import run_equals_test, run_list_equals_test, unwritten_test
-from pipig.recipes.models import Recipe
+from recipes.models import Recipe
 from binders.models import BindDatapointsAppliances, BindDatapointsSensors
 from appliances.tests import build_appliance_model
 from sensors.tests import build_sensor_model

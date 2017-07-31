@@ -1,6 +1,6 @@
 from pi_gpio.config import GPIO
 
-from pipig.pi_gpio.models import RaspberryPi, GpioPin
+from pi_gpio.models import RaspberryPi, GpioPin
 
 PI_1_MODEL_B_REVISION_1 = "Pi 1 Model B Revision 1"
 PI_1_MODEL_AB_REVISION_2 = "Pi 1 Model A/B Revision 2"

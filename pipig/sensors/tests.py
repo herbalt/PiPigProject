@@ -7,8 +7,8 @@ from generics.constants import COMPONENT_TYPE_SENSOR
 from test_helpers.test_base import BaseTestCase
 from test_helpers.test_forms import FormTestCase
 
-from pipig.sensors.forms import SensorsForm
-from pipig.sensors.models import Sensor, SensorType
+from .forms import SensorsForm
+from .models import Sensor, SensorType
 from generics.models import GenericReading, GenericUnits
 
 from sensor import BaseSensor

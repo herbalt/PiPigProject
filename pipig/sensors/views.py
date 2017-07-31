@@ -3,8 +3,8 @@ from flask import redirect
 from flask import render_template
 from flask import url_for
 
-from pipig.sensors.forms import SensorsForm
-from pipig.sensors.models import Sensor
+from .forms import SensorsForm
+from .models import Sensor
 
 sensors = Blueprint('sensors', __name__)
 

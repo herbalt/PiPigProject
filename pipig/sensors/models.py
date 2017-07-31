@@ -2,8 +2,8 @@ from generics.constants import COMPONENT_TYPE_SENSOR
 from generics.models import GenericReading
 from pipig.data import db, CRUDMixin
 
-from pipig.generics.models import GenericUnits
-from pipig.pi_gpio.models import GpioPin
+from generics.models import GenericUnits
+from pi_gpio.models import GpioPin
 
 
 class SensorType(db.Model, CRUDMixin):

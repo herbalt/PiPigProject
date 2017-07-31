@@ -3,13 +3,13 @@ from time import sleep
 from time import time
 
 from pipig import app
-from pipig.binders.models import BindDatapointsAppliances, BindDatapointsSensors
-from pipig.controller.controller_api import Controller
-from pipig.curing_sessions.models import CuringSession
-from pipig.pi_gpio.raspberry_pi import BaseRaspberryPi, PI_2_MODEL_B
+from binders.models import BindDatapointsAppliances, BindDatapointsSensors
+from controller.controller_api import Controller
+from curing_sessions.models import CuringSession
+from pi_gpio.raspberry_pi import BaseRaspberryPi, PI_2_MODEL_B
 from recipes.data_setup import recipe_creator
 from recipes.models import Recipe
-from pipig.processors.factory import DATABASE_ONLY, PRINT_PROCESSOR
+from processors.factory import DATABASE_ONLY, PRINT_PROCESSOR
 
 class TrialCreator:
     """

@@ -6,7 +6,7 @@ from generics.constants import COMPONENT_TYPE_SENSOR
 from generics.models import GenericReading, GenericUnits
 from pi_gpio.models import GpioPin
 from pipig import app
-from pipig.sensors.models import Sensor, SensorType
+from .models import Sensor, SensorType
 
 try:
     import Adafruit_DHT
@@ -48,8 +48,8 @@ class BaseSensor(AsyncTask):
 
     def obj_sensor(self):
         if self.sensor is None:
-            with app.app_context():
-                self.sensor = Sensor.get(self.get_id())
+            # with app.app_context():
+            self.sensor = Sensor.get(self.get_id())
                 # GPIO.setup(self.get_gpio_pin(), GPIO.IN)
         return self.sensor
 

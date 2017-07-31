@@ -1,6 +1,6 @@
 from pipig import app
-from pipig.factories.factory import APPLIANCE_TYPE_NAME_BASIC, APPLIANCE_TYPE_NAME_RELAY
-from pipig.appliances.models import ApplianceType, Appliance
+from factories.factory import APPLIANCE_TYPE_NAME_BASIC, APPLIANCE_TYPE_NAME_RELAY
+from appliances.models import ApplianceType, Appliance
 
 
 def data_setup():

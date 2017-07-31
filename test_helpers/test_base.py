@@ -1,6 +1,6 @@
 from flask_testing import TestCase
 from config import TestConfiguration, TestDatabaseConfiguration
-from pipig import app, db
+from pi_pig import app, db
 
 
 class BaseTestCase(TestCase):

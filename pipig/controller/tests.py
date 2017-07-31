@@ -1,8 +1,8 @@
 from test_helpers.test_base import BaseTestCase
 from test_helpers.test_generics import run_equals_test, unwritten_test, run_object_equals_test
-from pipig.controller.controller import Controller
-from pipig.recipes.tests import MockRecipe
-# from pipig.curing_sessions.tests import MockSession
+from controller.controller import Controller
+from recipes.tests import MockRecipe
+# from pi_pig.curing_sessions.tests import MockSession
 
 
 # ________________________________________________________________
@@ -29,7 +29,7 @@ class ControllerGetTests(BaseTestCase):
         result = build_test_controller().get_session_obj()
         # expected = MockSession("ControllerTest SessionSessionModel", 1, 0)
         # TODO REQUIRES A SEESSION OBJECT TO RUN TEST CORRECTLY
-        from pipig.curing_sessions.models import CuringSession
+        from pi_pig.curing_sessions.models import CuringSession
         expected = CuringSession(name="ControllerTest Session", start_time=0)
         expected.id = 1
         # expected = build_curing_session_model("ControllerTest Session")
@@ -138,8 +138,8 @@ class ControllerInteractionTests(BaseTestCase):
 #
 # Builders to use in Unit Tests
 # ________________________________________________________________
-from pipig.recipes.tests import build_recipe_model
-from pipig.curing_sessions.tests import build_curing_session_model
+from pi_pig.recipes.tests import build_recipe_model
+from pi_pig.curing_sessions.tests import build_curing_session_model
 
 
 def build_test_controller():

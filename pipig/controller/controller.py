@@ -1,15 +1,15 @@
 from generics.constants import COMPONENT_TYPE_SENSOR, COMPONENT_TYPE_DATAPOINT, \
     COMPONENT_TYPE_DATAPOINTS_APPLIANCE_BINDER
-from pipig.generics.models import GenericReading
-from pipig.curing_sessions.models import CuringSession
-from pipig.recipes.models import Recipe
-from pipig.general.patterns import Subject, Observer
-from pipig.factories.abstract_factory import AbstractFactory
-from pipig.processors.factory import ProcessorChainFactory, DATABASE_ONLY, PRINT_PROCESSOR
+from generics.models import GenericReading
+from curing_sessions.models import CuringSession
+from recipes.models import Recipe
+from general.patterns import Subject, Observer
+from factories.abstract_factory import AbstractFactory
+from processors.factory import ProcessorChainFactory, DATABASE_ONLY, PRINT_PROCESSOR
 from queues.queues import BaseQueue
 from threading import Thread, ThreadError
 from pipig import app
-from pipig.utilities import debug_messenger
+from utilities import debug_messenger
 
 
 class Controller(Observer, Subject):
